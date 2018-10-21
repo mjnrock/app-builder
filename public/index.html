@@ -7,7 +7,7 @@
     </head>
     <body>
 		<script type="module">
-			import PTO from "./pto/package.js";
+			import PTO from "./assets/js/lib/pto/package.js";
 			console.log(PTO);
 
 			let tag = new PTO.Tag.TagCompound("ModelComponent");
@@ -17,8 +17,7 @@
 			regex.AddTag(new PTO.Tag.TagString("Match"));
 			regex.AddTag(new PTO.Tag.TagString("Replace"));
 			
-			console.log(PTO.Utility.Transformer.ToComposition(tag));
-			
+			console.log(PTO.Utility.Transformer.ToComposition(tag));			
 		</script>
     </body>
 </html>
