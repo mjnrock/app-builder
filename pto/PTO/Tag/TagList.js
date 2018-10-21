@@ -2,7 +2,7 @@ import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 import { InvalidDataType } from "../Error/InvalidDataType.js";
 
-export class TagList extends ATag {
+class TagList extends ATag {
 	constructor(key, type) {
 		super(Enum.TagType.LIST, key, null);
 
@@ -119,3 +119,5 @@ export class TagList extends ATag {
 		return this;
 	}
 }
+
+export { TagList };

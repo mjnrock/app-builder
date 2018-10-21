@@ -1,7 +1,7 @@
 import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 
-export class TagShort extends ATag {
+class TagShort extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.SHORT, key, null);
 
@@ -39,3 +39,5 @@ export class TagShort extends ATag {
 		return super.GetBytePerValue(2) * this.Value.length;
 	}
 }
+
+export { TagShort };

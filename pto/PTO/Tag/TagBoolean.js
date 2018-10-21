@@ -1,7 +1,7 @@
 import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 
-export class TagBoolean extends ATag {
+class TagBoolean extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.BOOL, key, null);
 
@@ -31,3 +31,5 @@ export class TagBoolean extends ATag {
 		return super.GetValue(index) === 1;
 	}
 }
+
+export { TagBoolean };

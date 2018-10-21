@@ -2,7 +2,7 @@ import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 import Error from "../Error/package.js";
 
-export class TagLong extends ATag {
+class TagLong extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.LONG, key, null);
 
@@ -14,8 +14,10 @@ export class TagLong extends ATag {
 			return super.SetValues(Int32Array, value);
 		}
 
-		if (this.Value === null || this.Value === void 0) {
+		if (typeof value === "object" || this.Value === null || this.Value === void 0) {
 			this.Value = new Int32Array();
+
+			return this;
 		}
 
 		if (value !== null && value !== void 0) {
@@ -130,3 +132,5 @@ export class TagLong extends ATag {
 		return super.GetBytePerValue(4) * this.Value.length;
 	}
 }
+
+export { TagLong };

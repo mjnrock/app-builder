@@ -84,30 +84,31 @@ export default Object.freeze({
 	},
 
 	GetEnum: value => {
+		value = value.toUpperCase();
 		switch(value) {
-			case "Int" || "TagInt":
+			case "INT" || "TAGINT":
 				return EnumTagType.INT;
-			case "String" || "TagString":
+			case "STRING" || "TAGSTRING":
 				return EnumTagType.STRING;
-			case "Short" || "TagShort":
+			case "SHORT" || "TAGSHORT":
 				return EnumTagType.SHORT;
-			case "Tiny" || "TagTiny":
+			case "TINY" || "TAGTINY":
 				return EnumTagType.TINY;
-			case "Long" || "TagLong":
+			case "LONG" || "TAGLONG":
 				return EnumTagType.LONG;
-			case "Boolean" || "TagBoolean":
+			case "BOOLEAN" || "TAGBOOLEAN":
 				return EnumTagType.BOOL;
-			case "Float" || "TagFloat":
+			case "FLOAT" || "TAGFLOAT":
 				return EnumTagType.FLOAT;
-			case "Double" || "TagDouble":
+			case "DOUBLE" || "TAGDOUBLE":
 				return EnumTagType.DOUBLE;
-			case "List" || "TagList":
+			case "LIST" || "TAGLIST":
 				return EnumTagType.LIST;
-			case "Compound" || "TagCompound":
+			case "COMPOUND" || "TAGCOMPOUND":
 				return EnumTagType.COMPOUND;
-			case "Character" || "TagCharacter":
+			case "CHARACTER" || "TAGCHARACTER":
 				return EnumTagType.CHARACTER;
-			case "UUID" || "TagUUID":
+			case "UUID" || "TAGUUID":
 				return EnumTagType.UUID;
 		}
 	}

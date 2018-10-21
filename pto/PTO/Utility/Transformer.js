@@ -3,7 +3,7 @@ import Tag from "../Tag/package.js";
 import Error from "../Error/package.js";
 import { ByteBuffer } from "./ByteBuffer.js";
 
-export class Transformer {
+class Transformer {
 	static GenerateUUID() {
 		let d = new Date().getTime();
 		let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -721,4 +721,52 @@ export class Transformer {
 
 		return Transformer.FromDelimited(string, ",|", false, true);
 	}
+
+	static ToComposition(tag) {
+		let process = (key, value) => {
+			if(key === "Type") {
+				value = Enum.TagType.GetString(value);
+			}
+
+			return value;
+		};
+		let traverse = (o, func) => {
+			for (let i in o) {
+				o[i] = func.apply(this, [i, o[i]]);  
+				if (o[i] !== null && typeof(o[i]) === "object") {
+					traverse(o[i], func);
+				}
+			}
+
+			return JSON.stringify(o);
+		};
+
+		return traverse(tag, process);
+	}
+	static FromComposition(composition) {
+		let obj = JSON.parse(composition);
+
+		let process = (key, value) => {
+			if(key === "Type") {
+				value = Enum.TagType.GetEnum(value);
+			}
+
+			return value;
+		};
+		let traverse = (o, func) => {
+			for (let i in o) {
+				o[i] = func.apply(this, [i, o[i]]);  
+				if (o[i] !== null && typeof(o[i]) === "object") {
+					traverse(o[i], func);
+				}
+			}
+
+			return o;
+		};
+
+		traverse(obj, process);
+		return Transformer.FromJSON(obj);
+	}
 }
+
+export { Transformer };

@@ -2,7 +2,7 @@ import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 import { IncorrectParameterCount } from "../Error/IncorrectParameterCount.js";
 
-export class TagCharacter extends ATag {
+class TagCharacter extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.CHARACTER, key, null);
 
@@ -91,3 +91,5 @@ export class TagCharacter extends ATag {
 		);
 	}
 }
+
+export { TagCharacter };

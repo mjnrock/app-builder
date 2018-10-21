@@ -1,6 +1,6 @@
 import Tag from "../Tag/package.js";
 
-export class Navigator {
+class Navigator {
 	//	This is really designed for treating a tag like an object with Dot Notation
 	static FindTag(tag, keys, dl) {
 		dl = dl === null || dl === void 0 ? "." : dl;
@@ -41,3 +41,5 @@ export class Navigator {
 	
 	//	TODO Add a "Selector" function that allows for CSS-style Tag selection
 }
+
+export { Navigator };

@@ -1,7 +1,7 @@
 import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 
-export class TagCompound extends ATag {
+class TagCompound extends ATag {
 	constructor(key) {
 		super(Enum.TagType.COMPOUND, key, null);
 
@@ -84,3 +84,5 @@ export class TagCompound extends ATag {
 		return this;
 	}
 }
+
+export { TagCompound };

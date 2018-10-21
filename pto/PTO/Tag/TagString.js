@@ -2,7 +2,7 @@ import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 import { IncorrectParameterCount } from "../Error/IncorrectParameterCount.js";
 
-export class TagString extends ATag {
+class TagString extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.STRING, key, null);
 
@@ -11,7 +11,7 @@ export class TagString extends ATag {
 
 	SetValues(value) {
 		this.Value = new Uint8Array();
-
+		
 		if (value !== null && value !== void 0) {
 			if (value instanceof Array) {
 				value = value.filter((v) => v !== "" && v !== 0);
@@ -113,3 +113,5 @@ export class TagString extends ATag {
 		);
 	}
 }
+
+export { TagString };

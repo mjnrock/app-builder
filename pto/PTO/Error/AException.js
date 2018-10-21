@@ -1,4 +1,4 @@
-export class AException {
+class AException {
 	constructor(message, passedValue) {
 		this.Message = `ERROR: ${message}`;
 		this.Input = {
@@ -7,3 +7,5 @@ export class AException {
 		};
 	}
 }
+
+export { AException };

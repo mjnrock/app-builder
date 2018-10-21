@@ -2,7 +2,7 @@ import Enum from "../Enum/package.js";
 import Error from "../Error/package.js";
 import Tag from "./package.js";
 
-export class ATag {
+class ATag {
 	constructor(type, key, value) {
 		this.Type = type;
 		this.Key = key;
@@ -154,3 +154,5 @@ export class ATag {
 		return this;
 	};
 }
+
+export { ATag };

@@ -2,7 +2,7 @@ import { ATag } from "./ATag.js";
 import Enum from "../Enum/package.js";
 import Error from "../Error/package.js";
 
-export class TagFloat extends ATag {
+class TagFloat extends ATag {
 	constructor(key, value) {
 		super(Enum.TagType.FLOAT, key, null);
 
@@ -132,3 +132,5 @@ export class TagFloat extends ATag {
 		return super.GetBytePerValue(4) * this.Value.length;
 	}
 }
+
+export { TagFloat };

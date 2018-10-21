@@ -1,7 +1,7 @@
 import { TagString } from "./TagString.js";
 import Enum from "../Enum/package.js";
 
-export class TagUUID extends TagString {
+class TagUUID extends TagString {
 	constructor(key, value) {
 		super(key, value);
 
@@ -20,8 +20,13 @@ export class TagUUID extends TagString {
 		if(value === null || value === void 0 || this.GetValues().length === 0) {
 			value = this.Generate();
 		}
+		if(typeof value === "object") {
+			value = Object.values(value).reduce((a, v) => `${a}${String.fromCharCode(v)}`, "");
+		}
 		super.SetValues(value);
 
 		return this;
 	}
 }
+
+export { TagUUID };

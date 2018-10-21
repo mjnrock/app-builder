@@ -8,6 +8,7 @@
     <body>
 		<script type="module">
 			import PTO from "./PTO/package.js";
+			console.log(PTO);
 
 			let post = new PTO.Tag.TagCompound("Post");
 			post.AddTag(new PTO.Tag.TagUUID("UUID"));
@@ -19,33 +20,10 @@
 
 			console.log(post);
 
-			let x = PTO.Utility.Transformer.FromJSON(`{
-				"Key": "Post",
-				"Type": 10,
-				"Value": {
-					"UUID": {
-						"Key": "UUID",
-						"Type": 12,
-						"Value": null
-					},
-					"Author": {
-						"Key": "Author",
-						"Type": 2,
-						"Value": null
-					},
-					"Messsage": {
-						"Key": "Messsage",
-						"Type": 2,
-						"Value": null
-					},
-					"Timestamp": {
-						"Key": "Timestamp",
-						"Type": 5,
-						"Value": null
-					}
-				}
-			}`);
-			console.log(x);
+			let comp = PTO.Utility.Transformer.ToComposition(post);
+			console.log(comp);
+			let recomp = PTO.Utility.Transformer.FromComposition(comp);
+			console.log(recomp);
 			
 		</script>
     </body>
