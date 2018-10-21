@@ -3,7 +3,7 @@ import Error from "../Error/package.js";
 import Tag from "./package.js";
 
 class ATag {
-	constructor(type, key, value) {
+	constructor(type, key, value) {		
 		this.Type = type;
 		this.Key = key;
 		this.Value = value;

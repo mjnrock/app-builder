@@ -10,20 +10,14 @@
 			import PTO from "./PTO/package.js";
 			console.log(PTO);
 
-			let post = new PTO.Tag.TagCompound("Post");
-			post.AddTag(new PTO.Tag.TagUUID("UUID"));
-			post.AddTag(new PTO.Tag.TagString("Author"));
-			post.AddTag(new PTO.Tag.TagString("Message"));
-			post.AddTag(new PTO.Tag.TagLong("Timestamp"));
-			post.AddTag(new PTO.Tag.TagCompound("Test"));
-			post.GetTag("Test").AddTag(new PTO.Tag.TagInt(5));
-
-			console.log(post);
-
-			let comp = PTO.Utility.Transformer.ToComposition(post);
-			console.log(comp);
-			let recomp = PTO.Utility.Transformer.FromComposition(comp);
-			console.log(recomp);
+			let tag = new PTO.Tag.TagCompound("ModelComponent");
+			tag.AddTag(new PTO.Tag.TagCompound("Field"));
+			tag.AddTag(new PTO.Tag.TagCompound("RegEx"));
+			let regex = tag.GetTag("RegEx");
+			regex.AddTag(new PTO.Tag.TagString("Match"));
+			regex.AddTag(new PTO.Tag.TagString("Replace"));
+			
+			console.log(PTO.Utility.Transformer.ToComposition(tag));
 			
 		</script>
     </body>

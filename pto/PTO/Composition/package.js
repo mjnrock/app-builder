@@ -1,5 +1,5 @@
-import Enum from "./Enum.js";
+import ModelComponent from "./ModelComponent.js";
 
 export default {
-	Enum
+	ModelComponent
 };

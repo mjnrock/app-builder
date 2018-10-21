@@ -2,6 +2,7 @@ import Tag from "../Tag/package.js";
 import EnumTagType from "./TagType.js";
 
 export default Object.freeze({
+	ANY: 0,
 	INT: 1,
 	STRING: 2,
 	SHORT: 3,
@@ -27,6 +28,8 @@ export default Object.freeze({
 
 	GetClass: value => {
 		switch(value) {
+			case EnumTagType.ANY:
+				return Tag.ATag;
 			case EnumTagType.INT:
 				return Tag.TagInt;
 			case EnumTagType.STRING:
@@ -86,6 +89,8 @@ export default Object.freeze({
 	GetEnum: value => {
 		value = value.toUpperCase();
 		switch(value) {
+			case "ANY" || "ATAG":
+				return EnumTagType.ANY;
 			case "INT" || "TAGINT":
 				return EnumTagType.INT;
 			case "STRING" || "TAGSTRING":
