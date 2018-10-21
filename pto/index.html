@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dynamic Tag</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+		<script type="module">
+			import PTO from "./PTO/package.js";
+
+			let post = new PTO.Tag.TagCompound("Post");
+			post.AddTag(new PTO.Tag.TagUUID("UUID"));
+			post.AddTag(new PTO.Tag.TagString("Author"));
+			post.AddTag(new PTO.Tag.TagString("Message"));
+			post.AddTag(new PTO.Tag.TagLong("Timestamp"));
+			post.AddTag(new PTO.Tag.TagCompound("Test"));
+			post.GetTag("Test").AddTag(new PTO.Tag.TagInt(5));
+
+			console.log(post);
+
+			let x = PTO.Utility.Transformer.FromJSON(`{
+				"Key": "Post",
+				"Type": 10,
+				"Value": {
+					"UUID": {
+						"Key": "UUID",
+						"Type": 12,
+						"Value": null
+					},
+					"Author": {
+						"Key": "Author",
+						"Type": 2,
+						"Value": null
+					},
+					"Messsage": {
+						"Key": "Messsage",
+						"Type": 2,
+						"Value": null
+					},
+					"Timestamp": {
+						"Key": "Timestamp",
+						"Type": 5,
+						"Value": null
+					}
+				}
+			}`);
+			console.log(x);
+			
+		</script>
+    </body>
+</html>
