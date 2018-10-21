@@ -19,10 +19,10 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, "public")));
 
 // fs.writeFile('./public/mynewfile1.txt', 'Hello content!', function (err) {
-fs.appendFile('./public/mynewfile1.txt', 'Hello content!', function (err) {
-	if (err) throw err;
-	console.log('Saved!');
-}); 
+// fs.appendFile('./public/mynewfile1.txt', 'Hello content!', function (err) {
+// 	if (err) throw err;
+// 	console.log('Saved!');
+// }); 
 
 app.ws("/ws", function (client, req) {
 	console.log(`[CLIENT CONNECTED]: { Timestamp: ${Date.now()}, IP: ${req.connection.remoteAddress} }`);

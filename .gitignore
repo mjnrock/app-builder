@@ -35,6 +35,8 @@ build/Release
 # Dependency directories
 mongodb/
 node_modules/
+client/node_modules/
+server/node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
