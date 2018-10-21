@@ -1,4 +1,0 @@
-export default {
-	CREATE_FEED: "CREATE_FEED",
-	ADD_FEED_POST: "ADD_FEED_POST"
-}
