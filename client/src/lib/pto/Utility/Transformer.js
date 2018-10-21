@@ -11,7 +11,7 @@ class Transformer {
 			function(c) {
 				let r = ((d + Math.floor(Math.random() * 17)) % 16) | 0;
 				d = Math.floor(d / 16);
-				return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+				return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
 			}
 		);
 
@@ -202,6 +202,8 @@ class Transformer {
 					case Enum.TagType.STRING:
 						BB.WriteTiny(Array.from(tag.Value));
 						break;
+					default:
+						break;
 				}
 			}
 		});
@@ -257,6 +259,8 @@ class Transformer {
 							break;
 						case Enum.TagType.STRING:
 							cacheString.push(BB.ReadTiny(1, false)[0]);
+							break;
+						default:
 							break;
 					}
 				}
@@ -449,7 +453,7 @@ class Transformer {
 			}
 		}
 
-		csv = csv.replace(/\,/gi, d1).replace(/\|/gi, d2);
+		csv = csv.replace(/,/gi, d1).replace(/\|/gi, d2);
 
 		return csv;
 	}

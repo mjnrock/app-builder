@@ -1,4 +1,5 @@
 import Tag from "./../Tag/package.js";
+import { Transformer } from "../Utility/Transformer.js";
 
 class AStruct {
 	constructor() {
@@ -15,11 +16,11 @@ class AStruct {
 			let keys = Object.keys(tag);
 			if(keys.length > 0) {
 				if(keys.includes("Type") && keys.includes("Key") && keys.includes("Value")) {
-					return this.Tag.GetSchema() === PTO.TagUtil.FromJSON(tag).GetSchema();
+					return this.Tag.GetSchema() === Transformer.FromJSON(tag).GetSchema();
 				}
 			}
 			
-			return this.Tag.GetSchema() === PTO.TagUtil.InferTagStructure("HTML", tag, false).GetSchema();
+			return this.Tag.GetSchema() === Transformer.InferTagStructure("HTML", tag, false).GetSchema();
 		}
 	
 		return false;

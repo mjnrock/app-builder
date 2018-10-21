@@ -47,7 +47,7 @@ class TagList extends ATag {
 		return this.Value[input];
 	}
 	AddValue(tag) {
-		if (tag instanceof PTO.Tag.ATag) {
+		if (tag instanceof ATag) {
 			if (tag.GetType() === this.GetContentType()) {
 				if (!(this.Value instanceof Array)) {
 					this.Value = [];

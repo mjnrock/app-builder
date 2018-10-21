@@ -42,7 +42,7 @@ class ATag {
 		} else if(value && value.length > 0) {
 			this.Value = array.of(...value);
 		} else {
-			this.Value = new array;
+			this.Value = new array();
 		}
 
 		return this;

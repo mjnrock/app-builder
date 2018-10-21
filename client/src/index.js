@@ -1,9 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import PTO from "./lib/pto/package";
+
 import App from "./App";
 
 ReactDOM.render(
-	<App />,
+	<App
+		Library={{
+			PTO
+		}}
+	/>,
 	document.getElementById("root")
 );

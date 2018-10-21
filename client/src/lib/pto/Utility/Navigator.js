@@ -33,7 +33,7 @@ class Navigator {
 				}
 			}
 			
-			if (tag.GetKey() === key && tag instanceof ATag) {
+			if (tag.GetKey() === key && tag instanceof Tag.ATag) {
 				return tag;
 			}
 		}

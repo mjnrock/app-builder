@@ -54,6 +54,8 @@ export default Object.freeze({
 				return Tag.TagCharacter;
 			case EnumTagType.UUID:
 				return Tag.TagUUID;
+			default:
+				return null;
 		}
 	},
 
@@ -83,6 +85,8 @@ export default Object.freeze({
 				return "string";
 			case EnumTagType.UUID:
 				return "string";
+			default:
+				return null;
 		}
 	},
 
@@ -115,6 +119,8 @@ export default Object.freeze({
 				return EnumTagType.CHARACTER;
 			case "UUID" || "TAGUUID":
 				return EnumTagType.UUID;
+			default:
+				return null;
 		}
 	}
 });
