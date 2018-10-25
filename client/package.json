@@ -14,7 +14,8 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "shake.js": "^1.2.2",
-    "superagent": "^3.8.3"
+    "superagent": "^3.8.3",
+    "url-parse": "^1.4.3"
   },
   "scripts": {
     "start": "set PORT=3002 && react-scripts start",
