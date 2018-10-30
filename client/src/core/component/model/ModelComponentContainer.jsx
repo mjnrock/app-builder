@@ -36,6 +36,8 @@ class ModelComponentContainer extends Component {
 			...this.state,
 			ModelComponents: mcs
 		});
+		
+		this.Tag.GetTag("Components").AddValue(mc.GetTag());
 
 		console.log(this);
 	}
@@ -74,7 +76,7 @@ class ModelComponentContainer extends Component {
 						})
 					}
 					<button onClick={ this.NewModelComponent.bind(this) }>Add Tag</button>
-					<button onClick={ () => console.log(this.ModelComponents) }>State</button>
+					<button onClick={ () => console.log(this.state.ModelComponents) }>State</button>
 				</div>
 			</div>
 		);

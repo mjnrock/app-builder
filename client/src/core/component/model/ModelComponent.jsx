@@ -5,12 +5,15 @@ class ModelComponent extends Component {
 		super(props);
 
 		let PTO = this.props.PTO;
+		//	This exists really just because of the List Content Type issue below (l#47)
+		this.Type = PTO.Enum.TagType.STRING;
+		this.ListContentType = PTO.Enum.TagType.STRING;
+
 		this.Tag = new PTO.Tag.TagCompound("ModelComponent");
 
 		this.Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
 		this.Tag.AddTag(new PTO.Tag.TagString("Name"));
-		this.Tag.AddTag(new PTO.Tag.TagInt("Type", PTO.Enum.TagType.STRING));		
-		this.Tag.AddTag(new PTO.Tag.TagInt("ListContentType", PTO.Enum.TagType.STRING));		
+		this.Tag.AddTag(new PTO.Tag.TagInt("Type", this.ListContentType));	
 		this.Tag.AddTag(new PTO.Tag.TagCompound("RegEx"));
 
 		let RegEx = this.Tag.GetTag("RegEx");
@@ -36,7 +39,19 @@ class ModelComponent extends Component {
 		return this.Tag;
 	}
 
-	//! May need to add a binding hook() function into ATag, to allow for processing if Tag is changed externally
+	GetTagListContentType() {
+		if(this.Type === this.props.PTO.Enum.TagType.LIST) {
+			if(this.Tag.GetTag("ListContentType")) {
+				return `<${this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("ListContentType").GetValue(0))}>`;
+			}
+
+			//	I don't know why (or care to spend more time figuring it out) this.Tag.GetTag("ListContentType") isn't populated by this call, so this workaround
+			return `<${this.props.PTO.Enum.TagType.GetString(this.ListContentType)}>`;
+		}
+		
+		return "";
+	}
+
 	render() {
 		return (
 			<div className="flex justify-around">
@@ -50,12 +65,7 @@ class ModelComponent extends Component {
 						onChange={ this.onDataChange.bind(this) }
 					/>
 					<p className="code text-center">
-						<span>{ this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("Type").GetValue(0)) }{
-							//	This just checks if the Type is a LIST, and if so, shows the CONTENT TYPE e.g. LIST<STRING>
-							this.Tag.GetTag("Type").GetValue(0) === this.props.PTO.Enum.TagType.LIST
-							? `<${this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("ListContentType").GetValue(0))}>`
-							: ""
-						}</span>&nbsp;
+						<span>{ this.props.PTO.Enum.TagType.GetString(this.Type) }{ this.GetTagListContentType() }</span>&nbsp;
 						<span>[{ this.props.UUID }]</span>
 					</p>
 				</div>
@@ -72,7 +82,7 @@ class ModelComponent extends Component {
 						onChange={ this.onDataChange.bind(this) }
 					/>
 					{
-						this.Tag.GetTag("Type").GetValue(0) === this.props.PTO.Enum.TagType.LIST ?
+						this.Type === this.props.PTO.Enum.TagType.LIST ?
 						<input
 							type="number"
 							className="form-control text-center"
@@ -134,8 +144,12 @@ class ModelComponent extends Component {
 		}
 	}
 	onDataChange(e) {
-		let mcf = e.target.getAttribute("mcf"),
-			tag = this.props.PTO.Utility.Navigator.FindTag(this.Tag, mcf);
+		let mcf = e.target.getAttribute("mcf");
+		if(mcf === ".ListContentType" || (mcf === ".Type" && +e.target.value === +this.props.PTO.Enum.TagType.LIST)) {
+			this.Tag.AddTag(new this.props.PTO.Tag.TagInt("ListContentType", this.ListContentType));
+		}
+
+		let tag = this.props.PTO.Utility.Navigator.FindTag(this.Tag, mcf);
 
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
@@ -151,15 +165,18 @@ class ModelComponent extends Component {
 					tag.SetValues(e.target.value);
 				} else {
 					tag.SetValues(e.target.value);
-					this.Tag.GetTag("ListContentType").SetValue(null);
+					this.Tag.RemoveTag("ListContentType");
+				}
+
+				if(mcf === ".Type" || mcf === ".ListContentType") {
+					this.Type = this.Tag.GetTag("Type") ? this.Tag.GetTag("Type").GetValue(0) : this.Type;
+					this.ListContentType = this.Tag.GetTag("ListContentType") ? this.Tag.GetTag("ListContentType").GetValue(0) : this.ListContentType;
 				}
 			}
 			
 			//	Because of the construction and no state manipulation, this basically doubly-binds the Tags to the component
 			this.forceUpdate();
 		}
-
-		console.log(tag);
 	}
 }
 
