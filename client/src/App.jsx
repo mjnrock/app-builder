@@ -3,6 +3,10 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Routes from "./routes/package";
 
+import PTO from "./lib/pto/package";
+
+import Core from "./core/package";
+
 class App extends Component {
 	componentWillMount() {
 		this.setState({
@@ -22,9 +26,7 @@ class App extends Component {
 			<BrowserRouter>
 				<div>
 					<Switch>
-						{/* <Route exact path="/" render={ (props) => <Routes.Feed WebSocketHelper={ this.WebSocketHelper } /> } /> */}
-						<Route exact path="/" component={ Routes.Feed } />
-						<Route path="/feed/:id" component={ Routes.Feed } />
+						<Route exact path="/" component={ () => <Routes.ModelBuilder Core={ Core } PTO={ PTO } /> } />
 					</Switch>
 				</div>
 			</BrowserRouter>

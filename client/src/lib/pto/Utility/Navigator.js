@@ -15,10 +15,10 @@ class Navigator {
 				let value = tag.GetValues();
 				if (tag instanceof Tag.TagCompound) {
 					let v = Object.values(value);
-					for (let i in v) {
+					for (let i in v) {				
 						tag = Navigator.FindTag(v[i], keys, dl);
 
-						if (tag !== null) {
+						if (tag !== null && tag !== void 0) {
 							return tag;
 						}
 					}
@@ -26,7 +26,7 @@ class Navigator {
 					for (let i in value) {
 						tag = Navigator.FindTag(value[i], keys, dl);
 
-						if (tag !== null) {
+						if (tag !== null && tag !== void 0) {
 							return tag;
 						}
 					}
