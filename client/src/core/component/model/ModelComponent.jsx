@@ -51,6 +51,7 @@ class ModelComponent extends Component {
 					/>
 					<p className="code text-center">
 						<span>{ this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("Type").GetValue(0)) }{
+							//	This just checks if the Type is a LIST, and if so, shows the CONTENT TYPE e.g. LIST<STRING>
 							this.Tag.GetTag("Type").GetValue(0) === this.props.PTO.Enum.TagType.LIST
 							? `<${this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("ListContentType").GetValue(0))}>`
 							: ""
@@ -138,6 +139,7 @@ class ModelComponent extends Component {
 
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
+				//	This checks the directionality to skip the LIST<LIST> possibility
 				if(e.target.getAttribute("pto") && e.target.getAttribute("pto").split(" ").includes("list-only")) {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
@@ -145,6 +147,7 @@ class ModelComponent extends Component {
 						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
+
 					tag.SetValues(e.target.value);
 				} else {
 					tag.SetValues(e.target.value);

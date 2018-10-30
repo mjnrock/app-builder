@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { ModelComponent } from "./ModelComponent";
 
+//TODO When on a LIST or a COMPOUND, reveal a <button>Add</button> and then add a ModelComponent.  Make TYPE aware, so LIST can only add ContentType
+//TODO Basically have it ANY time a ModelComponent is LIST or COMPOUND, an expansion pane appears to nest more Tags
 class ModelComponentContainer extends Component {
 	constructor(props) {
 		super(props);
