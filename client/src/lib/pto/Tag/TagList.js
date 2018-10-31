@@ -72,6 +72,14 @@ class TagList extends ATag {
 
 		return this;
 	}
+	RemoveTag(tag) {
+		let index = this.Find(tag.Key);
+		if(index >= 0) {
+			this.RemoveValue(index);
+		}
+
+		return this;
+	}
 
 	GetByteLength() {
 		let bytes = super.GetByteLength(this);

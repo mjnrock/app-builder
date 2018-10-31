@@ -33,13 +33,17 @@ class ModelContainer extends Mutator {
 	GetComponents() {
 		return this.Tag.GetTag("Components");
 	}
-	AddComponent() {
-		let tag = this.Tag.GetTag("Components");
+	AddComponent(tag) {
+		if(tag) {
+			this.Tag.GetTag("Components").AddValue(tag);
+		}
 
 		return this;
 	}
-	RemoveComponent() {
-		let tag = this.Tag.GetTag("Components");
+	RemoveComponent(tag) {
+		if(tag) {
+			this.Tag.GetTag("Components").RemoveTag(tag);
+		}
 
 		return this;
 	}
@@ -47,13 +51,17 @@ class ModelContainer extends Mutator {
 	GetContainers() {
 		return this.Tag.GetTag("Containers");
 	}
-	AddContainer() {
-		let tag = this.Tag.GetTag("Containers");
+	AddContainer(tag) {
+		if(tag) {
+			this.Tag.GetTag("Containers").AddValue(tag);
+		}
 
 		return this;
 	}
-	RemoveContainer() {
-		let tag = this.Tag.GetTag("Containers");
+	RemoveContainer(tag) {
+		if(tag) {
+			this.Tag.GetTag("Containers").RemoveTag(tag);
+		}
 
 		return this;
 	}

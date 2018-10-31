@@ -21,6 +21,10 @@ class ModelComponent extends Component {
 		}
 	}
 
+	IsList() {
+		return +this.Type === this.props.PTO.Enum.TagType.LIST;
+	}
+
 	SetTag(tag) {
 		this.Mutator.SetTag(tag);
 

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { ModelComponent } from "./ModelComponent";
 
-//TODO When on a LIST or a COMPOUND, reveal a <button>Add</button> and then add a ModelComponent.  Make TYPE aware, so LIST can only add ContentType
-//TODO Basically have it ANY time a ModelComponent is LIST or COMPOUND, an expansion pane appears to nest more Tags
 class ModelContainer extends Component {
 	constructor(props) {
 		super(props);
@@ -10,17 +8,10 @@ class ModelContainer extends Component {
 			ModelComponents: {},
 			ModelContainers: {},
 			Elements: []
-		}
+		};
 
-		let PTO = this.props.PTO;
-		this.Tag = new PTO.Tag.TagCompound("ModelContainer");
-
-		this.Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
-		this.Tag.AddTag(new PTO.Tag.TagString("Name"));
-		this.Tag.AddTag(new PTO.Tag.TagList("Components", PTO.Enum.TagType.COMPOUND));
-		this.Tag.AddTag(new PTO.Tag.TagList("Containers", PTO.Enum.TagType.COMPOUND));
-
-		this.UUID = this.Tag.GetTag("UUID").GetValues();
+		this.Mutator = new this.props.PTO.Mutator.ModelContainer();
+		
 		this.Timestamp = Date.now();
 	}
 	componentDidMount() {
@@ -29,20 +20,18 @@ class ModelContainer extends Component {
 			this.props.GetModelContainer(this);
 		}
 		
-		//	If this is in constructor, throws: "TypeError: Cannot convert undefined or null to object"
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
-			this.Tag.GetTag("UUID").SetValues(this.props.UUID);
-			this.UUID = this.props.UUID;
+			this.Mutator.SetUUID(this.props.UUID);
 		}
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		this.Mutator.SetTag(tag);
 
 		return this;
 	}
 	GetTag() {
-		return this.Tag;
+		return this.Mutator.GetTag();
 	}
 
 	GetModelComponent(mc) {
@@ -57,7 +46,7 @@ class ModelContainer extends Component {
 		});
 		
 		mc.GetTag().SetKey(uuid);
-		this.Tag.GetTag("Components").AddValue(mc.GetTag());
+		this.Mutator.AddComponent(mc.GetTag());
 	}
 	NewModelComponent() {
 		let mcs = this.state.ModelComponents,
@@ -92,7 +81,7 @@ class ModelContainer extends Component {
 		});
 		
 		mc.GetTag().SetKey(uuid);
-		this.Tag.GetTag("Containers").AddValue(mc.GetTag());
+		this.Mutator.AddContainer(mc.GetTag());
 	}
 	NewModelContainer() {
 		let mcs = this.state.ModelContainers,
@@ -133,11 +122,11 @@ class ModelContainer extends Component {
 	RemoveComponent(element) {
 		let state = this.state;
 		if(element.Class instanceof ModelComponent) {
-			this.Tag.GetTag("Components").RemoveValue(element.Class.Tag);
+			this.Mutator.RemoveComponent(element.Class.Mutator.GetTag());
 
 			delete state.ModelComponents[element.UUID];
 		} else if(element.Class instanceof ModelContainer) {
-			this.Tag.GetTag("Containers").RemoveValue(element.Class.Tag);
+			this.Mutator.RemoveContainer(element.Class.Mutator.GetTag());
 
 			delete state.ModelContainers[element.UUID];
 		}
@@ -213,7 +202,7 @@ class ModelContainer extends Component {
 
 	onDataChange(e) {
 		let mcf = e.target.getAttribute("mcf"),
-			tag = this.props.PTO.Utility.Navigator.FindTag(this.Tag, mcf);
+			tag = this.props.PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
 		
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
