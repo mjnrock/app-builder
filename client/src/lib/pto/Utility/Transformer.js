@@ -305,24 +305,39 @@ class Transformer {
 		return tagList;
 	}
 
-	static FlattenTagStructure(input, array) {
+	/**
+	 * This will convert a TagCompound into an 1-D Array ("flattened") of every Descendant
+	 * @param PTO..TagCompound | @tag 
+	 * @param ? Array | @array | Used for recursion
+	 * 
+	 * @returns [Tag, ...N]
+	 */
+	static FlattenTagStructure(tag, array) {
 		if (array === null || array === void 0) {
 			array = [];
 		}
 
-		if (input instanceof Tag.TagCompound || input instanceof Tag.TagList) {
-			array.push(input);
-			let tags = input.Value;
+		if (tag instanceof Tag.TagCompound || tag instanceof Tag.TagList) {
+			array.push(tag);
+			let tags = tag.Value;
 			for (let i in tags) {
 				Transformer.FlattenTagStructure(tags[i], array);
 			}
-		} else if (input instanceof Tag.ATag) {
-			array.push(input);
+		} else if (tag instanceof Tag.ATag) {
+			array.push(tag);
 		}
 
 		return array;
 	}
 
+	/**
+	 * This will create a flattened, RDMS-like Hierarchy array where each constituent Tag is wrapped with an "ID" and a "ParentID"
+	 * @param PTO..TagCompound | @tag 
+	 * @param ? Array | @array | Used for recursion
+	 * @param ? INT | @parentID | Used for recursion
+	 * 
+	 * @returns [{ID, ParentID, Tag}, ...N]
+	 */
 	static ToHierarchy(tag, array, parentID) {
 		if (array === null || array === void 0) {
 			array = [];
@@ -346,6 +361,12 @@ class Transformer {
 
 		return array;
 	}
+	/**
+	 * This will reconstitute a TagCompound from a TagCompound previously Tx:Hierarchy
+	 * @param this.ToHierarchy Output | @array
+	 * 
+	 * @returns TagCompound
+	 */
 	static FromHierarchy(array) {
 		if (array === null || array === void 0) {
 			array = [];
@@ -377,6 +398,18 @@ class Transformer {
 		return array;
 	}
 
+	/**
+	 * Column:	"Value"
+	 * - If the Tag is a TagCompound or TagList, the entry will be a count of Children (not Descendants)
+	 * Column:	"Extra"
+	 * - If the Tag is a TagList, the entry will be the List's ContentType (i.e. the allowed Child type)
+	 * @param PTO..TagCompound | @tagCompound
+	 * @param ? [PRIMARY, SECONDARY] | @delimiters
+	 * @param ? BOOL | @hasHeaders 
+	 * @param ? BOOL | @makeTextReadible
+	 * 
+	 * @returns STRING | A @delimiters-delimited string
+	 */
 	static ToDelimited(tagCompound, delimiters, hasHeaders, makeTextReadible) {
 		if (hasHeaders === null || hasHeaders === void 0) {
 			hasHeaders = true;
@@ -457,6 +490,14 @@ class Transformer {
 
 		return csv;
 	}
+	/**
+	 * This will reconstitute the .ToDelimited() output into a TagCompound
+	 * @param this.ToDelimited Output | string 
+	 * @param ? [PRIMARY, SECONDARY] | @delimiters
+	 * @param ? BOOL | @hasHeaders 
+	 * 
+	 * @returns TagCompound
+	 */
 	static FromDelimited(string, delimiters, hasHeaders) {
 		let arr = string.replace(/"/gi, "").split("\n");
 		let d1 = delimiters && delimiters[0] ? delimiters[0] : ",",
@@ -517,6 +558,12 @@ class Transformer {
 		return Transformer.FromHierarchy(tags);
 	}
 
+	/**
+	 * Converts a TagCompound into XML.  Each Tag has a corresponding <Tag___></Tag___>, <Value></Value> nested for each array index, and attributes of "key" and "content-type", when appropriate
+	 * @param PTO..TagCompound | tagCompound 
+	 * 
+	 * @returns STRING XML
+	 */
 	static ToXML(tagCompound) {
 		let xml = "";
 
@@ -552,15 +599,23 @@ class Transformer {
 
 		return xml;
 	}
+	/**
+	 * This will reconstitute a TagCompound from .ToXML() output.
+	 * 
+	 * [IMPORTANT]: This will only parse the DEFAULT TAGS.  If more Tags are desired, they must be manually added to this function at each RegEx piece in a similar fashion
+	 * @param this.ToXML Output | xml
+	 * 
+	 * @returns TagCompound
+	 */
 	static FromXML(xml) {
 		let selfClosing = xml.match(
-			/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny)(.*?)(\/)>/gi
+			/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)(.*?)(\/)>/gi
 		);
 
 		xml = xml.replace(/>(\s*)</gi, "><");
 		if (selfClosing && selfClosing.length > 0) {
 			xml = xml.replace(
-				/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny)(.*?)[/]*>/gi,
+				/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)(.*?)[/]*>/gi,
 				function(m, tag) {
 					return m.replace(/\/>/gi, `></Tag${tag}>`);
 				}
@@ -568,7 +623,7 @@ class Transformer {
 		}
 
 		xml = xml.replace(
-			/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny)(.*?)>/gi,
+			/<Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)(.*?)>/gi,
 			function(m, tag, attrs) {
 				let type = `"Type": "Tag${tag}"`;
 				attrs = attrs.replace(
@@ -591,7 +646,7 @@ class Transformer {
 			}
 		);
 		xml = xml.replace(
-			/<\/Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny)>/gi,
+			/<\/Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)>/gi,
 			"]}"
 		);
 
@@ -602,7 +657,7 @@ class Transformer {
 		xml = xml.replace(/]/gi, "]").replace(//gi, ","); // the blank space is NOT whitespace, it's the (unrendered) DELETE CHARACTER (ASCII #127)
 
 		xml = xml.replace(
-			/Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny)/gi,
+			/Tag(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)/gi,
 			function(m, t) {
 				return Enum.TagType.GetEnum(t);
 			}
@@ -619,15 +674,24 @@ class Transformer {
 	static ToJSON(tagCompound) {
 		return tagCompound.Serialize(Enum.Serialization.JSON);
 	}
-	static FromJSON(json) {
-		while (typeof json === "string" || json instanceof String) {
-			json = JSON.parse(json);
-		}
+	//! Directly .ToJson() output doesn't work, and I can't remember how this needs to be invoked
+	// static FromJSON(json) {
+	// 	while (typeof json === "string" || json instanceof String) {
+	// 		json = JSON.parse(json);
+	// 	}
 
-		let tag = new (Enum.TagType.GetClass(json.Type))(json.Key);
-		return tag.Deserialize(json);
-	}
+	// 	let tag = new (Enum.TagType.GetClass(json.Type))(json.Key);
+	// 	return tag.Deserialize(json);
+	// }
 
+	/**
+	 * Converted a TagCompound into an Avro-compliant output
+	 * @param PTO..TagCompound | @tag 
+	 * @param STRING | @name | Avro-required Name
+	 * @param ? STRING | @namespace
+	 * 
+	 * @returns JSON structured to Avro spec
+	 */
 	static ToAvro(tag, name, namespace) {
 		if (name === null || name === void 0) {
 			throw new Error.NoName(name);
