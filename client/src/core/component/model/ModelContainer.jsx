@@ -61,13 +61,11 @@ class ModelContainer extends Component {
 		
 		if(type === "Container") {
 			elements[uuid]["Element"] = <ModelContainer
-				PTO={ PTO }
 				UUID={ uuid }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 			/>;
 		} else if(type === "Component") {
 			elements[uuid]["Element"] = <ModelComponent
-				PTO={ PTO }
 				UUID={ uuid }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 			/>;
