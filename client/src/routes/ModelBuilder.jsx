@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 class ModelBuilder extends Component {
 	render() {
-		console.log(this.props);
+		//? Here to remind about the "Router" object and its data
+		// console.log(this.props);
 		return (
 			<div>
 				<this.props.Core.Component.Model.Model />
