@@ -4,21 +4,9 @@ class ModelComponent extends Component {
 	constructor(props) {
 		super(props);
 
-		let PTO = this.props.PTO;
-		//	This exists really just because of the List Content Type issue below (l#47)
-		this.Type = PTO.Enum.TagType.STRING;
-		this.ListContentType = PTO.Enum.TagType.STRING;
-
-		this.Tag = new PTO.Tag.TagCompound("ModelComponent");
-
-		this.Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
-		this.Tag.AddTag(new PTO.Tag.TagString("Name"));
-		this.Tag.AddTag(new PTO.Tag.TagInt("Type", this.ListContentType));	
-		this.Tag.AddTag(new PTO.Tag.TagCompound("RegEx"));
-
-		let RegEx = this.Tag.GetTag("RegEx");
-		RegEx.AddTag(new PTO.Tag.TagString("Match"));
-		RegEx.AddTag(new PTO.Tag.TagString("Replace"));
+		this.Type = this.props.PTO.Enum.TagType.STRING;
+		this.ListContentType = this.props.PTO.Enum.TagType.STRING;
+		this.Mutator = new this.props.PTO.Mutator.ModelComponent();
 
 		this.Timestamp = Date.now();
 	}
@@ -35,17 +23,17 @@ class ModelComponent extends Component {
 		
 		//	If this is in constructor, throws: "TypeError: Cannot convert undefined or null to object"
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
-			this.Tag.GetTag("UUID").SetValues(this.props.UUID);
+			this.Mutator.SetUUID(this.props.UUID);
 		}
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		this.Mutator.SetTag(tag);
 
 		return this;
 	}
 	GetTag() {
-		return this.Tag;
+		return this.Mutator.GetTag();
 	}
 
 	GetTagListContentType() {
@@ -106,7 +94,7 @@ class ModelComponent extends Component {
 							className="form-control text-center"
 							placeholder="List Type"
 							pto="list-only"
-							mcf=".ListContentType"
+							mcf=".Type"
 							min="1"
 							max="12"
 							oldvalue="2"
@@ -130,7 +118,7 @@ class ModelComponent extends Component {
 						type="text"
 						className="form-control"
 						placeholder="Replace Pattern"
-						mcf=".RegEx.Pattern"
+						mcf=".RegEx.Replace"
 						onFocus={ this.onRegExFocusBlur.bind(this) }
 						onBlur={ this.onRegExFocusBlur.bind(this) }
 						onChange={ this.onDataChange.bind(this) }
@@ -144,6 +132,7 @@ class ModelComponent extends Component {
 		// 1st index will be FOCUS DEFAULT
 		let options = [
 			"//g",
+
 			"/ /g",
 			"/ /",
 			"//"
@@ -162,12 +151,8 @@ class ModelComponent extends Component {
 		}
 	}
 	onDataChange(e) {
-		let mcf = e.target.getAttribute("mcf");
-		if(mcf === ".ListContentType" || (mcf === ".Type" && +e.target.value === +this.props.PTO.Enum.TagType.LIST)) {
-			this.Tag.AddTag(new this.props.PTO.Tag.TagInt("ListContentType", this.ListContentType));
-		}
-
-		let tag = this.props.PTO.Utility.Navigator.FindTag(this.Tag, mcf);
+		let mcf = e.target.getAttribute("mcf"),
+			tag = this.props.PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
 
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
@@ -181,7 +166,8 @@ class ModelComponent extends Component {
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
 
-					tag.SetValues(e.target.value);
+					tag.SetValue(1, e.target.value);
+					this.ListContentType = this.Mutator.GetType().GetValue(1);
 				} else if(mcf === ".Type") {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
@@ -191,14 +177,9 @@ class ModelComponent extends Component {
 					e.target.setAttribute("oldvalue", e.target.value);
 
 					tag.SetValues(e.target.value);
+					this.Type = this.Mutator.GetType().GetValue(0);
 				} else {
-					tag.SetValues(e.target.value);
-					this.Tag.RemoveTag("ListContentType");
-				}
-
-				if(mcf === ".Type" || mcf === ".ListContentType") {
-					this.Type = this.Tag.GetTag("Type") ? this.Tag.GetTag("Type").GetValue(0) : this.Type;
-					this.ListContentType = this.Tag.GetTag("ListContentType") ? this.Tag.GetTag("ListContentType").GetValue(0) : this.ListContentType;
+					tag.SetValues(0, e.target.value);
 				}
 			}
 			
