@@ -100,7 +100,7 @@ class Model extends Component {
 						type="button"
 						className="btn btn-sm btn-block btn-outline-warning mr1"
 						onClick={ () => this.GetOverview() }
-					>Debug</button>
+					>Get Overview</button>
 				</div>
 				{ this.ModelOverview }
 			</div>
