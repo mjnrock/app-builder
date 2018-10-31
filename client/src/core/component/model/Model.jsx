@@ -32,7 +32,7 @@ class Model extends Component {
 
 	//! This is complex enough that it should be a child component
 	GetOverview() {
-		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GetTag()).split("\n").map((v, k) => {
+		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GenerateSimpleTag()).split("\n").map((v, k) => {
 			return v.split(",").map((r, i, a) => {
 				if(k > 0) {
 					switch(i) {

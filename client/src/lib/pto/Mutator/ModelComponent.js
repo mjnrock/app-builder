@@ -8,12 +8,25 @@ class ModelComponent extends Mutator {
 
 		this.Tag.AddTag(new this.PTO.Tag.TagUUID("UUID"));
 		this.Tag.AddTag(new this.PTO.Tag.TagString("Name"));
-		this.Tag.AddTag(new this.PTO.Tag.TagInt("Type"));
+		this.Tag.AddTag(new this.PTO.Tag.TagInt("Type", this.PTO.Enum.TagType.STRING));
 		this.Tag.AddTag(new this.PTO.Tag.TagCompound("RegEx"));
 
 		let RegEx = this.Tag.GetTag("RegEx");
 		RegEx.AddTag(new this.PTO.Tag.TagString("Match"));
 		RegEx.AddTag(new this.PTO.Tag.TagString("Replace"));
+	}
+
+	//@ This creates the Tag that the user input dictates, NOT the Tag that this Mutator uses as a variable
+	GenerateSimpleTag() {
+		let clazz = this.PTO.Enum.TagType.GetClass(+this.GetType().GetValue(0)),
+			name = this.GetName().GetValues(),
+			comp = new this.PTO.Tag.TagCompound(this.GetUUID().GetValues()),
+			tag = new clazz(name);
+	
+		comp.AddTag(this.GetRegEx());
+		comp.AddTag(tag);
+		
+		return comp;
 	}
 
 	GetUUID() {

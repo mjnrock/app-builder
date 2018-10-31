@@ -7,8 +7,7 @@ class ModelContainer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			Container: {},
-			Elements: []
+			Container: {}
 		};
 
 		this.Mutator = new PTO.Mutator.ModelContainer();
@@ -16,13 +15,14 @@ class ModelContainer extends Component {
 		this.Timestamp = Date.now();
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		if(this.props.RegisterElement) {
 			this.props.RegisterElement(this);
 		}
 		
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
 			this.Mutator.SetUUID(this.props.UUID);
+			this.Mutator.SetName(this.props.UUID);
 		}
 	}
 
@@ -43,7 +43,7 @@ class ModelContainer extends Component {
 
 		this.setState({
 			...this.state,
-			ContainerElements: elements
+			Container: elements
 		});
 		
 		element.GetTag().SetKey(uuid);
@@ -73,7 +73,7 @@ class ModelContainer extends Component {
 
 		this.setState({
 			...this.state,
-			ContainerElements: elements
+			Container: elements
 		});
 	}
 
@@ -108,6 +108,15 @@ class ModelContainer extends Component {
 						className="form-control mb1"
 						placeholder="Container Name"
 						mcf=".Name"
+						defaultValue={ this.Mutator.GetName().GetValues() }
+						onFocus={
+							(e) => {
+								if(e.target.value === this.Mutator.GetUUID().GetValues()) {
+									e.target.setSelectionRange(0, e.target.value.length);
+								}
+								console.log(this.Mutator.GenerateSimpleTag());
+							}
+						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
 					<p className="f7 code text-center">
@@ -147,6 +156,11 @@ class ModelContainer extends Component {
 							className="btn btn-block btn-sm btn-outline-info mr1"
 							onClick={ () => this.NewContainerElement("Container") }
 						>Add Container</button>
+						<button
+							type="button"
+							className="btn btn-block btn-sm btn-outline-info mr1"
+							// onClick={ () => this.NewContainerElement("List") }
+						>Add List</button>
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-secondary mr1"

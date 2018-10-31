@@ -13,12 +13,13 @@ class ModelComponent extends Component {
 		this.Timestamp = Date.now();
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.RegisterElement(this);
 		
 		//	If this is in constructor, throws: "TypeError: Cannot convert undefined or null to object"
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
 			this.Mutator.SetUUID(this.props.UUID);
+			this.Mutator.SetName(this.props.UUID);
 		}
 		this.Mutator.SetType(this.Type);
 	}
@@ -45,7 +46,7 @@ class ModelComponent extends Component {
 			);
 		}
 		
-		return "";
+		return null;
 	}
 
 	render() {
@@ -58,6 +59,15 @@ class ModelComponent extends Component {
 						className="form-control"
 						placeholder="Name"
 						mcf=".Name"
+						defaultValue={ this.Mutator.GetName().GetValues() }
+						onFocus={
+							(e) => {
+								if(e.target.value === this.Mutator.GetUUID().GetValues()) {
+									e.target.setSelectionRange(0, e.target.value.length);
+								}
+								console.log(this.Mutator.GenerateSimpleTag());
+							}
+						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
 					<p

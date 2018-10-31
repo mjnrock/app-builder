@@ -1,4 +1,5 @@
 import { Mutator } from "./Mutator";
+import { ModelComponent } from "./ModelComponent";
 
 class ModelContainer extends Mutator {
 	constructor() {
@@ -9,7 +10,33 @@ class ModelContainer extends Mutator {
 		this.Tag.AddTag(new this.PTO.Tag.TagUUID("UUID"));
 		this.Tag.AddTag(new this.PTO.Tag.TagString("Name"));
 		
-		this.Tag.AddTag(new this.PTO.Tag.TagList("Container", this.PTO.Enum.TagType.COMPOUND));
+		this.Tag.AddTag(new this.PTO.Tag.TagList("Elements", this.PTO.Enum.TagType.COMPOUND));
+	}
+
+	//@ This creates the Tag that the user input dictates, NOT the Tag that this Mutator uses as a variable
+	GenerateSimpleTag() {
+		let name = this.GetName().GetValues(),
+			comp = new this.PTO.Tag.TagCompound(name),
+			list = this.GetElements().GetValues();
+
+		for(let i  in list) {
+			//TODO Make this more robust, but it's an easy solution for now
+			let obj = list[i],
+				keys = Object.keys(obj.GetValues());
+			if(keys.includes("Elements")) {
+				let mutator = new ModelContainer();
+				mutator.SetTag(obj);
+
+				comp.AddTag(mutator.GenerateSimpleTag());
+			} else if(keys.includes("RegEx")) {
+				let mutator = new ModelComponent();
+				mutator.SetTag(obj);
+
+				comp.AddTag(mutator.GenerateSimpleTag());
+			}
+		}
+
+		return comp;
 	}
 
 	GetUUID() {
@@ -30,19 +57,19 @@ class ModelContainer extends Mutator {
 		return this;
 	}
 
-	GetContainer() {
-		return this.Tag.GetTag("Container");
+	GetElements() {
+		return this.Tag.GetTag("Elements");
 	}
 	AddContainerElement(tag) {
 		if(tag) {
-			this.Tag.GetTag("Container").AddValue(tag);
+			this.Tag.GetTag("Elements").AddValue(tag);
 		}
 
 		return this;
 	}
 	RemoveContainerElement(tag) {
 		if(tag) {
-			this.Tag.GetTag("Container").RemoveTag(tag);
+			this.Tag.GetTag("Elements").RemoveTag(tag);
 		}
 
 		return this;
