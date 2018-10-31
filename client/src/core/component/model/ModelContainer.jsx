@@ -15,7 +15,6 @@ class ModelContainer extends Component {
 		this.Timestamp = Date.now();
 	}
 	componentDidMount() {
-		console.log(this.props);
 		if(this.props.GetModelContainer) {
 			this.props.GetModelContainer(this);
 		}

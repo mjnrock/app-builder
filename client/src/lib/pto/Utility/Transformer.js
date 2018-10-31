@@ -726,51 +726,52 @@ class Transformer {
 		return Transformer.FromDelimited(string, ",|", false, true);
 	}
 
-	static ToComposition(tag) {
-		let process = (key, value) => {
-			if(key === "Type") {
-				value = Enum.TagType.GetString(value);
-			}
+	//! This is presently overwriting the tag Type with the TagType.GetString(), so commented out until resolution
+	// static ToComposition(tag) {
+	// 	let process = (key, value) => {
+	// 		if(key === "Type") {
+	// 			value = Enum.TagType.GetString(value);
+	// 		}
 
-			return value;
-		};
-		let traverse = (o, func) => {
-			for (let i in o) {
-				o[i] = func.apply(this, [i, o[i]]);  
-				if (o[i] !== null && typeof(o[i]) === "object") {
-					traverse(o[i], func);
-				}
-			}
+	// 		return value;
+	// 	};
+	// 	let traverse = (o, func) => {
+	// 		for (let i in o) {
+	// 			o[i] = func.apply(this, [i, o[i]]);  
+	// 			if (o[i] !== null && typeof(o[i]) === "object") {
+	// 				traverse(o[i], func);
+	// 			}
+	// 		}
 
-			return JSON.stringify(o);
-		};
+	// 		return JSON.stringify(o);
+	// 	};
 
-		return traverse(tag, process);
-	}
-	static FromComposition(composition) {
-		let obj = JSON.parse(composition);
+	// 	return traverse(tag, process);
+	// }
+	// static FromComposition(composition) {
+	// 	let obj = JSON.parse(composition);
 
-		let process = (key, value) => {
-			if(key === "Type") {
-				value = Enum.TagType.GetEnum(value);
-			}
+	// 	let process = (key, value) => {
+	// 		if(key === "Type") {
+	// 			value = Enum.TagType.GetEnum(value);
+	// 		}
 
-			return value;
-		};
-		let traverse = (o, func) => {
-			for (let i in o) {
-				o[i] = func.apply(this, [i, o[i]]);  
-				if (o[i] !== null && typeof(o[i]) === "object") {
-					traverse(o[i], func);
-				}
-			}
+	// 		return value;
+	// 	};
+	// 	let traverse = (o, func) => {
+	// 		for (let i in o) {
+	// 			o[i] = func.apply(this, [i, o[i]]);  
+	// 			if (o[i] !== null && typeof(o[i]) === "object") {
+	// 				traverse(o[i], func);
+	// 			}
+	// 		}
 
-			return o;
-		};
+	// 		return o;
+	// 	};
 
-		traverse(obj, process);
-		return Transformer.FromJSON(obj);
-	}
+	// 	traverse(obj, process);
+	// 	return Transformer.FromJSON(obj);
+	// }
 }
 
 export { Transformer };

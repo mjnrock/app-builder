@@ -27,13 +27,11 @@ class Model extends Component {
 		}
 	}
 	OnSave() {
+		console.log("This isn't actually saving anything right now.");
 		console.log(this.Tag);
 	}
 
 	render() {
-		let c = new this.props.PTO.Mutator.ModelComponent();
-		console.log(c);
-
 		return (
 			<div className="container">
 				<h2 className="text-center mt3 mb3">Model Builder</h2>
