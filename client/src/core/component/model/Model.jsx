@@ -27,6 +27,7 @@ class Model extends Component {
 	}
 
 	OnSave() {
+		console.log("This doesn't save anything presently");
 		console.log(this.Mutator.GetTag());
 	}
 
