@@ -1,20 +1,28 @@
 ====================================
 			PENDING
 ====================================
-[] Create LIST Container functionality with ModelContainer
-	[] Do basically the same thing as a Compound, but prevent incongruent Types at the child level
-	[] Update all children Type if parent LIST type changes, rather than deleting or preventing a change (parent can force Type updates)
-[] Add "Add List" button to Container
+List-Specific ModelContainer
+	[] Create LIST Container functionality with ModelContainer
+		[] Do basically the same thing as a Compound, but prevent incongruent Types at the child level
+		[] Update all children Type if parent LIST type changes, rather than deleting or preventing a change (parent can force Type updates)
+	[] Add "Add List" button to Container
 
+
+
+====================================
+			BUGS/ISSUES
+====================================
+Utility.Transformer
+	[] .FromJSON() appears to be broken.  Try with a Composition and see if that works.  You'll need to convert the text in the Type field back into a number first.
+	[] .ToComposition() overwrites the Tag directly, which is bad.
+		[] .FromComposition() needs to be checked, after above is fixed
 
 
 
 ====================================
 			COMPLETED
 ====================================
-
-MODEL HELPER CLASS
-------------------------------------
-[X] Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw
-[X] Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw
-[X] Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw
+Model Helper Classes
+	[X] Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw
+	[X] Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw
+	[X] Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw
