@@ -4,18 +4,12 @@ class ModelComponent extends Component {
 	constructor(props) {
 		super(props);
 
+		this.Mutator = new this.props.PTO.Mutator.ModelComponent();
+		
 		this.Type = this.props.PTO.Enum.TagType.STRING;
 		this.ListContentType = this.props.PTO.Enum.TagType.STRING;
-		this.Mutator = new this.props.PTO.Mutator.ModelComponent();
 
 		this.Timestamp = Date.now();
-	}
-
-	IsListOrCompound() {
-		return this.Type === this.props.PTO.Enum.TagType.LIST || this.Type === this.props.PTO.Enum.TagType.COMPOUND;
-	}
-	IsList() {
-		return this.Type === this.props.PTO.Enum.TagType.LIST;
 	}
 
 	componentDidMount() {
