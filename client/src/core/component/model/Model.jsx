@@ -4,31 +4,29 @@ import { ModelContainer } from "./ModelContainer";
 class Model extends Component {
 	constructor(props) {
 		super(props);
+		
+		this.Mutator = new this.props.PTO.Mutator.Model();
 
-		let PTO = this.props.PTO;
-		this.Tag = new PTO.Tag.TagCompound("Model");
-
-		this.Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
-		this.Tag.AddTag(new PTO.Tag.TagString("Name"));
+		this.Timestamp = Date.now();
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		this.Mutator.SetTag(tag);
 
 		return this;
 	}
 	GetTag() {
-		return this.Tag;
+		return this.Mutator.GetTag();
 	}
 
 	GetModelContainer(mc) {
-		if(!this.Tag.GetTag("ModelContainer")) {
-			this.Tag.AddTag(mc.GetTag());
+		if(!this.Mutator.GetModelContainer()) {
+			this.Mutator.SetModelContainer(mc.GetTag());
 		}
 	}
 	OnSave() {
 		console.log("This isn't actually saving anything right now.");
-		console.log(this.Tag);
+		console.log(this);
 	}
 
 	render() {
