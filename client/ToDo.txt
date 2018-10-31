@@ -1,0 +1,5 @@
+MODEL HELPER CLASS
+====================================
+[] Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw
+[] Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw
+[] Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw
