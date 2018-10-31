@@ -1,5 +1,20 @@
-MODEL HELPER CLASS
 ====================================
-[] Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw
-[] Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw
-[] Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw
+			PENDING
+====================================
+[] Create LIST Container functionality with ModelContainer
+	[] Do basically the same thing as a Compound, but prevent incongruent Types at the child level
+	[] Update all children Type if parent LIST type changes, rather than deleting or preventing a change (parent can force Type updates)
+[] Add "Add List" button to Container
+
+
+
+
+====================================
+			COMPLETED
+====================================
+
+MODEL HELPER CLASS
+------------------------------------
+[X] Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw
+[X] Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw
+[X] Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw

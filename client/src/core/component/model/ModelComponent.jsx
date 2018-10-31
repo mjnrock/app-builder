@@ -19,6 +19,7 @@ class ModelComponent extends Component {
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
 			this.Mutator.SetUUID(this.props.UUID);
 		}
+		this.Mutator.SetType(this.Type);
 	}
 
 	IsList() {
@@ -177,7 +178,7 @@ class ModelComponent extends Component {
 					tag.SetValues(e.target.value);
 					this.Type = this.Mutator.GetType().GetValue(0);
 				} else {
-					tag.SetValues(0, e.target.value);
+					tag.SetValues(e.target.value);
 				}
 			}
 			
