@@ -13,7 +13,7 @@ class ModelComponent extends Component {
 	}
 
 	componentDidMount() {
-		this.props.GetModelComponent(this);
+		this.props.RegisterElement(this);
 		
 		//	If this is in constructor, throws: "TypeError: Cannot convert undefined or null to object"
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {

@@ -8,8 +8,8 @@ class ModelContainer extends Mutator {
 
 		this.Tag.AddTag(new this.PTO.Tag.TagUUID("UUID"));
 		this.Tag.AddTag(new this.PTO.Tag.TagString("Name"));
-		this.Tag.AddTag(new this.PTO.Tag.TagList("Components", this.PTO.Enum.TagType.COMPOUND));
-		this.Tag.AddTag(new this.PTO.Tag.TagList("Containers", this.PTO.Enum.TagType.COMPOUND));
+		
+		this.Tag.AddTag(new this.PTO.Tag.TagList("Container", this.PTO.Enum.TagType.COMPOUND));
 	}
 
 	GetUUID() {
@@ -30,37 +30,19 @@ class ModelContainer extends Mutator {
 		return this;
 	}
 
-	GetComponents() {
-		return this.Tag.GetTag("Components");
+	GetContainer() {
+		return this.Tag.GetTag("Container");
 	}
-	AddComponent(tag) {
+	AddContainerElement(tag) {
 		if(tag) {
-			this.Tag.GetTag("Components").AddValue(tag);
+			this.Tag.GetTag("Container").AddValue(tag);
 		}
 
 		return this;
 	}
-	RemoveComponent(tag) {
+	RemoveContainerElement(tag) {
 		if(tag) {
-			this.Tag.GetTag("Components").RemoveTag(tag);
-		}
-
-		return this;
-	}
-
-	GetContainers() {
-		return this.Tag.GetTag("Containers");
-	}
-	AddContainer(tag) {
-		if(tag) {
-			this.Tag.GetTag("Containers").AddValue(tag);
-		}
-
-		return this;
-	}
-	RemoveContainer(tag) {
-		if(tag) {
-			this.Tag.GetTag("Containers").RemoveTag(tag);
+			this.Tag.GetTag("Container").RemoveTag(tag);
 		}
 
 		return this;

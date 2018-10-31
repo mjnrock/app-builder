@@ -88,7 +88,7 @@ class Model extends Component {
 				<ModelContainer
 					PTO={ this.props.PTO }
 					UUID={ this.props.PTO.Utility.Transformer.GenerateUUID() }
-					GetModelContainer={ (mc) => { this.GetModelContainer(mc) }}
+					RegisterElement={ (mc) => { this.GetModelContainer(mc) }}
 				/>
 				<div className="text-center mt3 mb2">
 					<button

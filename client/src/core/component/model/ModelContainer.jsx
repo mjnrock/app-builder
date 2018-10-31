@@ -5,8 +5,7 @@ class ModelContainer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			ModelComponents: {},
-			ModelContainers: {},
+			Container: {},
 			Elements: []
 		};
 
@@ -14,9 +13,10 @@ class ModelContainer extends Component {
 		
 		this.Timestamp = Date.now();
 	}
+
 	componentDidMount() {
-		if(this.props.GetModelContainer) {
-			this.props.GetModelContainer(this);
+		if(this.props.RegisterElement) {
+			this.props.RegisterElement(this);
 		}
 		
 		if(this.props.UUID !== null && this.props.UUID !== void 0) {
@@ -32,83 +32,54 @@ class ModelContainer extends Component {
 	GetTag() {
 		return this.Mutator.GetTag();
 	}
-
-	GetModelComponent(mc) {
-		let mcs = this.state.ModelComponents,
-			uuid = mc.props.UUID;
-
-		mcs[uuid].Class = mc;
-
-		this.setState({
-			...this.state,
-			ModelComponents: mcs
-		});
-		
-		mc.GetTag().SetKey(uuid);
-		this.Mutator.AddComponent(mc.GetTag());
-	}
-	NewModelComponent() {
-		let mcs = this.state.ModelComponents,
-			uuid = this.props.PTO.Utility.Transformer.GenerateUUID();
-
-		mcs[uuid] = {
-			UUID: uuid,
-			Class: null,
-			Element: <ModelComponent
-				PTO={ this.props.PTO }
-				UUID={ uuid }
-				GetModelComponent={ (mc) => { this.GetModelComponent(mc) }}
-			/>,
-			Timestamp: Date.now()
-		};
-
-		this.setState({
-			...this.state,
-			ModelComponents: mcs
-		});
-	}
 	
-	GetModelContainer(mc) {		
-		let mcs = this.state.ModelContainers,
-			uuid = mc.props.UUID;
+	RegisterElement(element) {
+		let elements = this.state.Container,
+			uuid = element.props.UUID;
 
-		mcs[uuid].Class = mc;
+		elements[uuid].Class = element;
 
 		this.setState({
 			...this.state,
-			ModelContainers: mcs
+			ContainerElements: elements
 		});
 		
-		mc.GetTag().SetKey(uuid);
-		this.Mutator.AddContainer(mc.GetTag());
+		element.GetTag().SetKey(uuid);
+		this.Mutator.AddContainerElement(element.GetTag());
 	}
-	NewModelContainer() {
-		let mcs = this.state.ModelContainers,
+	NewContainerElement(type) {
+		let elements = this.state.Container,
 			uuid = this.props.PTO.Utility.Transformer.GenerateUUID();
 
-		mcs[uuid] = {
+		elements[uuid] = {
 			UUID: uuid,
 			Class: null,
-			Element: <ModelContainer
-				PTO={ this.props.PTO }
-				UUID={ uuid }
-				GetModelContainer={ (mc) => { this.GetModelContainer(mc) }}
-			/>,
 			Timestamp: Date.now()
 		};
+		
+		if(type === "Container") {
+			elements[uuid]["Element"] = <ModelContainer
+				PTO={ this.props.PTO }
+				UUID={ uuid }
+				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+			/>;
+		} else if(type === "Component") {
+			elements[uuid]["Element"] = <ModelComponent
+				PTO={ this.props.PTO }
+				UUID={ uuid }
+				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+			/>;
+		}
 
 		this.setState({
 			...this.state,
-			ModelContainers: mcs
+			ContainerElements: elements
 		});
 	}
 
 	MergeIntoElements() {
 		let Elements = {};
-		Object.entries(this.state.ModelComponents).forEach((e, i) => {
-			Elements[e[1].Timestamp] = e[1];
-		});
-		Object.entries(this.state.ModelContainers).forEach((e, i) => {
+		Object.entries(this.state.Container).forEach((e, i) => {
 			Elements[e[1].Timestamp] = e[1];
 		});
 		Elements = Object.entries(Elements);
@@ -117,25 +88,17 @@ class ModelContainer extends Component {
 
 		return Elements;
 	}
-
-	RemoveComponent(element) {
+	
+	RemoveElement(element) {
 		let state = this.state;
-		if(element.Class instanceof ModelComponent) {
-			this.Mutator.RemoveComponent(element.Class.Mutator.GetTag());
 
-			delete state.ModelComponents[element.UUID];
-		} else if(element.Class instanceof ModelContainer) {
-			this.Mutator.RemoveContainer(element.Class.Mutator.GetTag());
-
-			delete state.ModelContainers[element.UUID];
-		}
+		this.Mutator.RemoveContainerElement(element.Class.Mutator.GetTag());
+		delete state.Container[element.UUID];
 
 		this.setState(state);
 	}
 
 	render() {
-		let Elements = this.MergeIntoElements();
-
 		return (
 			<div className="w-100 flex justify-around mt2 mb2 ba br2 b--ddd pa2">
 				<div className="w-100">
@@ -151,14 +114,14 @@ class ModelContainer extends Component {
 						<span>{ this.UUID }</span>
 					</p>
 					{
-						Elements.map((e, i) => {
+						Object.values(this.state.Container).map((e, i) => {
 							return (
 								<div className="flex mt2 mb2 justify-around" key={ i }>
 									<button
 										className={
 											`btn btn-sm btn-outline-danger ${ e.Class instanceof ModelContainer ? "mr2" : "mr1" }`
 										}
-										onClick={ () => this.RemoveComponent(e) }
+										onClick={ () => this.RemoveElement(e) }
 									>X</button>
 									{
 										e.Element
@@ -177,12 +140,12 @@ class ModelContainer extends Component {
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-primary mr1"
-							onClick={ this.NewModelComponent.bind(this) }
+							onClick={ () => this.NewContainerElement("Component") }
 						>Add Tag</button>
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-info mr1"
-							onClick={ this.NewModelContainer.bind(this) }
+							onClick={ () => this.NewContainerElement("Container") }
 						>Add Container</button>
 						<button
 							type="button"
