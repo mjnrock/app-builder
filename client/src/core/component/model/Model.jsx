@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+
+import PTO from "./../../../lib/pto/package";
 import { ModelContainer } from "./ModelContainer";
 
 class Model extends Component {
 	constructor(props) {
 		super(props);
 		
-		this.Mutator = new this.props.PTO.Mutator.Model();
+		this.Mutator = new PTO.Mutator.Model();
 
 		this.ModelOverview = [];
 		this.Timestamp = Date.now();
@@ -20,7 +22,7 @@ class Model extends Component {
 		return this.Mutator.GetTag();
 	}
 
-	GetModelContainer(mc) {
+	RegisterElement(mc) {
 		this.Mutator.SetModelContainer(mc.GetTag());
 	}
 
@@ -30,7 +32,7 @@ class Model extends Component {
 
 	//! This is complex enough that it should be a child component
 	GetOverview() {
-		let CSV = this.Mutator.PTO.Utility.Transformer.ToDelimited(this.Mutator.GetTag()).split("\n").map((v, k) => {
+		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GetTag()).split("\n").map((v, k) => {
 			return v.split(",").map((r, i, a) => {
 				if(k > 0) {
 					switch(i) {
@@ -51,7 +53,7 @@ class Model extends Component {
 			});
 		});
 
-		this.ModelOverview = <table className="table">
+		this.ModelOverview = <table className="table mt4">
 			<thead>
 				<tr>
 					{
@@ -86,9 +88,8 @@ class Model extends Component {
 			<div className="container">
 				<h2 className="text-center mt3 mb3">Model Builder</h2>
 				<ModelContainer
-					PTO={ this.props.PTO }
-					UUID={ this.props.PTO.Utility.Transformer.GenerateUUID() }
-					RegisterElement={ (mc) => { this.GetModelContainer(mc) }}
+					UUID={ PTO.Utility.Transformer.GenerateUUID() }
+					RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 				/>
 				<div className="text-center mt3 mb2">
 					<button

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 
+import PTO from "./../../../lib/pto/package";
 class ModelComponent extends Component {
 	constructor(props) {
 		super(props);
 
-		this.Mutator = new this.props.PTO.Mutator.ModelComponent();
+		this.Mutator = new PTO.Mutator.ModelComponent();
 		
-		this.Type = this.props.PTO.Enum.TagType.STRING;
-		this.ListContentType = this.props.PTO.Enum.TagType.STRING;
+		this.Type = PTO.Enum.TagType.STRING;
+		this.ListContentType = PTO.Enum.TagType.STRING;
 
 		this.Timestamp = Date.now();
 	}
@@ -22,10 +23,6 @@ class ModelComponent extends Component {
 		this.Mutator.SetType(this.Type);
 	}
 
-	IsList() {
-		return +this.Type === this.props.PTO.Enum.TagType.LIST;
-	}
-
 	SetTag(tag) {
 		this.Mutator.SetTag(tag);
 
@@ -36,14 +33,14 @@ class ModelComponent extends Component {
 	}
 
 	GetTagListContentType() {
-		if(this.IsList()) {
+		if(+this.Type === PTO.Enum.TagType.LIST) {
 			return (
 				<span
 					style={{
-						"color": this.props.PTO.Enum.TagType.GetColor(this.ListContentType)
+						"color": PTO.Enum.TagType.GetColor(this.ListContentType)
 					}}
 				>
-					{ `<${this.props.PTO.Enum.TagType.GetString(this.ListContentType)}>` }
+					{ `<${PTO.Enum.TagType.GetString(this.ListContentType)}>` }
 				</span>
 			);
 		}
@@ -66,10 +63,10 @@ class ModelComponent extends Component {
 					<p
 						className="f7 code text-center"						
 						style={{
-							"color": this.props.PTO.Enum.TagType.GetColor(this.Type)
+							"color": PTO.Enum.TagType.GetColor(this.Type)
 						}}
 					>
-						<span>{ this.props.PTO.Enum.TagType.GetString(this.Type) }{ this.GetTagListContentType() }</span>&nbsp;
+						<span>{ PTO.Enum.TagType.GetString(this.Type) }{ this.GetTagListContentType() }</span>&nbsp;
 						<span>[{ this.props.UUID }]</span>
 					</p>
 				</div>
@@ -87,7 +84,7 @@ class ModelComponent extends Component {
 						onChange={ this.onDataChange.bind(this) }
 					/>
 					{
-						this.Type === this.props.PTO.Enum.TagType.LIST ?
+						this.Type === PTO.Enum.TagType.LIST ?
 						<input
 							type="number"
 							className="form-control text-center"
@@ -151,17 +148,17 @@ class ModelComponent extends Component {
 	}
 	onDataChange(e) {
 		let mcf = e.target.getAttribute("mcf"),
-			tag = this.props.PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
+			tag = PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
 
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
 				if(e.target.getAttribute("pto") && e.target.getAttribute("pto").split(" ").includes("list-only")) {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 					} else {
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
 
@@ -169,9 +166,9 @@ class ModelComponent extends Component {
 					this.ListContentType = this.Mutator.GetType().GetValue(1);
 				} else if(mcf === ".Type") {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 					} else {
-						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
 

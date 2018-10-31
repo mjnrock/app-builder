@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import PTO from "./../../../lib/pto/package";
 import { ModelComponent } from "./ModelComponent";
 
 class ModelContainer extends Component {
@@ -9,7 +11,7 @@ class ModelContainer extends Component {
 			Elements: []
 		};
 
-		this.Mutator = new this.props.PTO.Mutator.ModelContainer();
+		this.Mutator = new PTO.Mutator.ModelContainer();
 		
 		this.Timestamp = Date.now();
 	}
@@ -49,7 +51,7 @@ class ModelContainer extends Component {
 	}
 	NewContainerElement(type) {
 		let elements = this.state.Container,
-			uuid = this.props.PTO.Utility.Transformer.GenerateUUID();
+			uuid = PTO.Utility.Transformer.GenerateUUID();
 
 		elements[uuid] = {
 			UUID: uuid,
@@ -59,13 +61,13 @@ class ModelContainer extends Component {
 		
 		if(type === "Container") {
 			elements[uuid]["Element"] = <ModelContainer
-				PTO={ this.props.PTO }
+				PTO={ PTO }
 				UUID={ uuid }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 			/>;
 		} else if(type === "Component") {
 			elements[uuid]["Element"] = <ModelComponent
-				PTO={ this.props.PTO }
+				PTO={ PTO }
 				UUID={ uuid }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 			/>;
@@ -164,7 +166,7 @@ class ModelContainer extends Component {
 
 	onDataChange(e) {
 		let mcf = e.target.getAttribute("mcf"),
-			tag = this.props.PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
+			tag = PTO.Utility.Navigator.FindTag(this.Mutator.GetTag(), mcf);
 		
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
