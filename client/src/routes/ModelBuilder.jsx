@@ -4,7 +4,7 @@ class ModelBuilder extends Component {
 	render() {
 		return (
 			<div>
-				<this.props.Core.Component.Model.ModelComponentContainer PTO={ this.props.PTO } />
+				<this.props.Core.Component.Model.Model PTO={ this.props.PTO } />
 			</div>
 		);
 	}

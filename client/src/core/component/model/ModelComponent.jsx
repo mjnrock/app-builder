@@ -19,6 +19,15 @@ class ModelComponent extends Component {
 		let RegEx = this.Tag.GetTag("RegEx");
 		RegEx.AddTag(new PTO.Tag.TagString("Match"));
 		RegEx.AddTag(new PTO.Tag.TagString("Replace"));
+
+		this.Timestamp = Date.now();
+	}
+
+	IsListOrCompound() {
+		return this.Type === this.props.PTO.Enum.TagType.LIST || this.Type === this.props.PTO.Enum.TagType.COMPOUND;
+	}
+	IsList() {
+		return this.Type === this.props.PTO.Enum.TagType.LIST;
 	}
 
 	componentDidMount() {
@@ -40,13 +49,16 @@ class ModelComponent extends Component {
 	}
 
 	GetTagListContentType() {
-		if(this.Type === this.props.PTO.Enum.TagType.LIST) {
-			if(this.Tag.GetTag("ListContentType")) {
-				return `<${this.props.PTO.Enum.TagType.GetString(this.Tag.GetTag("ListContentType").GetValue(0))}>`;
-			}
-
-			//	I don't know why (or care to spend more time figuring it out) this.Tag.GetTag("ListContentType") isn't populated by this call, so this workaround
-			return `<${this.props.PTO.Enum.TagType.GetString(this.ListContentType)}>`;
+		if(this.IsList()) {
+			return (
+				<span
+					style={{
+						"color": this.props.PTO.Enum.TagType.GetColor(this.ListContentType)
+					}}
+				>
+					{ `<${this.props.PTO.Enum.TagType.GetString(this.ListContentType)}>` }
+				</span>
+			);
 		}
 		
 		return "";
@@ -54,7 +66,7 @@ class ModelComponent extends Component {
 
 	render() {
 		return (
-			<div className="flex justify-around">
+			<div className="w-100 flex justify-around">
 				<div className="w-60">
 					<label className="f7 b">Name</label>
 					<input
@@ -64,7 +76,12 @@ class ModelComponent extends Component {
 						mcf=".Name"
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<p className="code text-center">
+					<p
+						className="f7 code text-center"						
+						style={{
+							"color": this.props.PTO.Enum.TagType.GetColor(this.Type)
+						}}
+					>
 						<span>{ this.props.PTO.Enum.TagType.GetString(this.Type) }{ this.GetTagListContentType() }</span>&nbsp;
 						<span>[{ this.props.UUID }]</span>
 					</p>
@@ -78,6 +95,7 @@ class ModelComponent extends Component {
 						mcf=".Type"
 						min="1"
 						max="12"
+						oldvalue="2"
 						defaultValue="2"
 						onChange={ this.onDataChange.bind(this) }
 					/>
@@ -123,10 +141,10 @@ class ModelComponent extends Component {
 	}
 
 	onRegExFocusBlur(e) {
+		// 1st index will be FOCUS DEFAULT
 		let options = [
-			"/ /g",		// 1st index will be FOCUS DEFAULT
-
 			"//g",
+			"/ /g",
 			"/ /",
 			"//"
 		];
@@ -153,12 +171,22 @@ class ModelComponent extends Component {
 
 		if(tag !== null && tag !== void 0) {
 			if(e.type === "change") {
-				//	This checks the directionality to skip the LIST<LIST> possibility
 				if(e.target.getAttribute("pto") && e.target.getAttribute("pto").split(" ").includes("list-only")) {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
+						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 					} else {
+						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
 						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
+					}
+					e.target.setAttribute("oldvalue", e.target.value);
+
+					tag.SetValues(e.target.value);
+				} else if(mcf === ".Type") {
+					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
+						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
+					} else {
+						e.target.value = +e.target.value === +this.props.PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
 
@@ -174,7 +202,6 @@ class ModelComponent extends Component {
 				}
 			}
 			
-			//	Because of the construction and no state manipulation, this basically doubly-binds the Tags to the component
 			this.forceUpdate();
 		}
 	}

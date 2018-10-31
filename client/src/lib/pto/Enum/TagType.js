@@ -122,5 +122,36 @@ export default Object.freeze({
 			default:
 				return null;
 		}
+	},
+
+	GetColor: value => {
+		switch(value) {
+			case EnumTagType.INT:
+				return "#1976d2";
+			case EnumTagType.STRING:
+				return "#c62828";
+			case EnumTagType.SHORT:
+				return "#42a5f5";
+			case EnumTagType.TINY:
+				return "#bbdefb";
+			case EnumTagType.LONG:
+				return "#0d47a1";
+			case EnumTagType.BOOL:
+				return "#5e35b1";
+			case EnumTagType.FLOAT:
+				return "#66bb6a";
+			case EnumTagType.DOUBLE:
+				return "#2e7d32";
+			case EnumTagType.LIST:
+				return "#a1887f";
+			case EnumTagType.COMPOUND:
+				return "#616161";
+			case EnumTagType.CHARACTER:
+				return "#f06292";
+			case EnumTagType.UUID:
+				return "#ffb74d";
+			default:
+				return "#000";
+		}
 	}
 });

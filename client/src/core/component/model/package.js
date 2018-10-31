@@ -1,7 +1,9 @@
 import { ModelComponent } from "./ModelComponent";
-import { ModelComponentContainer } from "./ModelComponentContainer";
+import { ModelContainer } from "./ModelContainer";
+import { Model } from "./Model";
 
 export default {
 	ModelComponent,
-	ModelComponentContainer
+	ModelContainer,
+	Model
 };
