@@ -25,8 +25,7 @@ class Model extends Component {
 		}
 	}
 	OnSave() {
-		console.log("This isn't actually saving anything right now.");
-		console.log(this);
+		console.log(this.Mutator.GetTag());
 	}
 
 	render() {
@@ -43,7 +42,7 @@ class Model extends Component {
 						type="button"
 						className="btn btn-sm btn-block btn-outline-success mr1"
 						onClick={ () => this.OnSave() }
-					>Save</button>
+					>Send Tag to Console</button>
 				</div>
 			</div>
 		);
