@@ -158,12 +158,12 @@ class ModelContainer extends Component {
 						>Add Container</button>
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-info mr1"
+							className="disabled btn btn-block btn-sm btn-outline-info mr1"
 							// onClick={ () => this.NewContainerElement("List") }
 						>Add List</button>
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-secondary mr1"
+							className="disabled btn btn-block btn-sm btn-outline-secondary mr1"
 						>Add Model</button>
 						<button
 							type="button"

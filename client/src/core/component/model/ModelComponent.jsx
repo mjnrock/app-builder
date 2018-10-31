@@ -8,6 +8,8 @@ class ModelComponent extends Component {
 		this.Mutator = new PTO.Mutator.ModelComponent();
 		
 		this.Type = PTO.Enum.TagType.STRING;
+
+		//TODO Remove this and refactor into a new, modified ModelContainer specific for Lists and use ModelContainer for Compounds exclusively
 		this.ListContentType = PTO.Enum.TagType.STRING;
 
 		this.Timestamp = Date.now();
@@ -176,9 +178,11 @@ class ModelComponent extends Component {
 					this.ListContentType = this.Mutator.GetType().GetValue(1);
 				} else if(mcf === ".Type") {
 					if(+e.target.value > +e.target.getAttribute("oldvalue")) {
+						e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
 						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 					} else {
 						e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
+						e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
 					}
 					e.target.setAttribute("oldvalue", e.target.value);
 
