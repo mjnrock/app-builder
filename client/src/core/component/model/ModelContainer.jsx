@@ -149,8 +149,8 @@ class ModelContainer extends Component {
 		let Elements = this.MergeIntoElements();
 
 		return (
-			<div className="w-100 flex justify-around mt2 mb2">
-				<div className="w-100 ba br2 b--light-gray pa2">
+			<div className="w-100 flex justify-around mt2 mb2 ba br2 b--ddd pa2">
+				<div className="w-100">
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
@@ -165,8 +165,13 @@ class ModelContainer extends Component {
 					{
 						Elements.map((e, i) => {
 							return (
-								<div className="flex mt2 mb2" key={ i }>
-									<button className="btn btn-sm btn-outline-danger mr1" onClick={ () => this.RemoveComponent(e) }>X</button>
+								<div className="flex mt2 mb2 justify-around" key={ i }>
+									<button
+										className={
+											`btn btn-sm btn-outline-danger ${ e.Class instanceof ModelContainer ? "mr2" : "mr1" }`
+										}
+										onClick={ () => this.RemoveComponent(e) }
+									>X</button>
 									{
 										e.Element
 									}
@@ -174,22 +179,32 @@ class ModelContainer extends Component {
 							);
 						})
 					}
-					<div className="text-center">
+					<div className="text-center flex justify-around">
+						{/* Weird CSS issue that this janky thing fixes, so w/e */}
+						<div
+							className="btn-block"
+							style={{ "display": "none" }}
+						></div>
+
 						<button
 							type="button"
-							className="btn btn-sm btn-outline-primary mr1"
-							onClick={ this.NewModelComponent.bind(this) }>Add Tag</button>
+							className="btn btn-block btn-sm btn-outline-primary mr1"
+							onClick={ this.NewModelComponent.bind(this) }
+						>Add Tag</button>
 						<button
 							type="button"
-							className="btn btn-sm btn-outline-info mr1"
-							onClick={ this.NewModelContainer.bind(this) }>Add Container</button>
+							className="btn btn-block btn-sm btn-outline-info mr1"
+							onClick={ this.NewModelContainer.bind(this) }
+						>Add Container</button>
 						<button
 							type="button"
-							className="btn btn-sm btn-outline-secondary mr1">Add Model</button>
+							className="btn btn-block btn-sm btn-outline-secondary mr1"
+						>Add Model</button>
 						<button
 							type="button"
-							className="btn btn-sm btn-outline-dark mr1"
-							onClick={ () => console.log(this) }>This</button>
+							className="btn btn-block btn-sm btn-outline-dark mr1"
+							onClick={ () => console.log(this) }
+						>console.log(this)</button>
 					</div>
 				</div>
 			</div>
