@@ -275,7 +275,34 @@ class Transformer {
 		}
 
 		BB.ResetPosition();
-		return Transformer.UnflattenTagStructure(tags);
+		return Transformer.UnflattenBufferInput(tags);
+	}
+	static UnflattenBufferInput(tagList) {
+		if (tagList.length > 0) {
+			let e = tagList[0];
+
+			if (e instanceof Tag.TagCompound) {
+				for (let i = 0; i < e.CHILD_COUNT; i++) {
+					tagList.shift();
+					e.AddTag(Transformer.UnflattenBufferInput(tagList));
+				}
+
+				delete e.CHILD_COUNT; //  Delete this temp variable
+				return e;
+			} else if (e instanceof Tag.TagList) {
+				for (let i = 0; i < e.CHILD_COUNT; i++) {
+					tagList.shift();
+					e.AddValue(Transformer.UnflattenBufferInput(tagList));
+				}
+
+				delete e.CHILD_COUNT; //  Delete this temp variable
+				return e;
+			} else if (e instanceof Tag.ATag) {
+				return e;
+			}
+		}
+
+		return tagList;
 	}
 
 	static FlattenTagStructure(input, array) {
@@ -294,33 +321,6 @@ class Transformer {
 		}
 
 		return array;
-	}
-	static UnflattenTagStructure(tagList) {
-		if (tagList.length > 0) {
-			let e = tagList[0];
-
-			if (e instanceof Tag.TagCompound) {
-				for (let i = 0; i < e.CHILD_COUNT; i++) {
-					tagList.shift();
-					e.AddTag(Transformer.UnflattenTagStructure(tagList));
-				}
-
-				delete e.CHILD_COUNT; //  Delete this temp variable
-				return e;
-			} else if (e instanceof Tag.TagList) {
-				for (let i = 0; i < e.CHILD_COUNT; i++) {
-					tagList.shift();
-					e.AddValue(Transformer.UnflattenTagStructure(tagList));
-				}
-
-				delete e.CHILD_COUNT; //  Delete this temp variable
-				return e;
-			} else if (e instanceof Tag.ATag) {
-				return e;
-			}
-		}
-
-		return tagList;
 	}
 
 	static ToHierarchy(tag, array, parentID) {
