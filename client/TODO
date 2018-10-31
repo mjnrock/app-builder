@@ -1,7 +1,8 @@
-Info - https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
-Tags - @critical @high @low @today @customizableTag
-CTRL+ENTER - Make the boxes
-ALT+D - Mark Complete/Incomplete
+NOTES:
+	Info - https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
+	Tags - @critical @high @low @today @customizableTag
+	CTRL+ENTER - Make the boxes
+	ALT+D - Mark Complete/Incomplete
 
 PENDING:
 	List-Specific ModelContainer:
