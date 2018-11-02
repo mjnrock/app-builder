@@ -24,17 +24,6 @@ class ModelComponent extends Mutator {
 		
 		return tag;
 	}
-	// GenerateRecordTag() {
-	// 	let clazz = this.PTO.Enum.TagType.GetClass(+this.GetType().GetValue(0)),
-	// 		name = this.GetName().GetValues(),
-	// 		comp = new this.PTO.Tag.TagCompound(this.GetUUID().GetValues()),
-	// 		tag = new clazz(name);
-	
-	// 	comp.AddTag(this.GetRegEx());
-	// 	comp.AddTag(tag);
-		
-	// 	return comp;
-	// }
 
 	GetUUID() {
 		return this.Tag.GetTag("UUID");

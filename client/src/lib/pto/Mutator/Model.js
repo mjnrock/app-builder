@@ -1,3 +1,4 @@
+import { MutatorFactory } from "./MutatorFactory";
 import { Mutator } from "./Mutator";
 import { ModelContainer } from "./ModelContainer";
 
@@ -19,22 +20,10 @@ class Model extends Mutator {
 		mutator.SetTag(this.GetModelContainer());
 		let comp = mutator.GenerateRecordTag();
 
-		Mutator.GenerateMutator(comp);
+		MutatorFactory.GenerateMutator(comp);
 
 		return comp;
 	}
-	// GenerateRecordTag() {
-	// 	let name = this.GetName().GetValues() || this.GetUUID().GetValues(),
-	// 		comp = new this.PTO.Tag.TagCompound(name),
-	// 		mutator = new ModelContainer();
-
-	// 	mutator.SetTag(this.GetModelContainer());
-	// 	comp.AddTag(mutator.GenerateRecordTag());
-
-	// 	Mutator.GenerateMutator(comp);
-
-	// 	return comp;
-	// }
 
 	GetUUID() {
 		return this.Tag.GetTag("UUID");
