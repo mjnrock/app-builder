@@ -10,6 +10,7 @@ PENDING:
 		☐ Create "BuildFromRecord()" that will create a Mutator instance from that Record Tag
 		☐ Complete GenerateMutator
 			☐ MakeGetter and MakeSetter don't have a "tier" awareness; they currently just use "this.Tag", even if they are deeply nested
+			@NOTE: Iterate over hierarchy..Tag.GetKey() and check for collisions.  If NO, continue, if YES, reformat deeper tiers to prepend as many parent names as necessary to make unique
 			☐ MakeGetter and MakeSetter are currently victim to Tag > Key collisions when naming the Getter and the Setter
 		@NOTE: Maybe use a result of .ToHierarchy(), iterate over tags, and compare Keys, too--must be able to account for variable length Tags when working with List/Compound
 		☐ Create a "Compare()" and "CompareFromRecord()" function that let's you know if the Tag is a Mutator-compliant Tag structure
