@@ -132,7 +132,7 @@ class Mutator {
 			lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
 
 			//TODO Same-tier, Key collisions will still produce unexpected results.  Don't accept Key name if it would result in a collision.
-			funcs.push(...MakeGetterSetter(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ParentID].Key) }().GetTag("${ IDKeyMapping[hier.ID].Key }")`));
+			funcs.push(...MakeGetterSetter(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ParentID].Key, false) }().GetTag("${ IDKeyMapping[hier.ID].Key }")`));
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
