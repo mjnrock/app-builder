@@ -39,7 +39,7 @@ class Mutator {
 	 * This is designed to build a basic Mutator class with a Getter and a Setter for each tag in the Mutator.
 	 * @param TagCompound | tag 
 	 */
-	static GenerateMutator(tag) {
+	static GenerateMutator(tag, downloadFile = false) {
 		let hierarchy = PTO.Utility.Transformer.ToHierarchy(tag);
 
 		let SanitizeName = (input, firstCharCheck = true) => {
@@ -123,20 +123,22 @@ class Mutator {
 		lines.push(...funcs);
 		lines.push(`}`);
 
-		// const download = (filename, text) => {
-		// 	var element = document.createElement('a');
-		// 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		// 	element.setAttribute('download', filename);
-		
-		// 	element.style.display = 'none';
-		// 	document.body.appendChild(element);
-		
-		// 	element.click();
-		
-		// 	document.body.removeChild(element);
-		// };
-		// //? Download the created file
-		// download(`${ saniRootKey }.js`, lines.join(""));
+		//? Download the created file
+		if(downloadFile === false) {
+			const download = (filename, text) => {
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+				element.setAttribute('download', filename);
+			
+				element.style.display = 'none';
+				document.body.appendChild(element);
+			
+				element.click();
+			
+				document.body.removeChild(element);
+			};
+			download(`${ saniRootKey }.js`, lines.join(""));
+		}
 	}
 }
 
