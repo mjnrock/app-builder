@@ -100,6 +100,7 @@ class Mutator {
 				`\t\t${ currentVariable } = new this.PTO.Tag.TagCompound("${ root.GetKey() }");\n\n`
 			],
 			funcs = [];
+
 		for(let i in hierarchy) {
 			let hier = hierarchy[i],
 				key = hier.Tag.GetKey(),
@@ -122,10 +123,11 @@ class Mutator {
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
+		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);
 
 		//? Download the created file
-		if(downloadFile === false) {
+		if(downloadFile === true) {
 			const download = (filename, text) => {
 				var element = document.createElement('a');
 				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -140,6 +142,8 @@ class Mutator {
 			};
 			download(`${ saniRootKey }.js`, lines.join(""));
 		}
+
+		return lines.join("");
 	}
 }
 

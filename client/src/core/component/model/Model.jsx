@@ -105,6 +105,19 @@ class Model extends Component {
 						onClick={ () => this.GetOverview() }
 					>Get Overview</button>
 				</div>
+				<div>
+					<p className="text-center">Generate Record Mutator</p>
+					<button
+						type="button"
+						className="btn btn-sm btn-block btn-outline-danger mr1"
+						onClick={ () => PTO.Mutator.Mutator.GenerateMutator(this.Mutator.GenerateRecordTag(), true) }
+					>Save File</button>
+					<button
+						type="button"
+						className="btn btn-sm btn-block btn-outline-danger mr1"
+						onClick={ () => console.log(PTO.Mutator.Mutator.GenerateMutator(this.Mutator.GenerateRecordTag())) }
+					>Send to Console</button>
+				</div>
 				{ this.ModelOverview }
 			</div>
 		);
