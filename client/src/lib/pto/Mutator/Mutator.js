@@ -90,7 +90,7 @@ class Mutator {
 			currentParentID = 1,
 			lines = [
 				`import { Mutator } from "./Mutator";\n`,
-				`// import { Mutator } from "./path/to/mutator/";\n\n`,
+				// `// import { Mutator } from "./path/to/mutator/";\n\n`,
 
 				`class ${ saniRootKey } extends Mutator {\n`,
 				`\tconstructor() {\n`,
@@ -116,7 +116,7 @@ class Mutator {
 			lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
 
 			//TODO Need to add some sort of "tiering" awareness so that nested tags have appropriately-functioning Getters and Setters
-			// funcs.push(...MakeGetterSetter(key));
+			funcs.push(...MakeGetterSetter(key));
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
