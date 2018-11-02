@@ -17,17 +17,24 @@ class ModelComponent extends Mutator {
 	}
 
 	//@ This creates the Tag that the user input dictates, NOT the Tag that this Mutator uses as a variable
-	GenerateSimpleTag() {
+	GenerateRecordTag() {
 		let clazz = this.PTO.Enum.TagType.GetClass(+this.GetType().GetValue(0)),
 			name = this.GetName().GetValues(),
-			comp = new this.PTO.Tag.TagCompound(this.GetUUID().GetValues()),
 			tag = new clazz(name);
-	
-		comp.AddTag(this.GetRegEx());
-		comp.AddTag(tag);
 		
-		return comp;
+		return tag;
 	}
+	// GenerateRecordTag() {
+	// 	let clazz = this.PTO.Enum.TagType.GetClass(+this.GetType().GetValue(0)),
+	// 		name = this.GetName().GetValues(),
+	// 		comp = new this.PTO.Tag.TagCompound(this.GetUUID().GetValues()),
+	// 		tag = new clazz(name);
+	
+	// 	comp.AddTag(this.GetRegEx());
+	// 	comp.AddTag(tag);
+		
+	// 	return comp;
+	// }
 
 	GetUUID() {
 		return this.Tag.GetTag("UUID");

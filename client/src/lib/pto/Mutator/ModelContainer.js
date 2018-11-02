@@ -14,25 +14,24 @@ class ModelContainer extends Mutator {
 	}
 
 	//@ This creates the Tag that the user input dictates, NOT the Tag that this Mutator uses as a variable
-	GenerateSimpleTag() {
+	GenerateRecordTag() {
 		let name = this.GetName().GetValues(),
 			comp = new this.PTO.Tag.TagCompound(name),
 			list = this.GetElements().GetValues();
 
 		for(let i  in list) {
-			//TODO Make this more robust, but it's an easy solution for now
 			let obj = list[i],
 				keys = Object.keys(obj.GetValues());
 			if(keys.includes("Elements")) {
 				let mutator = new ModelContainer();
 				mutator.SetTag(obj);
 
-				comp.AddTag(mutator.GenerateSimpleTag());
-			} else if(keys.includes("RegEx")) {
+				comp.AddTag(mutator.GenerateRecordTag());
+			} else {
 				let mutator = new ModelComponent();
 				mutator.SetTag(obj);
 
-				comp.AddTag(mutator.GenerateSimpleTag());
+				comp.AddTag(mutator.GenerateRecordTag());
 			}
 		}
 

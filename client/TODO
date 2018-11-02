@@ -5,6 +5,14 @@ NOTES:
 	ALT+D - Mark Complete/Incomplete
 
 PENDING:
+	Mutator:
+		☐ Complete GenerateMutator
+			☐ MakeGetter and MakeSetter don't have a "tier" awareness; they currently just use "this.Tag", even if they are deeply nested
+			☐ MakeGetter and MakeSetter are currently victim to Tag > Key collisions when naming the Getter and the Setter
+	RegEx:
+		☐ Make RegEx Modal where user can search patterns
+			☐ Copy to clipboard option
+			☐ Send to RegEx Match/Replace input fields in Model Builder option
 	List-Specific ModelContainer:
 		☐ Create LIST Container functionality with ModelContainer
 			☐ Do basically the same thing as a Compound, but prevent incongruent Types at the child level
@@ -24,3 +32,5 @@ COMPLETED:
 		✔ Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12)
 		✔ Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12)
 		✔ Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:11)
+	ModeContainer:
+		✔ Raw Tags are being saved into the Simple Tag as children of a TagCompound, instead of just the Tag @done(18-11-01 18:29)

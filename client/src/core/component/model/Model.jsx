@@ -29,11 +29,12 @@ class Model extends Component {
 	OnSave() {
 		console.log("This doesn't save anything presently");
 		console.log(this.Mutator.GetTag());
+		console.log(this.Mutator.GenerateRecordTag());
 	}
 
 	//! This is complex enough that it should be a child component
 	GetOverview() {
-		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GenerateSimpleTag()).split("\n").map((v, k) => {
+		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GenerateRecordTag()).split("\n").map((v, k) => {
 			return v.split(",").map((r, i, a) => {
 				if(k > 0) {
 					switch(i) {

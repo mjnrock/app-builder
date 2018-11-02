@@ -13,16 +13,28 @@ class Model extends Mutator {
 
 	//TODO Come up with a simple way to offload as much of the setup as possible by creating SUPER functions and passing info
 	//@ This creates the Tag that the user input dictates, NOT the Tag that this Mutator uses as a variable
-	GenerateSimpleTag() {
-		let name = this.GetName().GetValues() || this.GetUUID().GetValues(),
-			comp = new this.PTO.Tag.TagCompound(name),
-			mutator = new ModelContainer();
+	GenerateRecordTag() {
+		let mutator = new ModelContainer();
 
 		mutator.SetTag(this.GetModelContainer());
-		comp.AddTag(mutator.GenerateSimpleTag());
+		let comp = mutator.GenerateRecordTag();
+
+		Mutator.GenerateMutator(comp);
 
 		return comp;
 	}
+	// GenerateRecordTag() {
+	// 	let name = this.GetName().GetValues() || this.GetUUID().GetValues(),
+	// 		comp = new this.PTO.Tag.TagCompound(name),
+	// 		mutator = new ModelContainer();
+
+	// 	mutator.SetTag(this.GetModelContainer());
+	// 	comp.AddTag(mutator.GenerateRecordTag());
+
+	// 	Mutator.GenerateMutator(comp);
+
+	// 	return comp;
+	// }
 
 	GetUUID() {
 		return this.Tag.GetTag("UUID");

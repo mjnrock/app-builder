@@ -67,7 +67,7 @@ class ModelComponent extends Component {
 								if(e.target.value === this.Mutator.GetUUID().GetValues()) {
 									e.target.setSelectionRange(0, e.target.value.length);
 								}
-								console.log(this.Mutator.GenerateSimpleTag());
+								console.log(this.Mutator.GenerateRecordTag());
 							}
 						}
 						onChange={ this.onDataChange.bind(this) }
