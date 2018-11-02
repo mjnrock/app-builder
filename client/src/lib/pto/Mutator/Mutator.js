@@ -42,6 +42,13 @@ class Mutator {
 	static GenerateMutator(tag, downloadFile = false) {
 		let hierarchy = PTO.Utility.Transformer.ToHierarchy(tag);
 
+		if(hierarchy.length <= 1) {
+			// throw new Error("You must have at least two (2) tags to generate a Mutator");
+			console.warn("You must have at least two (2) tags to generate a Mutator");
+
+			return false;
+		}
+
 		let SanitizeName = (input, firstCharCheck = true) => {
 				input = input.replace(/\W+/g, "");
 
