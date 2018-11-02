@@ -57,25 +57,27 @@ class Mutator {
 				}
 				return input;
 			},
-			MakeGetter = (key) => {
+			MakeGetter = (key, path) => {
+				path = path === null || path === void 0 ? `this.Tag.GetTag("${ key }")` : path;
 				return [
 					`\tGet${ SanitizeName(key, false) }() {\n`,
-					`\t\treturn this.Tag.GetTag("${ key }");\n`,
+					`\t\treturn ${ path };\n`,
 					`\t}\n`
 				];
 			},
-			MakeSetter = (key) => {
+			MakeSetter = (key, path) => {
+				path = path === null || path === void 0 ? `this.Tag.GetTag("${ key }")` : path;
 				return [
 					`\tSet${ SanitizeName(key, false) }(input) {\n`,
-					`\t\tthis.Tag.GetTag("${ key }").SetValues(input);\n\n`,
+					`\t\t${ path }.SetValues(input);\n\n`,
 					`\t\treturn this;\n`,
 					`\t}\n`
 				];
 			},
-			MakeGetterSetter = (key) => {
+			MakeGetterSetter = (key, path) => {
 				return [
-					...MakeGetter(key),
-					...MakeSetter(key),
+					...MakeGetter(key, path),
+					...MakeSetter(key, path),
 					`\n`
 				];
 			},
@@ -86,7 +88,8 @@ class Mutator {
 			IDKeyMapping[+v.ID] = {
 				ParentID: +v.ParentID,
 				Key: v.Tag.GetKey(),
-				SaniKey: SanitizeName(v.Tag.GetKey())
+				SaniKey: SanitizeName(v.Tag.GetKey()),
+				Tag: v.Tag
 			};
 		});
 
@@ -106,7 +109,9 @@ class Mutator {
 
 				`\t\t${ currentVariable } = new this.PTO.Tag.TagCompound("${ root.GetKey() }");\n\n`
 			],
-			funcs = [];
+			funcs = [
+				...MakeGetterSetter(root.GetKey())
+			];
 
 		for(let i in hierarchy) {
 			let hier = hierarchy[i],
@@ -124,9 +129,8 @@ class Mutator {
 			}
 			lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
 
-			//TODO Need to add some sort of "tiering" awareness so that nested tags have appropriately-functioning Getters and Setters
-			//! Currently this will create INCORRECT METHODS if the Tag is deeper than ParentID === 1
-			funcs.push(...MakeGetterSetter(key));
+			//TODO Same-tier, Key collisions will still produce unexpected results.  Don't accept Key name if it would result in a collision.
+			funcs.push(...MakeGetterSetter(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ParentID].Key) }().GetTag("${ IDKeyMapping[hier.ID].Key }")`));
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
