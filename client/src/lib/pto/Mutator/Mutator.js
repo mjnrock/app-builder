@@ -89,7 +89,8 @@ class Mutator {
 		let currentVariable = "this.Tag",
 			currentParentID = 1,
 			lines = [
-				`import { Mutator } from "./Mutator";\n`,
+				`import { Mutator } from "./Mutator";\n\n`,
+				// `import { Mutator } from "./Mutator";\n`,
 				// `// import { Mutator } from "./path/to/mutator/";\n\n`,
 
 				`class ${ saniRootKey } extends Mutator {\n`,
@@ -122,7 +123,20 @@ class Mutator {
 		lines.push(...funcs);
 		lines.push(`}`);
 
-		console.log(lines.join(""));
+		// const download = (filename, text) => {
+		// 	var element = document.createElement('a');
+		// 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		// 	element.setAttribute('download', filename);
+		
+		// 	element.style.display = 'none';
+		// 	document.body.appendChild(element);
+		
+		// 	element.click();
+		
+		// 	document.body.removeChild(element);
+		// };
+		// //? Download the created file
+		// download(`${ saniRootKey }.js`, lines.join(""));
 	}
 }
 
