@@ -66,13 +66,29 @@ class Mutator {
 					`\t}\n`
 				];
 			},
-			MakeSetter = (key, path) => {
-				path = path === null || path === void 0 ? `this.Tag.GetTag("${ key }")` : path;
+			MakeSetter = (key) => {
 				return [
 					`\tSet${ SanitizeName(key, false) }(input) {\n`,
-					`\t\t${ path }.SetValues(input);\n\n`,
+					`\t\tthis.Get${ SanitizeName(key, false) }().SetValues(input);\n\n`,
 					`\t\treturn this;\n`,
 					`\t}\n`
+				];
+			},
+			MakeAdderRemover = (key, path, isCompound = true) => {
+				path = path === null || path === void 0 ? `this.Tag.GetTag("${ key }")` : path;
+				return [
+					`\tAddTag${ SanitizeName(key, false) }(tag) {\n`,
+					// `\t\tlet tag = this.Get${ SanitizeName(key, false) }();\n`,
+					`\t\t${ path }.Add${ isCompound === false ? "Value" : "Tag"}(tag);\n\n`,
+					`\t\treturn this;\n`,
+					`\t}\n`,
+
+					`\tRemoveTag${ SanitizeName(key, false) }(tag) {\n`,
+					`\t\t${ path }.RemoveTag(tag);\n\n`,
+					`\t\treturn this;\n`,
+					`\t}\n`,
+					
+					`\n`
 				];
 			},
 			MakeGetterSetter = (key, path) => {
@@ -132,7 +148,14 @@ class Mutator {
 			lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
 
 			//TODO Same-tier, Key collisions will still produce unexpected results.  Don't accept Key name if it would result in a collision.
-			funcs.push(...MakeGetterSetter(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ParentID].Key, false) }().GetTag("${ IDKeyMapping[hier.ID].Key }")`));
+			funcs.push(
+				...MakeGetterSetter(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ParentID].Key, false) }().GetTag("${ IDKeyMapping[hier.ID].Key }")`)
+			);
+			if(hier.Tag instanceof PTO.Tag.TagCompound || hier.Tag instanceof PTO.Tag.TagList) {
+				funcs.push(
+					...MakeAdderRemover(key, `this.Get${ SanitizeName(IDKeyMapping[hier.ID].Key, false) }()`, hier.Tag instanceof PTO.Tag.TagCompound)
+				);
+			}
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);

@@ -47,6 +47,9 @@ class TagCompound extends ATag {
 	RemoveTag(input) {
 		if (typeof input === "string" || input instanceof String) {
 			delete this.Value[input];
+		} else if (input instanceof ATag) {
+			input = input.GetKey();
+			delete this.Value[input.GetKey()];
 		}
 
 		delete this.Value[Object.keys(this.Value)[input]];
