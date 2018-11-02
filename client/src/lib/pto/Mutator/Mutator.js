@@ -117,7 +117,7 @@ class Mutator {
 			lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
 
 			//TODO Need to add some sort of "tiering" awareness so that nested tags have appropriately-functioning Getters and Setters
-			//! Currently this WILL FAIL if the Tag is deeper than ParentID === 1
+			//! Currently this will create INCORRECT METHODS if the Tag is deeper than ParentID === 1
 			funcs.push(...MakeGetterSetter(key));
 		}
 		lines.push(`\t}\n\n`);	// End Constructor
