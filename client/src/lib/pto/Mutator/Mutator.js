@@ -39,6 +39,7 @@ class Mutator {
 	 * This is designed to build a basic Mutator class with a Getter and a Setter for each tag in the Mutator.
 	 * @param TagCompound | tag 
 	 */
+	//REFACTOR This was strongly piecemealed
 	static GenerateMutator(tag, downloadFile = false) {
 		let hierarchy = PTO.Utility.Transformer.ToHierarchy(tag);
 
@@ -113,6 +114,7 @@ class Mutator {
 				...MakeGetterSetter(root.GetKey())
 			];
 
+		// Because of the hierarchy.shift() above, anything in this loop will necessarily be a child
 		for(let i in hierarchy) {
 			let hier = hierarchy[i],
 				key = hier.Tag.GetKey(),
@@ -137,7 +139,7 @@ class Mutator {
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);
 
-		//? Download the created file
+		// Download the created file
 		if(downloadFile === true) {
 			const download = (filename, text) => {
 				var element = document.createElement('a');
