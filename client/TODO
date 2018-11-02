@@ -9,6 +9,8 @@ PENDING:
 		☐ Complete GenerateMutator
 			☐ MakeGetter and MakeSetter don't have a "tier" awareness; they currently just use "this.Tag", even if they are deeply nested
 			☐ MakeGetter and MakeSetter are currently victim to Tag > Key collisions when naming the Getter and the Setter
+		@NOTE: Maybe use a result of .ToHierarchy(), iterate over tags, and compare Keys, too--must be able to account for variable length Tags when working with List/Compound
+		☐ Create a "Compare" function that let's you know if the Tag is a Mutator-compliant Tag structure
 	RegEx:
 		☐ Make RegEx Modal where user can search patterns
 			☐ Copy to clipboard option
