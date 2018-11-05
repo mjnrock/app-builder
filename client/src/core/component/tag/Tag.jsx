@@ -1,41 +1,39 @@
 import React, { Component } from "react";
 
-import PTO from "./../../../lib/pto/package";
-import { ModelContainer } from "./ModelContainer";
-import { Modal } from "./../html/Modal";
+import PTO from "../../../lib/pto/package";
+import { TagContainer } from "./TagContainer";
 
-class Model extends Component {
+class Tag extends Component {
 	constructor(props) {
-		super(props);
-		
-		this.Mutator = new PTO.Mutator.Model();
+		super(props);		
 
-		this.ModelOverview = [];
+		this.Tag = null;
+
+		this.Descendents = [];
 		this.Timestamp = Date.now();
 	}
 
 	SetTag(tag) {
-		this.Mutator.SetTag(tag);
+		this.Tag = tag;
 
 		return this;
 	}
 	GetTag() {
-		return this.Mutator.GetTag();
+		return this.Tag;
 	}
 
 	RegisterElement(mc) {
-		this.Mutator.SetModelContainer(mc.GetTag());
+		this.Tag = mc.GetTag();
 	}
 
 	OnSave() {
 		console.log("This doesn't save anything presently");
-		console.log(this.Mutator.GetTag());
-		console.log(this.Mutator.GenerateRecordTag());
+		console.log(this.Tag);
 	}
 
 	//! This is complex enough that it should be a child component
 	GetOverview() {
-		let CSV = PTO.Utility.Transformer.ToDelimited(this.Mutator.GenerateRecordTag()).split("\n").map((v, k) => {
+		let CSV = PTO.Utility.Transformer.ToDelimited(this.Tag).split("\n").map((v, k) => {
 			return v.split(",").map((r, i, a) => {
 				if(k > 0) {
 					switch(i) {
@@ -56,7 +54,7 @@ class Model extends Component {
 			});
 		});
 
-		this.ModelOverview = <table className="table mt4">
+		this.Descendents = <table className="table mt4">
 			<thead>
 				<tr>
 					{
@@ -87,20 +85,11 @@ class Model extends Component {
 	}
 
 	render() {
+		console.log(this.Tag);
 		return (
 			<div className="container">
-				<Modal
-					label="Push Me!"
-					title="Modal Title"
-					body={
-						<ModelContainer
-							UUID={ PTO.Utility.Transformer.GenerateUUID() }
-							RegisterElement={ (mc) => { this.RegisterElement(mc) }}
-						/>
-					}
-				/>
-				<h2 className="text-center mt3 mb3">Model Builder</h2>
-				<ModelContainer
+				<h2 className="text-center mt3 mb3">Tag Builder</h2>
+				<TagContainer
 					UUID={ PTO.Utility.Transformer.GenerateUUID() }
 					RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 				/>
@@ -121,18 +110,18 @@ class Model extends Component {
 					<button
 						type="button"
 						className="btn btn-sm btn-block btn-outline-danger mr1"
-						onClick={ () => PTO.Mutator.MutatorFactory.GenerateMutator(this.Mutator.GenerateRecordTag(), true) }
+						onClick={ () => PTO.Mutator.MutatorFactory.GenerateMutator(this.Tag, true) }
 					>Save File</button>
 					<button
 						type="button"
 						className="btn btn-sm btn-block btn-outline-danger mr1"
-						onClick={ () => console.log(PTO.Mutator.MutatorFactory.GenerateMutator(this.Mutator.GenerateRecordTag())) }
+						onClick={ () => console.log(PTO.Mutator.MutatorFactory.GenerateMutator(this.Tag)) }
 					>Send to Console</button>
 				</div>
-				{ this.ModelOverview }
+				{ this.Descendents }
 			</div>
 		);
 	}
 }
 
-export { Model };
+export { Tag };

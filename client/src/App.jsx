@@ -47,6 +47,7 @@ class App extends Component {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/model/builder" component={ (router) => <Routes.ModelBuilder Router={ router } Core={ Core } /> } />
+					<Route exact path="/tag/builder" component={ (router) => <Routes.TagBuilder Router={ router } Core={ Core } /> } />
 				</Switch>
 			</BrowserRouter>
 		);

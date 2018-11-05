@@ -6,6 +6,14 @@ NOTES:
 	CTRL+ENTER - Make the boxes
 	ALT+D - Mark Complete/Incomplete
 
+ACTIVE TASK:
+	☐ Serialize and Deserialize a Mutator from a Model
+		☐ From a Model Tag
+		☐ From JSON of Model Tag
+	☐ Build a Save/Load button to save Model's to the file system
+		☐ Redirect download() to prompt dialog box
+		☐ Load invoke dialog and Deserialize the JSON file into the active Model
+
 PENDING:
 	MutatorFactory:
 		✔ Build this to generate Mutators so Mutator is not polluted with all that code @done(18-11-02 13:28)
