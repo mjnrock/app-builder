@@ -49,7 +49,7 @@ class TagCompound extends ATag {
 			delete this.Value[input];
 		} else if (input instanceof ATag) {
 			input = input.GetKey();
-			delete this.Value[input.GetKey()];
+			delete this.Value[input];
 		}
 
 		delete this.Value[Object.keys(this.Value)[input]];

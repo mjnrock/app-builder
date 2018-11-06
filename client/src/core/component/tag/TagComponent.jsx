@@ -9,11 +9,25 @@ class TagComponent extends Component {
 		this.UUID = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
 		this.Tag = new PTO.Tag.TagString(this.UUID);
 		this.Type = PTO.Enum.TagType.STRING;
+		this.ShowType = true;
 
 		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
+		if(this.props.Type !== null && this.props.Type !== void 0) {
+			let clazz = PTO.Enum.TagType.GetClass(+this.props.Type);
+			if(clazz) {
+				this.Tag = new clazz(this.UUID);
+				this.Type = +this.props.Type;
+				this.ShowType = false;
+			}
+		}
+
+		if(this.props.KeyName !== null && this.props.KeyName !== void 0) {
+			this.Tag.SetKey(this.props.KeyName);
+		}
+
 		this.props.RegisterElement(this);
 	}
 
@@ -29,7 +43,7 @@ class TagComponent extends Component {
 	render() {
 		return (
 			<div className="w-100 flex justify-around">
-				<div className="w-75">
+				<div className={ this.ShowType ? "w-75" : "w-100" }>
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
@@ -56,20 +70,24 @@ class TagComponent extends Component {
 						<span>[{ this.UUID }]</span>
 					</p>
 				</div>
-				<div className="w-20">
-					<label className="f7 b">Type</label>
-					<input
-						type="number"
-						className="form-control text-center mb-1"
-						placeholder="Type"
-						mcf=".Type"
-						min="1"
-						max="12"
-						oldvalue="2"
-						defaultValue="2"
-						onChange={ this.onDataChange.bind(this) }
-					/>
-				</div>
+				{
+					this.ShowType
+					? <div className="w-20">
+						<label className="f7 b">Type</label>
+						<input
+							type="number"
+							className="form-control text-center mb-1"
+							placeholder="Type"
+							mcf=".Type"
+							min="1"
+							max="12"
+							oldvalue="2"
+							defaultValue="2"
+							onChange={ this.onDataChange.bind(this) }
+						/>
+					</div>
+					: null
+				}
 			</div>
 		);
 	}

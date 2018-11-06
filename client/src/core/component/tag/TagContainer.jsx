@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import PTO from "../../../lib/pto/package";
 import { TagComponent } from "./TagComponent";
+import { TagList } from "./TagList";
 
 class TagContainer extends Component {
 	constructor(props) {
@@ -55,7 +56,7 @@ class TagContainer extends Component {
 			Timestamp: Date.now()
 		};
 		
-		if(type === "Container") {
+		if(type === "Compound") {
 			elements[uuid]["Element"] = <TagContainer
 				UUID={ uuid }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
@@ -63,6 +64,13 @@ class TagContainer extends Component {
 		} else if(type === "Component") {
 			elements[uuid]["Element"] = <TagComponent
 				UUID={ uuid }
+				Type={ this.ListType }
+				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+			/>;
+		} else if(type === "List") {
+			elements[uuid]["Element"] = <TagList
+				UUID={ uuid }
+				ListType={ PTO.Enum.TagType.STRING }
 				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
 			/>;
 		}
@@ -71,18 +79,6 @@ class TagContainer extends Component {
 			...this.state,
 			Container: elements
 		});
-	}
-
-	MergeIntoElements() {
-		let Elements = {};
-		Object.entries(this.state.Container).forEach((e, i) => {
-			Elements[e[1].Timestamp] = e[1];
-		});
-		Elements = Object.entries(Elements);
-		Elements.sort((a, b) => Number(a[1].Timestamp) - Number(b[1].Timestamp));
-		Elements = Elements.map((v, i) => v[1]);
-
-		return Elements;
 	}
 	
 	RemoveElement(element) {
@@ -114,8 +110,14 @@ class TagContainer extends Component {
 						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<p className="f7 code text-center">
-						<span>{ this.UUID }</span>
+					<p
+						className="f7 code text-center"						
+						style={{
+							"color": PTO.Enum.TagType.GetColor(PTO.Enum.TagType.COMPOUND)
+						}}
+					>
+						<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.COMPOUND) }</span>
+						<span>&nbsp;[{ this.UUID }]</span>
 					</p>
 					{
 						Object.values(this.state.Container).map((e, i) => {
@@ -149,12 +151,12 @@ class TagContainer extends Component {
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-info mr1"
-							onClick={ () => this.NewContainerElement("Container") }
-						>Add Container</button>
+							onClick={ () => this.NewContainerElement("Compound") }
+						>Add Compound</button>
 						<button
 							type="button"
-							className="disabled btn btn-block btn-sm btn-outline-info mr1"
-							// onClick={ () => this.NewContainerElement("List") }
+							className="btn btn-block btn-sm btn-outline-info mr1"
+							onClick={ () => this.NewContainerElement("List") }
 						>Add List</button>
 						<button
 							type="button"
