@@ -60,7 +60,7 @@ class TagComponent extends Component {
 						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<p
+					<div
 						className="f7 code text-center"						
 						style={{
 							"color": PTO.Enum.TagType.GetColor(this.Type)
@@ -68,7 +68,7 @@ class TagComponent extends Component {
 					>
 						<span>{ PTO.Enum.TagType.GetString(this.Type) }</span>&nbsp;
 						<span>[{ this.UUID }]</span>
-					</p>
+					</div>
 				</div>
 				{
 					this.ShowType
@@ -114,8 +114,10 @@ class TagComponent extends Component {
 					this.Type = +e.target.value;
 					this.props.RegisterElement(this);
 				}
-			} else {
+			} else if(mcf === ".Name") {
 				this.Tag.SetKey(e.target.value);
+			} else if(mcf === ".Value") {
+				this.Tag.SetValues(e.target.value);
 			}
 		}
 		
