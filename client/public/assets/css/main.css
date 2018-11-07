@@ -1,3 +1,7 @@
+[hidden] {
+	display: none !important;
+}
+
 .b--ddd {
 	border-color: #ddd;
 }

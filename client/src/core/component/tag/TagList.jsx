@@ -6,80 +6,116 @@ import { TagComponent } from "./TagComponent";
 class TagList extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			Container: {}
-		};
-
-		this.UUID = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
-		if(this.props.ListType !== null && this.props.ListType !== void 0) {
-			this.Tag = new PTO.Tag.TagList(this.UUID, +this.props.ListType);
-			this.ListType = +this.props.ListType;
-		} else {
-			this.Tag = new PTO.Tag.TagList(this.UUID);
-			this.ListType = PTO.Enum.TagType.STRING;
-		}
+		this.state = {};
+		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
+		this.state["Tag"] = new PTO.Tag.TagList(
+			this.state["UUID"],
+			this.props.ListType !== null && this.props.ListType !== void 0 ? +this.props.ListType : PTO.Enum.TagType.STRING
+		);
+		this.state["Container"] = {};
 		
 		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
+		let state = this.state;
+
+		if(this.props.Tag !== null && this.props.Tag !== void 0) {
+			state["Tag"] = this.props.Tag;
+			state["Container"] = this.ContainerFromTag(this.props.Tag);
+		}
+		
 		if(this.props.RegisterElement) {
 			this.props.RegisterElement(this);
+		}
+
+		this.setState(state);
+	}
+
+	ContainerFromTag(tag) {
+		if(tag !== null && tag !== void 0) {
+			let children = Object.values(tag.GetValues()),
+				container = {};
+
+			for(let i in children) {
+				let child = children[i],
+					uuid = PTO.Utility.Transformer.GenerateUUID();
+
+				container[uuid] = {
+					UUID: uuid,
+					Class: null,
+					Timestamp: Date.now()
+				};
+			
+				if(child instanceof PTO.Tag.ATag) {
+					container[uuid]["Element"] = <TagComponent
+						UUID={ uuid }
+						Tag={ child }
+						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+					/>;
+				}
+			}
+			
+			return container;
 		}
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		let state = this.state;
+		state.Tag = tag;
 
-		return this;
+		this.setState(state);
 	}
 	GetTag() {
-		return this.Tag;
+		return this.state.Tag;
 	}
 	
-	RegisterElement(element) {
-		let elements = this.state.Container,
-			uuid = element.props.UUID;
+	RegisterElement(element, options) {
+		let state = this.state,
+			uuid = element.props.UUID,
+			eleTag = element.state.Tag;
 
-		elements[uuid].Class = element;
+		state.Container[uuid].Class = element;
 
-		this.setState({
-			...this.state,
-			Container: elements
-		});
-		
-		if(element.GetTag().GetKey() === void 0 || element.GetTag().GetKey() === null) {
-			element.GetTag().SetKey(uuid);
+		let key = eleTag.GetKey();
+		if(options && options.OldKey) {
+			key = options.OldKey;
 		}
-		this.Tag.AddValue(element.GetTag());
-	}
-	NewListElement(key) {
-		let elements = this.state.Container,
-			uuid = PTO.Utility.Transformer.GenerateUUID();
 
-		elements[uuid] = {
+		let tag = state.Tag.GetValues().filter(t => t.GetKey() === key);
+		if(tag.length === 0) {
+			state.Tag.AddValue(eleTag);
+		} else {
+			state.Tag.RemoveTag(key);
+			state.Tag.AddValue(eleTag);
+		}
+
+		this.setState(state);
+	}
+	NewListElement(key, uuid) {
+		let state = this.state;
+		uuid = uuid !== null && uuid !== void 0 ? uuid : PTO.Utility.Transformer.GenerateUUID();
+
+		state.Container[uuid] = {
 			UUID: uuid,
 			Class: null,
 			Timestamp: Date.now()
 		};
-
-		elements[uuid]["Element"] = <TagComponent
+		
+		state.Container[uuid]["Element"] = <TagComponent
 			UUID={ uuid }
-			Type={ this.ListType }
+			Type={ state.Tag.GetContentType() }
 			KeyName={ key }
-			RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+			RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 		/>;
 
-		this.setState({
-			...this.state,
-			Container: elements
-		});
+		this.setState(state);
 	}
 	
 	RemoveElement(element) {
 		let state = this.state;
 
-		this.Tag.RemoveTag(element.Class.Tag);
+		state.Tag.RemoveTag(element.Class.state.Tag);
 		delete state.Container[element.UUID];
 
 		this.setState(state);
@@ -95,10 +131,11 @@ class TagList extends Component {
 						className="form-control"
 						placeholder="Name"
 						mcf=".Name"
-						defaultValue={ this.Tag.GetKey() }
+						oldvalue={ this.GetTag().GetKey() }
+						defaultValue={ this.GetTag().GetKey() }
 						onFocus={
 							(e) => {
-								if(e.target.value === this.UUID) {
+								if(e.target.value === this.state.UUID) {
 									e.target.setSelectionRange(0, e.target.value.length);
 								}
 							}
@@ -112,8 +149,8 @@ class TagList extends Component {
 						}}
 					>
 						<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.LIST) }</span>
-						<span style={{ "color": PTO.Enum.TagType.GetColor(this.ListType) }}>{ `<${ PTO.Enum.TagType.GetString(this.ListType) }>` }</span>
-						<span>&nbsp;[{ this.UUID }]</span>
+						<span style={{ "color": PTO.Enum.TagType.GetColor(this.state.Tag.GetContentType()) }}>{ `<${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()) }>` }</span>
+						<span>&nbsp;[{ this.state.UUID }]</span>
 					</p>
 					{
 						Object.values(this.state.Container).map((e, i) => {
@@ -160,8 +197,8 @@ class TagList extends Component {
 						mcf=".Type"
 						min="1"
 						max="12"
-						oldvalue="2"
-						defaultValue="2"
+						oldvalue={ this.GetTag().GetContentType() }
+						defaultValue={ this.GetTag().GetContentType() }
 						onChange={ this.onDataChange.bind(this) }
 					/>
 				</div>
@@ -170,25 +207,25 @@ class TagList extends Component {
 	}
 
 	onDataChange(e) {
-		let mcf = e.target.getAttribute("mcf");
+		let mcf = e.target.getAttribute("mcf"),
+			state = this.state;
 
 		if(e.type === "change") {
 			if(mcf === ".Type") {
 				if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 					e.target.value = +e.target.value === +PTO.Enum.TagType.DOUBLE ? +e.target.value + 1 : +e.target.value;
-					e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
-					e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 				} else {
-					e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
-					e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
 					e.target.value = +e.target.value === +PTO.Enum.TagType.DOUBLE ? +e.target.value - 1 : +e.target.value;
 				}
 				e.target.setAttribute("oldvalue", e.target.value);
 
-				this.ListType = +e.target.value;
-				this.Tag.SetContentType(this.ListType);
+				state.Tag.SetContentType(+e.target.value);
 
-				let keys = Object.values(this.state.Container).map((e) => e.Class.Tag.GetKey()),
+				let keys = Object.values(this.state.Container).map((e) => [e.Class.state.Tag.GetKey(), e.Class.state.UUID]),
 					elements = this.state.Container;
 				
 				Object.values(elements).forEach((e) => {
@@ -199,16 +236,21 @@ class TagList extends Component {
 				//* Not exactly sure what is happening, but without this timeout, the this.forceUpdate() doesn't work
 				setTimeout(() => {
 					keys.forEach((k) => {
-						this.NewListElement(k);
+						this.NewListElement(k[0], k[1]);
 					});
+
 					this.props.RegisterElement(this);
 				}, 1);
-			} else {
-				this.Tag.SetKey(e.target.value);
+			} else if(mcf === ".Name") {
+				state.Tag.SetKey(e.target.value);
+
+				this.props.RegisterElement(this, {
+					OldKey: e.target.getAttribute("oldvalue")
+				});
 			}
 		}
 		
-		this.forceUpdate();
+		this.setState(state);
 	}
 }
 

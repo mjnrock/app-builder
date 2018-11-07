@@ -95,7 +95,7 @@ class MutatorFactory {
 		let currentVariable = "this.Tag",
 			currentParentID = 1,
 			lines = [
-				`import { Mutator } from "./Mutator";\n\n`,
+				// `import { Mutator } from "./Mutator";\n\n`,
 				// `import { Mutator } from "./Mutator";\n`,
 				// `// import { Mutator } from "./path/to/mutator/";\n\n`,
 
@@ -140,6 +140,8 @@ class MutatorFactory {
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);
+		lines.push(`}`);
+		// lines.push(`\n\nexport { ${ saniRootKey } };`);
 
 		// Download the created file
 		if(downloadFile === true) {

@@ -5,55 +5,66 @@ import PTO from "../../../lib/pto/package";
 class TagComponent extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {};
+		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
+		this.state["Tag"] = new PTO.Tag.TagString(this.state.UUID);
 
-		this.UUID = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
-		this.Tag = new PTO.Tag.TagString(this.UUID);
-		this.Type = PTO.Enum.TagType.STRING;
-		this.ShowType = true;
+		// KeyName
+		// ListType
 
 		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
+		let state = this.state;
+
 		if(this.props.Type !== null && this.props.Type !== void 0) {
 			let clazz = PTO.Enum.TagType.GetClass(+this.props.Type);
 			if(clazz) {
-				this.Tag = new clazz(this.UUID);
-				this.Type = +this.props.Type;
-				this.ShowType = false;
+				state.Tag = new clazz(state.UUID);
 			}
 		}
 
 		if(this.props.KeyName !== null && this.props.KeyName !== void 0) {
-			this.Tag.SetKey(this.props.KeyName);
+			state.Tag.SetKey(this.props.KeyName);
 		}
 
-		this.props.RegisterElement(this);
+		if(this.props.Tag !== null && this.props.Tag !== void 0) {
+			state.Tag = this.props.Tag;
+		}
+
+		if(this.props.RegisterElement !== null && this.props.RegisterElement !== void 0) {
+			this.props.RegisterElement(this);
+		}
+
+		this.setState(state);
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		let state = this.state;
+		state.Tag = tag;
 
-		return this;
+		this.setState(state);
 	}
 	GetTag() {
-		return this.Tag;
+		return this.state.Tag;
 	}
 
 	render() {
 		return (
 			<div className="w-100 flex justify-around">
-				<div className={ this.ShowType ? "w-75" : "w-100" }>
+				<div className={ this.props.hide ? "w-100" : "w-75" }>
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
 						className="form-control"
 						placeholder="Name"
 						mcf=".Name"
-						defaultValue={ this.Tag.GetKey() }
+						oldvalue={ this.GetTag().GetKey() }
+						defaultValue={ this.GetTag().GetKey() }
 						onFocus={
 							(e) => {
-								if(e.target.value === this.UUID) {
+								if(e.target.value === this.state.UUID) {
 									e.target.setSelectionRange(0, e.target.value.length);
 								}
 							}
@@ -63,16 +74,17 @@ class TagComponent extends Component {
 					<div
 						className="f7 code text-center"						
 						style={{
-							"color": PTO.Enum.TagType.GetColor(this.Type)
+							"color": PTO.Enum.TagType.GetColor(this.GetTag().GetType())
 						}}
 					>
-						<span>{ PTO.Enum.TagType.GetString(this.Type) }</span>&nbsp;
-						<span>[{ this.UUID }]</span>
+						<span>{ PTO.Enum.TagType.GetString(this.GetTag().GetType()) }</span>&nbsp;
+						<span>[{ this.state.UUID }]</span>
 					</div>
 				</div>
 				{
-					this.ShowType
-					? <div className="w-20">
+					this.props.hide
+					? null
+					: <div className="w-20">
 						<label className="f7 b">Type</label>
 						<input
 							type="number"
@@ -81,19 +93,19 @@ class TagComponent extends Component {
 							mcf=".Type"
 							min="1"
 							max="12"
-							oldvalue="2"
-							defaultValue="2"
+							oldvalue={ this.GetTag().GetType() }
+							defaultValue={ this.GetTag().GetType() }
 							onChange={ this.onDataChange.bind(this) }
 						/>
 					</div>
-					: null
 				}
 			</div>
 		);
 	}
 
 	onDataChange(e) {
-		let mcf = e.target.getAttribute("mcf");
+		let mcf = e.target.getAttribute("mcf"),
+			state = this.state;
 
 		if(e.type === "change") {
 			if(mcf === ".Type") {
@@ -108,20 +120,23 @@ class TagComponent extends Component {
 				}
 				e.target.setAttribute("oldvalue", e.target.value);
 
-				let clazz = PTO.Enum.TagType.GetClass(+e.target.value);
+				let clazz = PTO.Enum.TagType.GetClass(+e.target.value),
+					key = state.Tag.GetKey();
 				if(clazz) {
-					this.Tag = new clazz(this.UUID);
-					this.Type = +e.target.value;
-					this.props.RegisterElement(this);
+					state.Tag = new clazz(key !== null && key !== void 0 ? key : state.UUID);
 				}
+
+				this.props.RegisterElement(this);
 			} else if(mcf === ".Name") {
-				this.Tag.SetKey(e.target.value);
-			} else if(mcf === ".Value") {
-				this.Tag.SetValues(e.target.value);
+				state.Tag.SetKey(e.target.value);
+
+				this.props.RegisterElement(this, {
+					OldKey: e.target.getAttribute("oldvalue")
+				});
 			}
 		}
 		
-		this.forceUpdate();
+		this.setState(state);
 	}
 }
 

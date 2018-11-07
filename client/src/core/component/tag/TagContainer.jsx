@@ -7,84 +7,145 @@ import { TagList } from "./TagList";
 class TagContainer extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			Container: {}
-		};
-
-		this.UUID = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
-		this.Tag = new PTO.Tag.TagCompound(this.UUID);
+		this.state = {};
+		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
+		this.state["Tag"] = new PTO.Tag.TagCompound(this.state["UUID"]);
+		this.state["Container"] = {};
 		
 		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
+		let state = this.state;
+
+		if(this.props.Tag !== null && this.props.Tag !== void 0) {
+			state["Tag"] = this.props.Tag;
+			state["Container"] = this.ContainerFromTag(this.props.Tag);
+		}
+		
 		if(this.props.RegisterElement) {
 			this.props.RegisterElement(this);
 		}
+
+		this.setState(state);
+	}
+
+	ContainerFromTag(tag) {
+		if(tag !== null && tag !== void 0) {
+			let children = Object.values(tag.GetValues()),
+				container = {};
+
+			for(let i in children) {
+				let child = children[i],
+					uuid = PTO.Utility.Transformer.GenerateUUID();
+
+				container[uuid] = {
+					UUID: uuid,
+					Class: null,
+					Timestamp: Date.now()
+				};
+			
+				if(child instanceof PTO.Tag.TagCompound) {
+					container[uuid]["Element"] = <TagContainer
+						UUID={ uuid }
+						Tag={ child }
+						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+					/>;
+				} else if(child instanceof PTO.Tag.TagList) {
+					container[uuid]["Element"] = <TagList
+						UUID={ uuid }
+						Tag={ child }
+						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+					/>;
+				} else if(child instanceof PTO.Tag.ATag) {
+					container[uuid]["Element"] = <TagComponent
+						UUID={ uuid }
+						Tag={ child }
+						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+					/>;
+				}
+			}
+			
+			return container;
+		}
+	}
+	
+	InitializeFromTag(tag) {
+		let state = this.state;
+		
+		state.Tag = tag;
+		state.Container = this.ContainerFromTag(tag);
+
+		this.setState(state);
 	}
 
 	SetTag(tag) {
-		this.Tag = tag;
+		let state = this.state;
+		state.Tag = tag;
 
-		return this;
+		this.setState(state);
 	}
 	GetTag() {
-		return this.Tag;
+		return this.state.Tag;
 	}
-	
-	RegisterElement(element) {
-		let elements = this.state.Container,
-			uuid = element.props.UUID;
-
-		elements[uuid].Class = element;
-
-		this.setState({
-			...this.state,
-			Container: elements
-		});
 		
-		element.GetTag().SetKey(uuid);
-		this.Tag.AddTag(element.GetTag());
+
+	RegisterElement(element, options) {
+		let state = this.state,
+			uuid = element.props.UUID,
+			eleTag = element.state.Tag;
+
+		state.Container[uuid].Class = element;
+
+		let key = eleTag.GetKey();
+		if(options && options.OldKey) {
+			key = options.OldKey;
+		}
+
+		let tag = state.Tag.GetTag(key);
+		if(tag === void 0 || tag === null) {
+			state.Tag.AddTag(eleTag);
+		} else {
+			state.Tag.RemoveTag(key);
+			state.Tag.AddTag(eleTag);
+		}
+
+		this.setState(state);
 	}
 	NewContainerElement(type) {
-		let elements = this.state.Container,
+		let state = this.state,
 			uuid = PTO.Utility.Transformer.GenerateUUID();
 
-		elements[uuid] = {
+		state.Container[uuid] = {
 			UUID: uuid,
 			Class: null,
 			Timestamp: Date.now()
 		};
 		
 		if(type === "Compound") {
-			elements[uuid]["Element"] = <TagContainer
+			state.Container[uuid]["Element"] = <TagContainer
 				UUID={ uuid }
-				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 			/>;
 		} else if(type === "Component") {
-			elements[uuid]["Element"] = <TagComponent
+			state.Container[uuid]["Element"] = <TagComponent
 				UUID={ uuid }
-				Type={ this.ListType }
-				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 			/>;
 		} else if(type === "List") {
-			elements[uuid]["Element"] = <TagList
+			state.Container[uuid]["Element"] = <TagList
 				UUID={ uuid }
-				ListType={ PTO.Enum.TagType.STRING }
-				RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 			/>;
 		}
 
-		this.setState({
-			...this.state,
-			Container: elements
-		});
+		this.setState(state);
 	}
 	
 	RemoveElement(element) {
 		let state = this.state;
 
-		this.Tag.RemoveTag(element.Class.Tag);
+		state.Tag.RemoveTag(element.Class.state.Tag.GetKey());
 		delete state.Container[element.UUID];
 
 		this.setState(state);
@@ -100,10 +161,11 @@ class TagContainer extends Component {
 						className="form-control"
 						placeholder="Name"
 						mcf=".Name"
-						defaultValue={ this.Tag.GetKey() }
+						oldvalue={ this.GetTag().GetKey() }
+						defaultValue={ this.GetTag().GetKey() }
 						onFocus={
 							(e) => {
-								if(e.target.value === this.UUID) {
+								if(e.target.value === this.state.UUID) {
 									e.target.setSelectionRange(0, e.target.value.length);
 								}
 							}
@@ -117,7 +179,7 @@ class TagContainer extends Component {
 						}}
 					>
 						<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.COMPOUND) }</span>
-						<span>&nbsp;[{ this.UUID }]</span>
+						<span>&nbsp;[{ this.state.UUID }]</span>
 					</p>
 					{
 						Object.values(this.state.Container).map((e, i) => {
@@ -170,12 +232,20 @@ class TagContainer extends Component {
 	}
 
 	onDataChange(e) {
+		let mcf = e.target.getAttribute("mcf"),
+			state = this.state;
+
 		if(e.type === "change") {
-			this.Tag.SetValues(e.target.value);
+			if(mcf === ".Name") {
+				state.Tag.SetKey(e.target.value);
+
+				this.props.RegisterElement(this, {
+					OldKey: e.target.getAttribute("oldvalue")
+				});
+			}
 		}
 		
-		//	Because of the construction and no state manipulation, this basically doubly-binds the Tags to the component
-		this.forceUpdate();
+		this.setState(state);
 	}
 }
 
