@@ -81,26 +81,18 @@ class Tag extends Component {
 
 				reader.readAsText(file);
 			});
-
-			// let upload = new Promise((resolve, reject) => {
-			// 	reader.onload = event => resolve(event.target.result);
-			// 	reader.onerror = error => reject(error);
-
-			// 	reader.readAsText(file);
-			// });
-			
-			// return upload.then((result) => eval(`(${ result })`));
 		}
 	}
 
 	render() {
-		console.log(JSON.stringify(this.state.Tag));
 		return (
 			<div className="container">
 				<h2 className="text-center mt3 mb3">Tag Builder</h2>
-				<div className="alert alert-primary">
-					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } />
-				</div>
+				<label 
+					className="btn btn-block btn-sm btn-outline-primary mr1 mb0"
+				>Load from Mutator File
+					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden />
+				</label>
 				<TagContainer Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } RegisterElement={ (tc) => this.RegisterElement(tc) } />
 				<div className="text-center mt3 mb2">
 					<button

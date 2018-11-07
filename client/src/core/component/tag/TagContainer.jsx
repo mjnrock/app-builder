@@ -4,6 +4,10 @@ import PTO from "../../../lib/pto/package";
 import { TagComponent } from "./TagComponent";
 import { TagList } from "./TagList";
 
+//@ This is for the File Upload, so the files can just extend Mutator without the import line
+// eslint-disable-next-line
+const Mutator = PTO.Mutator.Mutator;
+
 class TagContainer extends Component {
 	constructor(props) {
 		super(props);
@@ -161,6 +165,57 @@ class TagContainer extends Component {
 		this.setState(state);
 	}
 
+	AddTagFromFile(file) {
+		if(file !== null && file !== void 0) {
+			// eslint-disable-next-line
+			file = eval(`(${ file })`);
+			let state = this.state,
+				uuid = PTO.Utility.Transformer.GenerateUUID(),
+				tag = (new file()).GetTag();
+	
+			state.Container[uuid] = {
+				UUID: uuid,
+				Class: null,
+				Timestamp: Date.now(),
+				Element: <TagContainer
+					UUID={ uuid }
+					Tag={ tag }
+					RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
+				/>
+			};
+
+			this.setState(state);
+		}
+	}
+
+	async OnFileUpload(e) {
+		let file = await this.UploadFile(e);
+		if(file !== null && file !== void 0) {
+			this.AddTagFromFile(file);
+		}
+	}
+
+	UploadFile(event) {
+		let file = event.target.files[0];
+        
+        if (file) {
+			const reader = new FileReader();
+
+			return new Promise((resolve, reject) => {
+				reader.onerror = () => {
+					reader.abort();
+					reject(new Error('Problem parsing file'));
+				};
+
+				reader.onload = () => {
+					resolve(reader.result);
+				};
+
+				reader.readAsText(file);
+			});
+		}
+	}
+
 	render() {
 		return (
 			<div className="w-100 flex justify-around mt2 mb2 ba br2 b--ddd pa2">
@@ -230,6 +285,11 @@ class TagContainer extends Component {
 							className="btn btn-block btn-sm btn-outline-info mr1"
 							onClick={ () => this.NewContainerElement("List") }
 						>Add List</button>
+						<label
+							className="btn btn-block btn-sm btn-outline-dark mr1 mb0"
+						>Import from Mutator
+							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden />
+						</label>
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-dark mr1"
