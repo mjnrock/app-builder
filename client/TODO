@@ -12,6 +12,10 @@ ACTIVE TASK:
 	☐ Serialize and Deserialize a Mutator from a Tag
 		☐ From a Tag
 		☐ From JSON of Tag
+	☐ Allow for configuration of Mutator path and export clause on Tag Save
+		☐ Build Modal with "Mutator Path" and "Export Clause" input fields
+		☐ Inject entries into file
+		☐ Extract the "class" content from the Mutator file and only load that instead
 	@NOTE: Currently only works on Mutator classes
 	☐ Expand File System to allow Composition files
 		☐ Save Composition file

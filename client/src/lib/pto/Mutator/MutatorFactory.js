@@ -140,7 +140,7 @@ class MutatorFactory {
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);
-		lines.push(`}`);
+		// lines.push(`}`);
 		// lines.push(`\n\nexport { ${ saniRootKey } };`);
 
 		// Download the created file
