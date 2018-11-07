@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 import PTO from "../../../lib/pto/package";
 import { TagContainer } from "./TagContainer";
@@ -46,6 +45,7 @@ class Tag extends Component {
 
 	UpdateContainer(file) {
 		if(file !== null && file !== void 0) {
+			// eslint-disable-next-line
 			file = eval(`(${ file })`);
 			let state = this.state,
 				tag = (new file()).GetTag();

@@ -32,6 +32,16 @@ class TagList extends Component {
 		this.setState(state);
 	}
 
+	componentWillReceiveProps(nextProps, nextContext) {
+		if(JSON.stringify(this.state.Tag) !== JSON.stringify(nextProps.Tag)) {
+			let state = this.state;
+			state.Tag = nextProps.Tag;
+			state.Container = this.ContainerFromTag(nextProps.Tag);
+
+			this.setState(state);
+		}
+	}
+
 	ContainerFromTag(tag) {
 		if(tag !== null && tag !== void 0) {
 			let children = Object.values(tag.GetValues()),
@@ -132,7 +142,7 @@ class TagList extends Component {
 						placeholder="Name"
 						mcf=".Name"
 						oldvalue={ this.GetTag().GetKey() }
-						defaultValue={ this.GetTag().GetKey() }
+						value={ this.GetTag().GetKey() }
 						onFocus={
 							(e) => {
 								if(e.target.value === this.state.UUID) {
@@ -198,7 +208,7 @@ class TagList extends Component {
 						min="1"
 						max="12"
 						oldvalue={ this.GetTag().GetContentType() }
-						defaultValue={ this.GetTag().GetContentType() }
+						value={ this.GetTag().GetContentType() }
 						onChange={ this.onDataChange.bind(this) }
 					/>
 				</div>
