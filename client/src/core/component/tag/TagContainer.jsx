@@ -63,19 +63,19 @@ class TagContainer extends Component {
 					container[uuid]["Element"] = <TagContainer
 						UUID={ uuid }
 						Tag={ child }
-						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 					/>;
 				} else if(child instanceof PTO.Tag.TagList) {
 					container[uuid]["Element"] = <TagList
 						UUID={ uuid }
 						Tag={ child }
-						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 					/>;
 				} else if(child instanceof PTO.Tag.ATag) {
 					container[uuid]["Element"] = <TagComponent
 						UUID={ uuid }
 						Tag={ child }
-						RegisterElement={ (mc) => { this.RegisterElement(mc) }}
+						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
 					/>;
 				}
 			}

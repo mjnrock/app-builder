@@ -13,7 +13,7 @@ class Tag extends Component {
 		this.state = {};
 		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
 
-		this.state["Tag"] = new PTO.Tag.TagCompound(this.state.UUID);
+		this.state["Tag"] = null;
 		
 		this.state["File"] = null;
 		this.state["Descendents"] = [];

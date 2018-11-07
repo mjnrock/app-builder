@@ -1,25 +1,27 @@
 NOTES:
-	**Install ToDo+ in VS Code**
-	Unit Test - http://dm.gl/2015/11/26/wallaby-for-visual-studio-code/
-	Info - https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
-	Tags - @critical @high @low @today @customizableTag
-	CTRL+ENTER - Make the boxes
-	ALT+D - Mark Complete/Incomplete
+	☐ **Install ToDo+ in VS Code**
+	☐ Unit Test - http://dm.gl/2015/11/26/wallaby-for-visual-studio-code/
+	☐ Info - https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
+	☐ Tags - @critical @high @low @today @customizableTag
+	☐ CTRL+ENTER - Make the boxes
+	☐ ALT+D - Mark Complete/Incomplete
+	☐ ALT+C - Mark Canceled
+	☐ CTRL+SHIFT+A - Archive (Move Completed/Canceled to Archive)
 
 ACTIVE TASK:
-	☐ Serialize and Deserialize a Mutator from a Model
-		☐ From a Model Tag
-		☐ From JSON of Model Tag
-	☐ Build a Save/Load button to save Model's to the file system
-		☐ Redirect download() to prompt dialog box
-		☐ Load invoke dialog and Deserialize the JSON file into the active Model
+	☐ Serialize and Deserialize a Mutator from a Tag
+		☐ From a Tag
+		☐ From JSON of Tag
+	@NOTE: Currently only works on Mutator classes
+	☐ Expand File System to allow Composition files
+		☐ Save Composition file
+		☐ Load Composition file as main Tag
+		☐ Load Composition file as child Tag
+	☐ Test List functionality with File Save/Load
 
 PENDING:
 	MutatorFactory:
-		✔ Build this to generate Mutators so Mutator is not polluted with all that code @done(18-11-02 13:28)
 		GenerateMutator:
-			✔ Refactor outputs like "this.Tag.GetTag("aa").GetTag("aac").GetTag("aaca").SetValues(input);" @done(18-11-02 12:58)
-			✔ MakeGetter and MakeSetter don't have a "tier" awareness; they currently just use "this.Tag", even if they are deeply nested @done(18-11-02 12:58)
 			@NOTE: Iterate over hierarchy..Tag.GetKey() and check for collisions.  If NO, continue, if YES, reformat deeper tiers to prepend as many parent names as necessary to make unique
 			☐ MakeGetter and MakeSetter are currently victim to Tag > Key collisions when naming the Getter and the Setter
 	Mutator:
@@ -36,18 +38,22 @@ PENDING:
 			☐ Update all children Type if parent LIST type changes, rather than deleting or preventing a change (parent can force Type updates)
 		☐ Add "Add List" button to Container
 
-
 BUGS/ISSUES:
 	Utility.Transformer:
 		☐ .FromJSON() appears to be broken.  Try with a Composition and see if that works.  You'll need to convert the text in the Type field back into a number first.
 		☐ .ToComposition() overwrites the Tag directly, which is bad.
 			☐ .FromComposition() needs to be checked, after above is fixed
 
-
-COMPLETED:
-	Model Helper Classes:
-		✔ Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12)
-		✔ Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12)
-		✔ Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:11)
-	ModeContainer:
-		✔ Raw Tags are being saved into the Simple Tag as children of a TagCompound, instead of just the Tag @done(18-11-01 18:29)
+Archive:
+  ✔ @low Initial name load in Tag is not the same UUID as the Tag data implies @done(18-11-07 10:21) @project(ACTIVE TASK)
+  ✔ @high Name updates on Imported Tags create copies instead of updating @done(18-11-07 10:14) @project(ACTIVE TASK)
+  ✔ Build this to generate Mutators so Mutator is not polluted with all that code @done(18-11-02 13:28) @project(PENDING.MutatorFactory)
+  ✔ Refactor outputs like "this.Tag.GetTag("aa").GetTag("aac").GetTag("aaca").SetValues(input);" @done(18-11-02 12:58) @project(PENDING.MutatorFactory.GenerateMutator)
+  ✔ MakeGetter and MakeSetter don't have a "tier" awareness; they currently just use "this.Tag", even if they are deeply nested @done(18-11-02 12:58) @project(PENDING.MutatorFactory.GenerateMutator)
+  ✔ Build a ModelComponent Helper class and refactor ModelComponent to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12) @project(COMPLETED.Model Helper Classes)
+  ✔ Build a ModelContainer Helper class and refactor ModelContainer to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:12) @project(COMPLETED.Model Helper Classes)
+  ✔ Build a Model Helper class and refactor Model to do Tag manipulation through the Helper, instead of raw @done(18-10-31 18:11) @project(COMPLETED.Model Helper Classes)
+  ✔ Raw Tags are being saved into the Simple Tag as children of a TagCompound, instead of just the Tag @done(18-11-01 18:29) @project(COMPLETED.ModeContainer)
+  ✔ Build a Save/Load button to save Tag's to the file system @done(18-11-07 09:53) @project(COMPLETED.Save/Load)
+  ✘ Redirect download() to prompt dialog box @cancelled(18-11-07 09:56) @project(COMPLETED.Save/Load)
+  ✔ Load invoke dialog and Deserialize the JSON file into the active Tag @done(18-11-07 09:56) @project(COMPLETED.Save/Load)
