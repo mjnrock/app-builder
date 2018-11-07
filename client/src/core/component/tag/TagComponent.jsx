@@ -40,6 +40,15 @@ class TagComponent extends Component {
 		this.setState(state);
 	}
 
+	componentWillReceiveProps(nextProps, nextContext) {
+		if(JSON.stringify(this.state.Tag) !== JSON.stringify(nextProps.Tag)) {
+			let state = this.state;
+			state.Tag = nextProps.Tag;
+
+			this.setState(state);
+		}
+	}
+
 	SetTag(tag) {
 		let state = this.state;
 		state.Tag = tag;
@@ -61,7 +70,7 @@ class TagComponent extends Component {
 						placeholder="Name"
 						mcf=".Name"
 						oldvalue={ this.GetTag().GetKey() }
-						defaultValue={ this.GetTag().GetKey() }
+						value={ this.GetTag().GetKey() }
 						onFocus={
 							(e) => {
 								if(e.target.value === this.state.UUID) {
@@ -94,7 +103,7 @@ class TagComponent extends Component {
 							min="1"
 							max="12"
 							oldvalue={ this.GetTag().GetType() }
-							defaultValue={ this.GetTag().GetType() }
+							value={ this.GetTag().GetType() }
 							onChange={ this.onDataChange.bind(this) }
 						/>
 					</div>
