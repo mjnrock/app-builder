@@ -169,7 +169,7 @@ class MutatorFactory {
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
-		lines.push(`}`);
+		lines.push(`}`);	// End Class
 
 		// Download the created file
 		if(downloadFile === true) {

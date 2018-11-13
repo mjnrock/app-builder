@@ -28,17 +28,17 @@ class Tag extends Component {
 			state["Tag"] = this.props.Tag;
 		}
 		
-		if(this.props.UpdateElement) {
-			this.props.UpdateElement(this);
+		if(this.props.RegisterElement) {
+			this.props.RegisterElement(this);
 		}
 
 		this.setState(state);
 	}
 	
-	UpdateElement(clazz, options) {
+	RegisterElement(element) {
 		let state = this.state;
 
-		state.Tag = clazz.state.Tag;
+		state.Tag = element.state.Tag;
 
 		this.setState(state);
 	}
@@ -101,7 +101,7 @@ class Tag extends Component {
 				>Load from Mutator File
 					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden />
 				</label>
-				<TagContainer Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } />
+				<TagContainer Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } RegisterElement={ (tc) => this.RegisterElement(tc) } />
 				<div className="text-center mt3 mb2">
 					<button
 						type="button"

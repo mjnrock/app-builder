@@ -9,7 +9,7 @@ class TagComponent extends Component {
 		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
 		this.state["Tag"] = new PTO.Tag.TagString(this.state.UUID);
 
-		this.state["Timestamp"] = Date.now();
+		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
@@ -30,8 +30,8 @@ class TagComponent extends Component {
 			state.Tag = this.props.Tag;
 		}
 
-		if(this.props.UpdateElement !== null && this.props.UpdateElement !== void 0) {
-			this.props.UpdateElement(this);
+		if(this.props.RegisterElement !== null && this.props.RegisterElement !== void 0) {
+			this.props.RegisterElement(this);
 		}
 
 		this.setState(state);
@@ -132,11 +132,11 @@ class TagComponent extends Component {
 					state.Tag = new clazz(key !== null && key !== void 0 ? key : state.UUID);
 				}
 
-				this.props.UpdateElement(this);
+				this.props.RegisterElement(this);
 			} else if(mcf === ".Name") {
 				state.Tag.SetKey(e.target.value);
 
-				this.props.UpdateElement(this, {
+				this.props.RegisterElement(this, {
 					OldKey: e.target.getAttribute("oldvalue")
 				});
 			}

@@ -21,6 +21,10 @@ class TagCompound extends ATag {
 		return `${depth}${schema}`;
 	}
 
+	ToArray() {
+		return Object.values(this.Value);
+	}
+
 	GetContentType() {
 		return this.ContentType;
 	}

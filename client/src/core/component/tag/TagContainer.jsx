@@ -14,9 +14,8 @@ class TagContainer extends Component {
 		this.state = {};
 		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
 		this.state["Tag"] = new PTO.Tag.TagCompound(this.state["UUID"]);
-		this.state["Container"] = {};
-		
-		this.Timestamp = Date.now();
+
+		this.state["Timestamp"] = Date.now();
 	}
 
 	componentWillMount() {
@@ -24,11 +23,10 @@ class TagContainer extends Component {
 
 		if(this.props.Tag !== null && this.props.Tag !== void 0) {
 			state["Tag"] = this.props.Tag;
-			state["Container"] = this.ContainerFromTag(this.props.Tag);
 		}
-		
-		if(this.props.RegisterElement) {
-			this.props.RegisterElement(this);
+
+		if(this.props.UpdateElement !== null && this.props.UpdateElement !== void 0) {
+			this.props.UpdateElement(this);
 		}
 
 		this.setState(state);
@@ -38,57 +36,32 @@ class TagContainer extends Component {
 		if(JSON.stringify(this.state.Tag) !== JSON.stringify(nextProps.Tag)) {
 			let state = this.state;
 			state.Tag = nextProps.Tag;
-			state.Container = this.ContainerFromTag(nextProps.Tag);
 
 			this.setState(state);
 		}
 	}
 
-	ContainerFromTag(tag) {
-		if(tag !== null && tag !== void 0) {
-			let children = Object.values(tag.GetValues()),
-				container = {};
+	UpdateElement(clazz, options) {
+		let state = this.state,
+			eleTag = clazz.state.Tag;
 
-			for(let i in children) {
-				let child = children[i],
-					uuid = PTO.Utility.Transformer.GenerateUUID();
-
-				container[uuid] = {
-					UUID: uuid,
-					Class: null,
-					Timestamp: Date.now()
-				};
-			
-				if(child instanceof PTO.Tag.TagCompound) {
-					container[uuid]["Element"] = <TagContainer
-						UUID={ uuid }
-						Tag={ child }
-						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-					/>;
-				} else if(child instanceof PTO.Tag.TagList) {
-					container[uuid]["Element"] = <TagList
-						UUID={ uuid }
-						Tag={ child }
-						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-					/>;
-				} else if(child instanceof PTO.Tag.ATag) {
-					container[uuid]["Element"] = <TagComponent
-						UUID={ uuid }
-						Tag={ child }
-						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-					/>;
-				}
-			}
-			
-			return container;
+		let key = eleTag.GetKey();
+		if(options && options.OldKey) {
+			key = options.OldKey;
 		}
-	}
-	
-	InitializeFromTag(tag) {
-		let state = this.state;
-		
-		state.Tag = tag;
-		state.Container = this.ContainerFromTag(tag);
+
+		let tag = state.Tag.GetTag(key);
+		if(tag === void 0 || tag === null) {
+			state.Tag.AddTag(eleTag);
+		} else {
+			//? This Timestamp overrides the React internal flag that otherwise causes rerenders based on last update timestamp
+			//TODO Add an "Ordinality" KVP to the ATag base and adjust downstream consequences (Transformer, etc.)
+			let tag = state.Tag.GetTag(key);
+			eleTag.Timestamp = tag.Timestamp;
+
+			state.Tag.RemoveTag(key);
+			state.Tag.AddTag(eleTag);
+		}
 
 		this.setState(state);
 	}
@@ -102,118 +75,114 @@ class TagContainer extends Component {
 	GetTag() {
 		return this.state.Tag;
 	}
-		
 
-	RegisterElement(element, options) {
+	CreateNewTag(type) {
 		let state = this.state,
-			uuid = element.props.UUID,
-			eleTag = element.state.Tag;
-
-		state.Container[uuid].Class = element;
-
-		let key = eleTag.GetKey();
-		if(options && options.OldKey) {
-			key = options.OldKey;
-		}
-
-		let tag = state.Tag.GetTag(key);
-		if(tag === void 0 || tag === null) {
-			state.Tag.AddTag(eleTag);
-		} else {
-			state.Tag.RemoveTag(key);
-			state.Tag.AddTag(eleTag);
-		}
-
-		this.setState(state);
-	}
-	NewContainerElement(type) {
-		let state = this.state,
-			uuid = PTO.Utility.Transformer.GenerateUUID();
-
-		state.Container[uuid] = {
-			UUID: uuid,
-			Class: null,
-			Timestamp: Date.now()
-		};
-		
+			uuid = PTO.Utility.Transformer.GenerateUUID(),
+			tag = null;
+			
 		if(type === "Compound") {
-			state.Container[uuid]["Element"] = <TagContainer
-				UUID={ uuid }
-				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-			/>;
+			tag = new PTO.Tag.TagCompound(uuid);
 		} else if(type === "Component") {
-			state.Container[uuid]["Element"] = <TagComponent
-				UUID={ uuid }
-				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-			/>;
+			tag = new PTO.Tag.TagString(uuid);
 		} else if(type === "List") {
-			state.Container[uuid]["Element"] = <TagList
-				UUID={ uuid }
-				RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-			/>;
+			tag = new PTO.Tag.TagList(uuid, PTO.Enum.TagType.STRING);
 		}
+		tag.Timestamp = Date.now();
+		state.Tag.AddTag(tag);
 
 		this.setState(state);
 	}
 	
-	RemoveElement(element) {
+	RemoveElement(tag) {
 		let state = this.state;
 
-		state.Tag.RemoveTag(element.Class.state.Tag.GetKey());
-		delete state.Container[element.UUID];
+		state.Tag.RemoveTag(tag);
 
 		this.setState(state);
 	}
 
-	AddTagFromFile(file) {
-		if(file !== null && file !== void 0) {
-			// eslint-disable-next-line
-			file = eval(`(${ file })`);
-			let state = this.state,
-				uuid = PTO.Utility.Transformer.GenerateUUID(),
-				tag = (new file()).GetTag();
+	// AddTagFromFile(file) {
+	// 	if(file !== null && file !== void 0) {
+	// 		// eslint-disable-next-line
+	// 		file = eval(`(${ file })`);
+	// 		let state = this.state,
+	// 			uuid = PTO.Utility.Transformer.GenerateUUID(),
+	// 			tag = (new file()).GetTag();
 	
-			state.Container[uuid] = {
-				UUID: uuid,
-				Class: null,
-				Timestamp: Date.now(),
-				Element: <TagContainer
+	// 		state.Container[uuid] = {
+	// 			UUID: uuid,
+	// 			Class: null,
+	// 			Timestamp: Date.now(),
+	// 			Element: <TagContainer
+	// 				UUID={ uuid }
+	// 				Tag={ tag }
+	// 				UpdateElement={ (mc, options) => { this.UpdateElement(mc, options) }}
+	// 			/>
+	// 		};
+
+	// 		this.setState(state);
+	// 	}
+	// }
+
+	// async OnFileUpload(e) {
+	// 	let file = await this.UploadFile(e);
+	// 	if(file !== null && file !== void 0) {
+	// 		this.AddTagFromFile(file);
+	// 	}
+	// }
+
+	// UploadFile(event) {
+	// 	let file = event.target.files[0];
+        
+    //     if (file) {
+	// 		const reader = new FileReader();
+
+	// 		return new Promise((resolve, reject) => {
+	// 			reader.onerror = () => {
+	// 				reader.abort();
+	// 				reject(new Error('Problem parsing file'));
+	// 			};
+
+	// 			reader.onload = () => {
+	// 				resolve(reader.result);
+	// 			};
+
+	// 			reader.readAsText(file);
+	// 		});
+	// 	}
+	// }
+
+	RenderTag(tag) {
+		if(tag !== null && tag !== void 0) {
+			let uuid = PTO.Utility.Transformer.GenerateUUID();
+
+			if(tag.GetKey().match(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+				uuid = tag.GetKey();
+			}
+		
+			if(tag instanceof PTO.Tag.TagCompound) {
+				return <TagContainer
 					UUID={ uuid }
 					Tag={ tag }
-					RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
-				/>
-			};
-
-			this.setState(state);
+					UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
+				/>;
+			} else if(tag instanceof PTO.Tag.TagList) {
+				return <TagList
+					UUID={ uuid }
+					Tag={ tag }
+					UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
+				/>;
+			} else if(tag instanceof PTO.Tag.ATag) {
+				return <TagComponent
+					UUID={ uuid }
+					Tag={ tag }
+					UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
+				/>;
+			}
 		}
-	}
 
-	async OnFileUpload(e) {
-		let file = await this.UploadFile(e);
-		if(file !== null && file !== void 0) {
-			this.AddTagFromFile(file);
-		}
-	}
-
-	UploadFile(event) {
-		let file = event.target.files[0];
-        
-        if (file) {
-			const reader = new FileReader();
-
-			return new Promise((resolve, reject) => {
-				reader.onerror = () => {
-					reader.abort();
-					reject(new Error('Problem parsing file'));
-				};
-
-				reader.onload = () => {
-					resolve(reader.result);
-				};
-
-				reader.readAsText(file);
-			});
-		}
+		return null;
 	}
 
 	render() {
@@ -247,17 +216,17 @@ class TagContainer extends Component {
 						<span>&nbsp;[{ this.state.UUID }]</span>
 					</p>
 					{
-						Object.values(this.state.Container).map((e, i) => {
+						this.state.Tag.ToArray().sort((a, b) => a.Timestamp - b.Timestamp).map((tag, i) => {
 							return (
 								<div className="flex mt2 mb2 justify-around" key={ i }>
 									<button
 										className={
-											`btn btn-sm btn-outline-danger ${ e.Class instanceof TagContainer ? "mr2" : "mr1" }`
+											`btn btn-sm btn-outline-danger ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
 										}
-										onClick={ () => this.RemoveElement(e) }
+										onClick={ () => this.RemoveElement(tag) }
 									>X</button>
 									{
-										e.Element
+										this.RenderTag(tag)
 									}
 								</div>
 							);
@@ -273,22 +242,22 @@ class TagContainer extends Component {
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-primary mr1"
-							onClick={ () => this.NewContainerElement("Component") }
+							onClick={ () => this.CreateNewTag("Component") }
 						>Add Tag</button>
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-info mr1"
-							onClick={ () => this.NewContainerElement("Compound") }
+							onClick={ () => this.CreateNewTag("Compound") }
 						>Add Compound</button>
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-info mr1"
-							onClick={ () => this.NewContainerElement("List") }
+							onClick={ () => this.CreateNewTag("List") }
 						>Add List</button>
 						<label
 							className="btn btn-block btn-sm btn-outline-dark mr1 mb0"
 						>Import from Mutator
-							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden />
+							{/* <input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden /> */}
 						</label>
 						<button
 							type="button"
@@ -309,7 +278,7 @@ class TagContainer extends Component {
 			if(mcf === ".Name") {
 				state.Tag.SetKey(e.target.value);
 
-				this.props.RegisterElement(this, {
+				this.props.UpdateElement(this, {
 					OldKey: e.target.getAttribute("oldvalue")
 				});
 			}

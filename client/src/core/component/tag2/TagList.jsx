@@ -12,8 +12,9 @@ class TagList extends Component {
 			this.state["UUID"],
 			this.props.ListType !== null && this.props.ListType !== void 0 ? +this.props.ListType : PTO.Enum.TagType.STRING
 		);
-
-		this.state["Timestamp"] = Date.now();
+		this.state["Container"] = {};
+		
+		this.Timestamp = Date.now();
 	}
 
 	componentWillMount() {
@@ -21,10 +22,11 @@ class TagList extends Component {
 
 		if(this.props.Tag !== null && this.props.Tag !== void 0) {
 			state["Tag"] = this.props.Tag;
+			state["Container"] = this.ContainerFromTag(this.props.Tag);
 		}
-
-		if(this.props.UpdateElement !== null && this.props.UpdateElement !== void 0) {
-			this.props.UpdateElement(this);
+		
+		if(this.props.RegisterElement) {
+			this.props.RegisterElement(this);
 		}
 
 		this.setState(state);
@@ -34,8 +36,37 @@ class TagList extends Component {
 		if(JSON.stringify(this.state.Tag) !== JSON.stringify(nextProps.Tag)) {
 			let state = this.state;
 			state.Tag = nextProps.Tag;
+			state.Container = this.ContainerFromTag(nextProps.Tag);
 
 			this.setState(state);
+		}
+	}
+
+	ContainerFromTag(tag) {
+		if(tag !== null && tag !== void 0) {
+			let children = Object.values(tag.GetValues()),
+				container = {};
+
+			for(let i in children) {
+				let child = children[i],
+					uuid = PTO.Utility.Transformer.GenerateUUID();
+
+				container[uuid] = {
+					UUID: uuid,
+					Class: null,
+					Timestamp: Date.now()
+				};
+			
+				if(child instanceof PTO.Tag.ATag) {
+					container[uuid]["Element"] = <TagComponent
+						UUID={ uuid }
+						Tag={ child }
+						RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
+					/>;
+				}
+			}
+			
+			return container;
 		}
 	}
 
@@ -49,9 +80,12 @@ class TagList extends Component {
 		return this.state.Tag;
 	}
 	
-	UpdateElement(clazz, options) {
+	RegisterElement(element, options) {
 		let state = this.state,
-			eleTag = clazz.state.Tag;
+			uuid = element.props.UUID,
+			eleTag = element.state.Tag;
+
+		state.Container[uuid].Class = element;
 
 		let key = eleTag.GetKey();
 		if(options && options.OldKey) {
@@ -62,54 +96,39 @@ class TagList extends Component {
 		if(tag.length === 0) {
 			state.Tag.AddValue(eleTag);
 		} else {
-			//? This Timestamp overrides the React internal flag that otherwise causes rerenders based on last update timestamp
-			//TODO Add an "Ordinality" KVP to the ATag base and adjust downstream consequences (Transformer, etc.)
-			let tag = state.Tag.GetValue(key);
-			eleTag.Timestamp = tag.Timestamp;
-
 			state.Tag.RemoveTag(key);
 			state.Tag.AddValue(eleTag);
 		}
 
 		this.setState(state);
 	}
-
-	CreateNewTag(key, uuid) {
+	NewListElement(key, uuid) {
 		let state = this.state;
 		uuid = uuid !== null && uuid !== void 0 ? uuid : PTO.Utility.Transformer.GenerateUUID();
 
-		let clazz = PTO.Enum.TagType.GetClass(state.Tag.GetContentType()),
-		tag = new clazz(key || uuid);
-		tag.Timestamp = Date.now();
-		state.Tag.AddValue(tag);
+		state.Container[uuid] = {
+			UUID: uuid,
+			Class: null,
+			Timestamp: Date.now()
+		};
+		
+		state.Container[uuid]["Element"] = <TagComponent
+			UUID={ uuid }
+			Type={ state.Tag.GetContentType() }
+			KeyName={ key }
+			RegisterElement={ (mc, options) => { this.RegisterElement(mc, options) }}
+		/>;
 
 		this.setState(state);
 	}
 	
-	RemoveElement(tag) {
+	RemoveElement(element) {
 		let state = this.state;
 
-		state.Tag.RemoveTag(tag);
+		state.Tag.RemoveTag(element.Class.state.Tag);
+		delete state.Container[element.UUID];
 
 		this.setState(state);
-	}
-
-	RenderTag(tag) {
-		if(tag !== null && tag !== void 0) {
-			let uuid = PTO.Utility.Transformer.GenerateUUID();
-
-			if(tag.GetKey().match(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
-				uuid = tag.GetKey();
-			}
-		
-			return <TagComponent
-				UUID={ uuid }
-				Tag={ tag }
-				UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
-			/>;
-		}
-
-		return null;
 	}
 
 	render() {
@@ -144,17 +163,17 @@ class TagList extends Component {
 						<span>&nbsp;[{ this.state.UUID }]</span>
 					</p>
 					{
-						this.state.Tag.GetValues().sort((a, b) => a.Timestamp - b.Timestamp).map((tag, i) => {
+						Object.values(this.state.Container).map((e, i) => {
 							return (
 								<div className="flex mt2 mb2 justify-around" key={ i }>
 									<button
 										className={
-											`btn btn-sm btn-outline-danger ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
+											`btn btn-sm btn-outline-danger ${ e.Class instanceof TagList ? "mr2" : "mr1" }`
 										}
-										onClick={ () => this.RemoveElement(tag) }
+										onClick={ () => this.RemoveElement(e) }
 									>X</button>
 									{
-										this.RenderTag(tag)
+										e.Element
 									}
 								</div>
 							);
@@ -170,7 +189,7 @@ class TagList extends Component {
 						<button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-primary mr1"
-							onClick={ () => this.CreateNewTag() }
+							onClick={ () => this.NewListElement() }
 						>Add Tag</button>
 						<button
 							type="button"
@@ -205,30 +224,37 @@ class TagList extends Component {
 			if(mcf === ".Type") {
 				if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 					e.target.value = +e.target.value === +PTO.Enum.TagType.DOUBLE ? +e.target.value + 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value + 1 : +e.target.value;
 				} else {
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.COMPOUND ? +e.target.value - 1 : +e.target.value;
+					// e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value - 1 : +e.target.value;
 					e.target.value = +e.target.value === +PTO.Enum.TagType.DOUBLE ? +e.target.value - 1 : +e.target.value;
 				}
 				e.target.setAttribute("oldvalue", e.target.value);
 
 				state.Tag.SetContentType(+e.target.value);
 
-				let keys = this.state.Tag.GetValues().map((e) => e.GetKey());
+				let keys = Object.values(this.state.Container).map((e) => [e.Class.state.Tag.GetKey(), e.Class.state.UUID]),
+					elements = this.state.Container;
 				
-				state.Tag.Values = [];
-				this.props.UpdateElement(this);
+				Object.values(elements).forEach((e) => {
+					this.RemoveElement(e);
+				});
+				this.props.RegisterElement(this);
 
 				//* Not exactly sure what is happening, but without this timeout, the this.forceUpdate() doesn't work
 				setTimeout(() => {
 					keys.forEach((k) => {
-						this.CreateNewTag(k);
+						this.NewListElement(k[0], k[1]);
 					});
 
-					this.props.UpdateElement(this);
+					this.props.RegisterElement(this);
 				}, 1);
 			} else if(mcf === ".Name") {
 				state.Tag.SetKey(e.target.value);
 
-				this.props.UpdateElement(this, {
+				this.props.RegisterElement(this, {
 					OldKey: e.target.getAttribute("oldvalue")
 				});
 			}
