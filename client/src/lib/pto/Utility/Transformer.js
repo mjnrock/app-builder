@@ -836,6 +836,33 @@ class Transformer {
 	// 	traverse(obj, process);
 	// 	return Transformer.FromJSON(obj);
 	// }
+
+	static ToSchema(tag, array, parentID, parent) {
+		if (array === null || array === void 0) {
+			array = [];
+		}
+		if (parentID === void 0) {
+			parentID = null;
+		}
+
+		let ID = array.length + 1;
+		array.push({
+			ID: ID,
+			ParentID: parentID,
+			Key: tag.GetKey(),
+			Path: `${parent !== null && parent !== void 0 ? `${parent.Path}.` : ""}${tag.GetKey()}`,
+			Tag: tag
+		});
+
+		if (tag instanceof Tag.TagCompound || tag instanceof Tag.TagList) {
+			let lastEntry = array[array.length - 1];
+			for (let i in tag.Value) {
+				array = Transformer.ToSchema(tag.Value[i], array, ID, lastEntry);
+			}
+		}
+
+		return array;
+	}
 }
 
 export { Transformer };

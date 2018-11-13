@@ -1,42 +1,16 @@
-import Tag from "../Tag/package.js";
+import { Transformer } from "./Transformer.js";
 
 class Navigator {
 	//	This is really designed for treating a tag like an object with Dot Notation
-	static FindTag(tag, keys, dl) {
-		dl = dl === null || dl === void 0 ? "." : dl;
-		if (keys.length > 0 && tag instanceof Tag.ATag) {
-			keys = keys.split(dl);
-			let key = keys.shift();
-			if (keys.length > 0) {
-				keys = keys.join(dl);
-			}
-			
-			if (tag.GetKey() === key || key === "") {
-				let value = tag.GetValues();
-				if (tag instanceof Tag.TagCompound) {
-					let v = Object.values(value);
-					for (let i in v) {				
-						tag = Navigator.FindTag(v[i], keys, dl);
+	static FindTag(tag, key) {
+		let schema = Transformer.ToSchema(tag),
+			ret = schema.filter(r => r.Path === key)[0];
 
-						if (tag !== null && tag !== void 0) {
-							return tag;
-						}
-					}
-				} else if (tag instanceof Tag.TagList) {
-					for (let i in value) {
-						tag = Navigator.FindTag(value[i], keys, dl);
-
-						if (tag !== null && tag !== void 0) {
-							return tag;
-						}
-					}
-				}
-			}
-			
-			if (tag.GetKey() === key && tag instanceof Tag.ATag) {
-				return tag;
-			}
+		if(ret !== null && ret !== void 0) {
+			return ret.Tag;
 		}
+
+		return false;
 	}
 	
 	//	TODO Add a "Selector" function that allows for CSS-style Tag selection

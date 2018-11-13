@@ -9,7 +9,7 @@ const Mutator = PTO.Mutator.Mutator;
 
 class Tag extends Component {
 	constructor(props) {
-		super(props);		
+		super(props);
 		this.state = {};
 		this.state["UUID"] = this.props.UUID !== null && this.props.UUID !== void 0 ? this.props.UUID : PTO.Utility.Transformer.GenerateUUID();
 
@@ -45,6 +45,11 @@ class Tag extends Component {
 
 	UpdateContainer(file) {
 		if(file !== null && file !== void 0) {
+			
+			//? This removes the "import" and the "export" lines put in by the MutatorFactory.GenerateMutator()
+			file = file.split("\n");
+			file = file.slice(2, file.length - 2).join("\n");
+
 			// eslint-disable-next-line
 			file = eval(`(${ file })`);
 			let state = this.state,
