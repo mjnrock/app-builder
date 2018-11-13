@@ -128,10 +128,6 @@ class MutatorFactory {
 		let currentVariable = "this.Tag",
 			currentParentID = 1,
 			lines = [
-				`import { Mutator } from "./Mutator";\n\n`,
-				// `import { Mutator } from "./Mutator";\n`,
-				// `// import { Mutator } from "./path/to/mutator/";\n\n`,
-
 				`class ${ saniRootKey } extends Mutator {\n`,
 				`\tconstructor() {\n`,
 				`\t\tsuper();\n\n`,
@@ -174,10 +170,15 @@ class MutatorFactory {
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);
-		lines.push(`\n\nexport { ${ saniRootKey } };`);
 
 		// Download the created file
 		if(downloadFile === true) {
+			lines = [
+				`import { Mutator } from "./Mutator";\n\n`,
+				...lines,
+				`\n\nexport { ${ saniRootKey } };`
+			];
+
 			const download = (filename, text) => {
 				var element = document.createElement('a');
 				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
