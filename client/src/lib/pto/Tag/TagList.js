@@ -46,6 +46,10 @@ class TagList extends ATag {
 
 		return this.Value[input];
 	}
+	
+	AddTag(tag) {
+		return this.AddValue(tag);
+	}
 	AddValue(tag) {
 		if (tag instanceof ATag) {
 			if (tag.GetType() === this.GetContentType()) {

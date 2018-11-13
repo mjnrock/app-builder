@@ -102,56 +102,56 @@ class TagContainer extends Component {
 		this.setState(state);
 	}
 
-	// AddTagFromFile(file) {
-	// 	if(file !== null && file !== void 0) {
-	// 		// eslint-disable-next-line
-	// 		file = eval(`(${ file })`);
-	// 		let state = this.state,
-	// 			uuid = PTO.Utility.Transformer.GenerateUUID(),
-	// 			tag = (new file()).GetTag();
-	
-	// 		state.Container[uuid] = {
-	// 			UUID: uuid,
-	// 			Class: null,
-	// 			Timestamp: Date.now(),
-	// 			Element: <TagContainer
-	// 				UUID={ uuid }
-	// 				Tag={ tag }
-	// 				UpdateElement={ (mc, options) => { this.UpdateElement(mc, options) }}
-	// 			/>
-	// 		};
+	AddTagFromFile(file) {
+		if(file !== null && file !== void 0) {
+			file = file.split("\n");
+			//? This removes the "import" and the "export" lines put in by the MutatorFactory.GenerateMutator()
+			if(file[0].match(/import/gi) && file[file.length - 1].match(/export/gi)) {
+				file = file.slice(2, file.length - 2);
+			}
+			file = file.join("\n");
 
-	// 		this.setState(state);
-	// 	}
-	// }
+			// eslint-disable-next-line
+			file = eval(`(${ file })`);
+			let state = this.state,
+				tag = (new file()).GetTag();
+		
+			if(state.Tag.Serialize() !== tag.Serialize()) {
+				state.Tag = tag;
+				this.setState(state);
+			} else {
+				console.warn("[OPERATION HAULTED]: An identical tag structure was detected.");
+			}
+		}
+	}
 
-	// async OnFileUpload(e) {
-	// 	let file = await this.UploadFile(e);
-	// 	if(file !== null && file !== void 0) {
-	// 		this.AddTagFromFile(file);
-	// 	}
-	// }
+	async OnFileUpload(e) {
+		let file = await this.UploadFile(e);
+		if(file !== null && file !== void 0) {
+			this.AddTagFromFile(file);
+		}
+	}
 
-	// UploadFile(event) {
-	// 	let file = event.target.files[0];
+	UploadFile(event) {
+		let file = event.target.files[0];
         
-    //     if (file) {
-	// 		const reader = new FileReader();
+        if (file) {
+			const reader = new FileReader();
 
-	// 		return new Promise((resolve, reject) => {
-	// 			reader.onerror = () => {
-	// 				reader.abort();
-	// 				reject(new Error('Problem parsing file'));
-	// 			};
+			return new Promise((resolve, reject) => {
+				reader.onerror = () => {
+					reader.abort();
+					reject(new Error('Problem parsing file'));
+				};
 
-	// 			reader.onload = () => {
-	// 				resolve(reader.result);
-	// 			};
+				reader.onload = () => {
+					resolve(reader.result);
+				};
 
-	// 			reader.readAsText(file);
-	// 		});
-	// 	}
-	// }
+				reader.readAsText(file);
+			});
+		}
+	}
 
 	RenderTag(tag) {
 		if(tag !== null && tag !== void 0) {
@@ -257,7 +257,7 @@ class TagContainer extends Component {
 						<label
 							className="btn btn-block btn-sm btn-outline-dark mr1 mb0"
 						>Import from Mutator
-							{/* <input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden /> */}
+							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 						</label>
 						<button
 							type="button"

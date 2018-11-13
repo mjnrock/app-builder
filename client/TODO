@@ -48,6 +48,7 @@ BUGS/ISSUES:
 			☐ .FromComposition() needs to be checked, after above is fixed
 
 Archive:
+  ✔ Mutator does not Sanitize variables in the constructor @done(18-11-13 14:21) @project(BUGS)
   ✔ Extract the "class" content from the Mutator file and only load that instead @done(18-11-12 20:00) @project(ACTIVE TASK)
   ✔ @low Initial name load in Tag is not the same UUID as the Tag data implies @done(18-11-07 10:21) @project(ACTIVE TASK)
   ✔ @high Name updates on Imported Tags create copies instead of updating @done(18-11-07 10:14) @project(ACTIVE TASK)

@@ -148,11 +148,15 @@ class MutatorFactory {
 					let parent = lookup[row.ParentID];
 
 					lines.push(`\n`);
-					lines.push(`\t\tlet ${ parent.TierKey } = ${ currentVariable }.GetTag("${ parent.Key }");\n`);
-					currentVariable = parent.TierKey;
+					lines.push(`\t\tlet ${ SanitizeName(parent.TierKey) } = ${ currentVariable }.GetTag("${ parent.Key }");\n`);
+					currentVariable = SanitizeName(parent.TierKey);
 					currentParentID = +row.ParentID;
 				}
-				lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
+				if(className === "TagList") {
+					lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }", this.PTO.Enum.TagType.${ PTO.Enum.TagType.GetString(+schema[i].Tag.GetContentType()) }));\n`);
+				} else {
+					lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
+				}
 
 				funcs.push(
 					// ...MakeGetterSetter(key, `this.Get${ lookup[row.ParentID].TierKey }().GetTag("${ lookup[row.ID].Key }")`)

@@ -44,8 +44,7 @@ class Tag extends Component {
 	}
 
 	UpdateContainer(file) {
-		if(file !== null && file !== void 0) {
-			
+		if(file !== null && file !== void 0) {			
 			file = file.split("\n");
 			//? This removes the "import" and the "export" lines put in by the MutatorFactory.GenerateMutator()
 			if(file[0].match(/import/gi) && file[file.length - 1].match(/export/gi)) {
@@ -58,9 +57,12 @@ class Tag extends Component {
 			let state = this.state,
 				tag = (new file()).GetTag();
 	
-			state.Tag = tag;
-	
-			this.setState(state);
+			if(state.Tag.Serialize() !== tag.Serialize()) {
+				state.Tag = tag;
+				this.setState(state);
+			} else {
+				console.warn("[OPERATION HAULTED]: An identical tag structure was detected.");
+			}
 		}
 	}
 
@@ -99,7 +101,7 @@ class Tag extends Component {
 				<label 
 					className="btn btn-block btn-sm btn-outline-primary mr1 mb0"
 				>Load from Mutator File
-					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } hidden />
+					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 				</label>
 				<TagContainer Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } />
 				<div className="text-center mt3 mb2">
@@ -107,7 +109,7 @@ class Tag extends Component {
 						type="button"
 						className="btn btn-sm btn-block btn-outline-success mr1"
 						onClick={ () => this.OnSave() }
-					>Send Tag to Console</button>
+					>Send Class to Console</button>
 					<button
 						type="button"
 						className="btn btn-sm btn-block btn-outline-warning mr1"
