@@ -41,7 +41,7 @@ class MutatorFactory {
 			duplicates = GetDuplicateKeysArray(keys),
 			lookup = {};
 			
-		schema = schema.sort((a, b) => a.ParentID - b.ParentID);
+		// schema = schema.sort((a, b) => a.ParentID - b.ParentID);
 		schema.forEach((r, i) => {
 			lookup[r.ID] = {
 				...r,
@@ -123,16 +123,13 @@ class MutatorFactory {
 		};
 
 		let root = schema[0],
-			saniRootKey = SanitizeName(root.Tag.GetKey());
-
-		let currentVariable = "this.Tag",
-			currentParentID = 1,
+			saniRootKey = SanitizeName(root.Tag.GetKey()),
 			lines = [
 				`class ${ saniRootKey } extends Mutator {\n`,
 				`\tconstructor() {\n`,
 				`\t\tsuper();\n\n`,
 
-				`\t\t${ currentVariable } = new this.PTO.Tag.TagCompound("${ root.Tag.GetKey() }");\n\n`
+				`\t\tthis.Tag = new this.PTO.Tag.TagCompound("${ root.Tag.GetKey() }");\n`
 			],
 			funcs = [
 				...MakeGetterSetter(root)
@@ -140,31 +137,23 @@ class MutatorFactory {
 
 		schema.forEach((row, i) => {
 			if(i > 0) {
-				let key = row.Tag.GetKey(),
-					type = schema[i].Tag.GetType(),
-					className = PTO.Enum.TagType.GetClass(+type).name;
+				let type = schema[i].Tag.GetType(),
+					className = PTO.Enum.TagType.GetClass(+type).name,
+					parent = lookup[row.ParentID],
+					parentVar = row.ParentID === 1 ? "this.Tag" : SanitizeName(parent.TierKey);
 
-				if(+row.ParentID !== +currentParentID) {
-					let parent = lookup[row.ParentID];
-
-					lines.push(`\n`);
-					lines.push(`\t\tlet ${ SanitizeName(parent.TierKey) } = ${ currentVariable }.GetTag("${ parent.Key }");\n`);
-					currentVariable = SanitizeName(parent.TierKey);
-					currentParentID = +row.ParentID;
-				}
-				if(className === "TagList") {
-					lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }", this.PTO.Enum.TagType.${ PTO.Enum.TagType.GetString(+schema[i].Tag.GetContentType()) }));\n`);
+				if(row.Tag instanceof PTO.Tag.TagCompound || row.Tag instanceof PTO.Tag.TagList) {
+					lines.push(`\t\t${ parentVar }.AddTag(new this.PTO.Tag.${ className }("${ row.Key }"));\n`);
+					lines.push(`\t\tlet ${ SanitizeName(row.TierKey) } = ${ parentVar }.GetTag("${ row.Key }");\n`);
 				} else {
-					lines.push(`\t\t${ currentVariable }.AddTag(new this.PTO.Tag.${ className }("${ key }"));\n`);
+					lines.push(`\t\t${ parentVar }.AddTag(new this.PTO.Tag.${ className }("${ row.Key }"));\n`);
 				}
-
+				
 				funcs.push(
-					// ...MakeGetterSetter(key, `this.Get${ lookup[row.ParentID].TierKey }().GetTag("${ lookup[row.ID].Key }")`)
 					...MakeGetterSetter(row)
 				);
 				if(row.Tag instanceof PTO.Tag.TagCompound || row.Tag instanceof PTO.Tag.TagList) {
 					funcs.push(
-						// ...MakeAdderRemover(key, `this.Get${ lookup[row.ID].TierKey }()`, row.Tag instanceof PTO.Tag.TagCompound)
 						...MakeAdderRemover(row)
 					);
 				}

@@ -8,6 +8,9 @@ NOTES:
 	☐ ALT+C - Mark Canceled
 	☐ CTRL+SHIFT+A - Archive (Move Completed/Canceled to Archive)
 
+BUGS:
+	☐ Somehow creating a new tag delayed and TagCompound.Values[""] got entered.  Consequently, I had to delete the tag key data via the input field so it was blank, then delete the tag.  Importantly, the "Key" value in the tag was populated, but the TagCompound.Value key was blank.
+
 ACTIVE TASK:
 	☐ Serialize and Deserialize a Mutator from a Tag
 		☐ From a Tag

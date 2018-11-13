@@ -19,6 +19,8 @@ class Tag extends Component {
 		this.state["Descendents"] = [];
 		
 		this.Timestamp = Date.now();
+
+		console.log(PTO);
 	}
 
 	componentWillMount() {
@@ -54,6 +56,7 @@ class Tag extends Component {
 
 			// eslint-disable-next-line
 			file = eval(`(${ file })`);
+			console.log(file);
 			let state = this.state,
 				tag = (new file()).GetTag();
 	

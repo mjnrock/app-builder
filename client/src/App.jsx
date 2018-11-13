@@ -5,6 +5,15 @@ import Routes from "./routes/package";
 
 // import PTO from "./lib/pto/package";
 import Core from "./core/package";
+
+//! Remarkable
+//* Demo
+//	https://jonschlinkert.github.io/remarkable/demo/
+//* NPM
+//	https://www.npmjs.com/package/remarkable
+//* Usage
+// import Remarkable from "remarkable";
+// <div dangerouslySetInnerHTML={ {__html: this.Remarkable.render("Hello, **world**!")} }></div>
 	
 //! Move these into an appropriate class for use with the GUI bindings and forms
 // static GetAllParameters = (func) => {
