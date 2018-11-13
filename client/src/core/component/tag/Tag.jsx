@@ -48,7 +48,11 @@ class Tag extends Component {
 			
 			//? This removes the "import" and the "export" lines put in by the MutatorFactory.GenerateMutator()
 			file = file.split("\n");
-			file = file.slice(2, file.length - 2).join("\n");
+			if(file[0].match(/import/gi) && file[file.length - 1].match(/export/gi)) {
+				file = file.slice(2, file.length - 2);
+			}
+			file = file.join("\n");
+			console.log(file);
 
 			// eslint-disable-next-line
 			file = eval(`(${ file })`);
