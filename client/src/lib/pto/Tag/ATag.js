@@ -24,10 +24,10 @@ class ATag {
 	}
 
 	GetOrdinality() {
-		return this.Ordinality;
+		return +this.Ordinality;
 	}
 	SetOrdinality(order) {
-		this.Ordinality = order;
+		this.Ordinality = +order;
 
 		return this;
 	}

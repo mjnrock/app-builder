@@ -58,6 +58,8 @@ class Tag extends Component {
 			file = eval(`(${ file })`);
 			let state = this.state,
 				tag = (new file()).GetTag();
+
+			PTO.Utility.Transformer.ToHierarchy(tag).forEach((t, i) => t.Tag.SetOrdinality(i + 1));
 	
 			if(state.Tag.Serialize() !== tag.Serialize()) {
 				state.Tag = tag;
@@ -137,28 +139,9 @@ class Tag extends Component {
 	}
 	
 
-	AssertEquals(a, b) {
-		return JSON.stringify(a) === JSON.stringify(b);
-	}
-
 	OnSave() {
-		// console.log("This doesn't save anything presently");
-		// console.log(this);
-
-		let Tag = new PTO.Tag.TagCompound("ModelComponent");
-
-		Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
-		Tag.AddTag(new PTO.Tag.TagString("Name"));
-		Tag.AddTag(new PTO.Tag.TagInt("Type", PTO.Enum.TagType.STRING));
-		Tag.AddTag(new PTO.Tag.TagCompound("RegEx"));
-
-		let RegEx = Tag.GetTag("RegEx");
-		RegEx.AddTag(new PTO.Tag.TagString("Match"));
-		RegEx.AddTag(new PTO.Tag.TagString("Replace"));
-
-		let tbuff = PTO.Utility.Transformer.ToBuffer(Tag);
-		let fbuff = PTO.Utility.Transformer.FromBuffer(tbuff);
-		console.warn(this.AssertEquals(Tag, fbuff));
+		console.log("This doesn't save anything presently");
+		console.log(this);
 	}
 	//! This is complex enough that it should be a child component
 	GetOverview() {
@@ -172,7 +155,7 @@ class Tag extends Component {
 							return +r;
 						case 2:
 							return +r;
-						case 5:
+						case 4:
 							return +r;
 						default:
 							return r.replace(/"/g, "");

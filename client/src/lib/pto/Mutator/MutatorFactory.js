@@ -159,6 +159,7 @@ class MutatorFactory {
 				}
 			}
 		});
+		lines.push(`this.PTO.Utility.Transformer.ToHierarchy(this.Tag).forEach((t, i) => t.Tag.SetOrdinality(i + 1));`);	// Ensure Tag ordinality mimes creation order
 		lines.push(`\t}\n\n`);	// End Constructor
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line

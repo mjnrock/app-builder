@@ -217,7 +217,6 @@ class Transformer {
 	}
 	static FromBuffer(BB) {
 		let tags = [];
-		console.log(BB);
 		while (BB.Position < BB.DV.byteLength) {
 			let id = BB.ReadTiny(1, false)[0],
 				keyLength = BB.ReadTiny(1, false)[0],
@@ -413,7 +412,7 @@ class Transformer {
 	/**
 	 * Column:	"Value"
 	 * - If the Tag is a TagCompound or TagList, the entry will be a count of Children (not Descendants)
-	 * Column:	"Extra"
+	 * Column:	"Options"
 	 * - If the Tag is a TagList, the entry will be the List's ContentType (i.e. the allowed Child type)
 	 * @param PTO..TagCompound | @tagCompound
 	 * @param ? [PRIMARY, SECONDARY] | @delimiters
@@ -440,13 +439,14 @@ class Transformer {
 			s = Transformer.ToHierarchy(tagCompound);
 		}
 
-		let csv = !!hasHeaders ? "ID,ParentID,TagType,Key,Value,Extra\n" : "";
+		let csv = !!hasHeaders ? "ID,ParentID,TagType,Key,Ordinality,Value,Options\n" : "";
 		for (let i in s) {
 			let row = [
 				+s[i].ID,
 				s[i].ParentID === null ? null : +s[i].ParentID,
 				+s[i].Tag.GetType(),
-				s[i].Tag.GetKey().toString()
+				s[i].Tag.GetKey().toString(),
+				+s[i].Tag.GetOrdinality()
 			];
 			if (s[i].Tag instanceof Tag.TagCompound) {
 				row.push(+s[i].Tag.Size());
@@ -518,7 +518,7 @@ class Transformer {
 
 		if (
 			!!hasHeaders ||
-			string.includes("ID,ParentID,TagType,Key,Value,Extra")
+			string.includes("ID,ParentID,TagType,Key,Ordinality,Value,Options")
 		) {
 			arr.shift();
 		}
@@ -529,19 +529,22 @@ class Transformer {
 				ParentID: row[1] === "" ? null : row[1],
 				TagType: +row[2],
 				Key: row[3],
-				Value: row[4].split(d2),
-				Extra: row[5]
+				Ordinality: +row[4],
+				Value: row[5].split(d2),
+				Options: row[6]
 			};
 			let tag = new (Enum.TagType.GetClass(CSV.TagType))(CSV.Key);
+			tag.SetOrdinality(CSV.Ordinality);
 
 			if (tag instanceof Tag.TagCompound) {
 				//  NOOP
 			} else if (tag instanceof Tag.TagList) {
-				tag.SetContentType(+CSV.Extra);
+				tag.SetContentType(+CSV.Options);
 			} else {
 				tag.Deserialize({
 					Type: CSV.TagType,
 					Key: CSV.Key,
+					Ordinality: CSV.Ordinality,
 					Value: CSV.Value
 				});
 			}
@@ -584,7 +587,7 @@ class Transformer {
 			tagCompound instanceof Tag.TagList
 		) {
 			let tag = Enum.TagType.GetClass(tagCompound.Type).name;
-			xml += `<${tag} key="${tagCompound.Key}"${
+			xml += `<${tag} key="${tagCompound.Key}" ordinality="${tagCompound.Ordinality}"${
 				tagCompound instanceof Tag.TagList
 					? ` content-type="${
 							Enum.TagType.GetClass(tagCompound.ContentType)
@@ -606,7 +609,7 @@ class Transformer {
 				values += `<Value>${tagCompound.Value[i]}</Value>`;
 			}
 
-			xml += `<${tag} key="${tagCompound.Key}">${values}</${tag}>`;
+			xml += `<${tag} key="${tagCompound.Key}" ordinality="${tagCompound.Ordinality}">${values}</${tag}>`;
 		}
 
 		return xml;
@@ -639,12 +642,15 @@ class Transformer {
 			function(m, tag, attrs) {
 				let type = `"Type": "Tag${tag}"`;
 				attrs = attrs.replace(
-					/(key="(.*?)"|content-type="(.*?)")/gi,
-					function(m, p1, k, ct) {
+					/(key="(.*?)"|ordinality="(.*?)"|content-type="(.*?)")/gi,
+					function(m, p1, k, o, ct) {
 						let arr = [];
 
 						if (k !== void 0) {
 							arr.push(`"Key": "${k}"`);
+						}
+						if (o !== void 0) {
+							arr.push(`, "Ordinality": "${o}"`);
 						}
 						if (ct !== void 0) {
 							arr.push(`, "ContentType": "${ct}"`);
@@ -711,7 +717,7 @@ class Transformer {
 
 		tag = Transformer.ToHierarchy(tag).map(function(t) {
 			let value = t.Tag.GetValues(),
-				extra = null;
+				options = null;
 
 			if (t.Tag instanceof Tag.TagString) {
 				value = t.Tag.GetValues();
@@ -723,7 +729,7 @@ class Transformer {
 				value = t.Tag.Size();
 			} else if (t.Tag instanceof Tag.TagList) {
 				value = t.Tag.Size();
-				extra = t.Tag.GetContentType();
+				options = t.Tag.GetContentType();
 			}
 
 			return {
@@ -731,8 +737,9 @@ class Transformer {
 				ParentID: t.ParentID,
 				TagType: t.Tag.Type,
 				Key: t.Tag.Key,
+				Ordinality: t.Tag.Ordinality,
 				Value: value,
-				Extra: extra
+				Options: options
 			};
 		});
 
@@ -763,11 +770,15 @@ class Transformer {
 							type: "string"
 						},
 						{
+							name: "Ordinality",
+							type: ["int", "null"]
+						},
+						{
 							name: "Value",
 							type: ["string", "null"]
 						},
 						{
-							name: "Extra",
+							name: "Options",
 							type: ["string", "null"]
 						}
 					]
@@ -777,6 +788,10 @@ class Transformer {
 		};
 	}
 	static FromAvro(array) {
+		if("Schema" in array && "Data" in array) {
+			array = array.Data.slice();
+		}
+
 		for (let i in array) {
 			while (typeof array[i] !== "object") {
 				array[i] = JSON.parse(array[i]);
@@ -790,12 +805,11 @@ class Transformer {
 						: +array[i].ParentID,
 				TagType: +array[i].TagType,
 				Key: array[i].Key,
+				Ordinality: array[i].Ordinality,
 				Value: array[i].Value === null ? "" : array[i].Value,
-				Extra: array[i].Extra === null ? "" : array[i].Extra
+				Options: array[i].Options === null ? "" : array[i].Options
 			};
-			array[i] = `${o.ID},${o.ParentID},${o.TagType},"${o.Key}","${
-				o.Value
-			}",${o.Extra}`;
+			array[i] = `${ o.ID },${ o.ParentID },${ o.TagType },"${ o.Key }",${ o.Ordinality },"${ o.Value }",${ o.Options }`;
 		}
 		let string = array.join("\n");
 
@@ -863,6 +877,7 @@ class Transformer {
 			ParentID: parentID,
 			Key: tag.GetKey(),
 			Path: `${parent !== null && parent !== void 0 ? `${parent.Path}.` : ""}${tag.GetKey()}`,
+			Ordinality: tag.GetOrdinality(),
 			Tag: tag
 		});
 
