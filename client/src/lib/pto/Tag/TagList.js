@@ -108,6 +108,7 @@ class TagList extends ATag {
 			level,
 			this.GetType(),
 			this.GetKey(),
+			this.GetOrdinality(),
 			arr,
 			{ ContentType: this.GetContentType() }
 		);
@@ -119,6 +120,7 @@ class TagList extends ATag {
 
 		this.SetType(+json.Type);
 		this.SetKey(json.Key);
+		this.SetOrdinality(json.Ordinality);
 		this.SetContentType(+json.ContentType);
 
 		for (let i in json.Value) {

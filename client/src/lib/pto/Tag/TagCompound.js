@@ -71,7 +71,7 @@ class TagCompound extends ATag {
 			obj[i] = this.Value[i].Serialize(Enum.Serialization.OBJECT);
 		}
 
-		return super.Serialize(level, this.GetType(), this.GetKey(), obj);
+		return super.Serialize(level, this.GetType(), this.GetKey(), obj, this.GetOrdinality());
 	}
 	Deserialize(json) {
 		while (typeof json === "string" || json instanceof String) {
@@ -80,6 +80,7 @@ class TagCompound extends ATag {
 
 		this.SetType(+json.Type);
 		this.SetKey(json.Key);
+		this.SetOrdinality(json.Ordinality);
 
 		for (let i in json.Value) {
 			let tag = new (Enum.TagType.GetClass(

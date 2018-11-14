@@ -7,6 +7,7 @@ class ATag {
 		this.Type = type;
 		this.Key = key;
 		this.Value = value;
+		this.Ordinality = Date.now();
 	}
 
 	GetSchema(id = 1, pid = 0, depth = "") {
@@ -18,6 +19,15 @@ class ATag {
 	}
 	SetType(type) {
 		this.Type = type;
+
+		return this;
+	}
+
+	GetOrdinality() {
+		return this.Ordinality;
+	}
+	SetOrdinality(order) {
+		this.Ordinality = order;
 
 		return this;
 	}
@@ -105,24 +115,27 @@ class ATag {
 		let bytes = 0;
 		++bytes;    //  Tag Type
 		++bytes;    //  Key Length
-		bytes += this.Key.length;
+		bytes += this.Key.length;    //  Key 
+		++bytes;    //  Ordinality Length
+		bytes += this.Ordinality.toString().length;    //  Ordinality
 		++bytes;    //  Value Length
 
 		if(this instanceof Tag.TagCompound || this instanceof Tag.TagList) {
 			++bytes; //  Amount of child Tags
 		} else {
-			bytes += this.Value.BYTES_PER_ELEMENT * this.Value.length;  //  Size of payload in bytes
+			bytes += this.Value.BYTES_PER_ELEMENT * this.Value.length;  //  Size of Value payload in bytes
 		}
 
 		return bytes;
 	};
 
-	Serialize(level, type, key, value, append) {
+	Serialize(level, type, key, value, order, append) {
 		level = (level === null || level === void 0) ? Enum.Serialization.STRING : level;
 		let obj = {
 			Type: (type === null || type === void 0) ? this.GetType() : type,
 			Key: (key === null || key === void 0) ? this.GetKey() : key,
-			Value: (value === null || value === void 0) ? [...this.GetValues()] : value
+			Value: (value === null || value === void 0) ? [...this.GetValues()] : value,
+			Ordinality: (order === null || order === void 0) ? this.GetOrdinality() : order,
 		};
 
 		if(append !== null && append !== void 0) {
@@ -150,6 +163,7 @@ class ATag {
 		this.SetType(+json.Type);
 		this.SetKey(json.Key);
 		this.SetValues(json.Value);
+		this.SetOrdinality(json.Ordinality);
 
 		return this;
 	};

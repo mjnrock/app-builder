@@ -57,7 +57,7 @@ class TagContainer extends Component {
 			//? This Timestamp overrides the React internal flag that otherwise causes rerenders based on last update timestamp
 			//TODO Add an "Ordinality" KVP to the ATag base and adjust downstream consequences (Transformer, etc.)
 			let tag = state.Tag.GetTag(key);
-			eleTag.Timestamp = tag.Timestamp;
+			eleTag.Ordinality = tag.Ordinality;
 
 			state.Tag.RemoveTag(key);
 			state.Tag.AddTag(eleTag);
@@ -88,7 +88,7 @@ class TagContainer extends Component {
 		} else if(type === "List") {
 			tag = new PTO.Tag.TagList(uuid, PTO.Enum.TagType.STRING);
 		}
-		tag.Timestamp = Date.now();
+		tag.Ordinality = Date.now();
 		state.Tag.AddTag(tag);
 
 		this.setState(state);
@@ -216,7 +216,7 @@ class TagContainer extends Component {
 						<span>&nbsp;[{ this.state.UUID }]</span>
 					</p>
 					{
-						this.state.Tag.ToArray().sort((a, b) => a.Timestamp - b.Timestamp).map((tag, i) => {
+						this.state.Tag.ToArray().sort((a, b) => a.Ordinality - b.Ordinality).map((tag, i) => {
 							return (
 								<div className="flex mt2 mb2 justify-around" key={ i }>
 									<button

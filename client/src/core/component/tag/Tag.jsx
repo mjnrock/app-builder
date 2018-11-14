@@ -56,7 +56,6 @@ class Tag extends Component {
 
 			// eslint-disable-next-line
 			file = eval(`(${ file })`);
-			console.log(file);
 			let state = this.state,
 				tag = (new file()).GetTag();
 	
@@ -138,10 +137,28 @@ class Tag extends Component {
 	}
 	
 
+	AssertEquals(a, b) {
+		return JSON.stringify(a) === JSON.stringify(b);
+	}
 
 	OnSave() {
-		console.log("This doesn't save anything presently");
-		console.log(this);
+		// console.log("This doesn't save anything presently");
+		// console.log(this);
+
+		let Tag = new PTO.Tag.TagCompound("ModelComponent");
+
+		Tag.AddTag(new PTO.Tag.TagUUID("UUID"));
+		Tag.AddTag(new PTO.Tag.TagString("Name"));
+		Tag.AddTag(new PTO.Tag.TagInt("Type", PTO.Enum.TagType.STRING));
+		Tag.AddTag(new PTO.Tag.TagCompound("RegEx"));
+
+		let RegEx = Tag.GetTag("RegEx");
+		RegEx.AddTag(new PTO.Tag.TagString("Match"));
+		RegEx.AddTag(new PTO.Tag.TagString("Replace"));
+
+		let tbuff = PTO.Utility.Transformer.ToBuffer(Tag);
+		let fbuff = PTO.Utility.Transformer.FromBuffer(tbuff);
+		console.warn(this.AssertEquals(Tag, fbuff));
 	}
 	//! This is complex enough that it should be a child component
 	GetOverview() {

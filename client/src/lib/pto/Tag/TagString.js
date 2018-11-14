@@ -109,7 +109,8 @@ class TagString extends ATag {
 			level,
 			this.GetType(),
 			this.GetKey(),
-			this.GetValues()
+			this.GetValues(),
+			this.GetOrdinality()
 		);
 	}
 }

@@ -152,12 +152,14 @@ class Transformer {
 			bytes += tag.GetByteLength();
 		});
 
-		//  Buffer: TYPE [1] | KEY_LENGTH [1] | KEY [1 * Key.Length] | VALUE_LENGTH [1] | VALUE(S) [variable]
+		//  Buffer: TYPE [1] | KEY_LENGTH [1] | KEY [1 * Key.Length] | ORDINALITY_LENGTH [1] | ORDINALITY [1 * Key.Length] | VALUE_LENGTH [1] | VALUE(S) [variable]
 		let BB = new ByteBuffer(bytes);
 		obj.forEach(function(tag) {
 			BB.WriteTiny(tag.GetType(), false); //  TYPE
 			BB.WriteTiny(tag.GetKey().length, false); //  KEY_LENGTH
 			BB.WriteString(tag.GetKey()); //  KEY
+			BB.WriteTiny(tag.GetOrdinality().toString().length, false); //  ORDINALITY_LENGTH
+			BB.WriteString(tag.GetOrdinality().toString()); //  ORDINALITY
 
 			if (tag instanceof Tag.TagCompound || tag instanceof Tag.TagList) {
 				BB.WriteTiny(1); //  VALUE_LENGTH
@@ -202,6 +204,9 @@ class Transformer {
 					case Enum.TagType.STRING:
 						BB.WriteTiny(Array.from(tag.Value));
 						break;
+					case Enum.TagType.UUID:
+						BB.WriteTiny(Array.from(tag.Value));
+						break;
 					default:
 						break;
 				}
@@ -212,13 +217,17 @@ class Transformer {
 	}
 	static FromBuffer(BB) {
 		let tags = [];
+		console.log(BB);
 		while (BB.Position < BB.DV.byteLength) {
 			let id = BB.ReadTiny(1, false)[0],
 				keyLength = BB.ReadTiny(1, false)[0],
 				key = BB.ReadString(keyLength),
+				ordinalityLength = BB.ReadTiny(1, false)[0],
+				ordinality = +BB.ReadString(ordinalityLength),
 				valueLength = BB.ReadTiny(1, false)[0];
 
 			let tag = new (Enum.TagType.GetClass(id))(key);
+			tag.SetOrdinality(ordinality);
 			if (tag instanceof Tag.TagCompound) {
 				tag.CHILD_COUNT = BB.ReadTiny(1, false)[0]; //  Temporarily hold the amount of children this Tag contains
 			} else if (tag instanceof Tag.TagList) {
@@ -258,6 +267,9 @@ class Transformer {
 							cacheString.push(BB.ReadTiny(1, false)[0]);
 							break;
 						case Enum.TagType.STRING:
+							cacheString.push(BB.ReadTiny(1, false)[0]);
+							break;
+						case Enum.TagType.UUID:
 							cacheString.push(BB.ReadTiny(1, false)[0]);
 							break;
 						default:
