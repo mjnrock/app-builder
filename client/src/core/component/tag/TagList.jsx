@@ -158,7 +158,7 @@ class TagList extends Component {
 											`btn btn-sm btn-remove-element ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
 										}
 										onClick={ () => this.RemoveElement(tag) }
-									>X</button>
+									>Remove</button>
 									{
 										this.RenderTag(tag)
 									}

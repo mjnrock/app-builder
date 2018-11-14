@@ -2,7 +2,7 @@ input:focus,
 select:focus,
 textarea:focus,
 button:focus {
-    outline: none;
+	outline: none;
 }
 
 input {
@@ -13,367 +13,424 @@ input::selection {
 	background-color: #fff;
 }
 
-.btn-any {
-	color: #000;
-	border-color: rgba(undefined, undefined, undefined, 1);
-	background-color: rgba(undefined, undefined, undefined, 0.3);
-}
-.btn-any:hover {
-	color: #fff;
-	border-color: rgba(undefined, undefined, undefined, 1);
-	background-color: rgba(undefined, undefined, undefined, 1);
-}
-
-.input-any {
-	color: #000;
-	border-color: rgba(undefined, undefined, undefined, 1);
-	background-color: rgba(undefined, undefined, undefined, 0.3);
-}		
-.input-any:focus {
-	color: #000;
-	background-color: rgba(undefined, undefined, undefined, 0.3);
-	box-shadow: 0 0 5px rgba(undefined, undefined, undefined, 1);
-	border: 1px solid rgba(undefined, undefined, undefined, 1);
-}		
-.input-any::selection {
-	color: rgba(undefined, undefined, undefined, 0.3);
-	background-color: #fff;
-}
-
 
 .btn-int {
-	color: #1976d2;
-	border-color: rgba(25, 118, 210, 1);
-	background-color: rgba(25, 118, 210, 0.3);
+    color: #1976d2;
+    border-color: rgba(25, 118, 210, 1);
+    background-color: rgba(25, 118, 210, 0.3);
+}
+.btn-int:focus {
+    color: #fff;
+    background-color: rgba(25, 118, 210, 0.3);
+	box-shadow: 0 0 5px rgba(25, 118, 210, 1);
+	border: 1px solid rgba(25, 118, 210, 1);
 }
 .btn-int:hover {
-	color: #fff;
-	border-color: rgba(25, 118, 210, 1);
-	background-color: rgba(25, 118, 210, 1);
+    color: #fff;
+    border-color: rgba(25, 118, 210, 1);
+    background-color: rgba(25, 118, 210, 1);
 }
 
 .input-int {
-	color: #1976d2;
-	border-color: rgba(25, 118, 210, 1);
-	background-color: rgba(25, 118, 210, 0.3);
+    color: #1976d2;
+    border-color: rgba(25, 118, 210, 1);
+    background-color: rgba(25, 118, 210, 0.3);
 }		
 .input-int:focus {
-	color: #1976d2;
-	background-color: rgba(25, 118, 210, 0.3);
+    color: #fff;
+    border-color: rgba(25, 118, 210, 1);
+    background-color: rgba(25, 118, 210, 1);
 	box-shadow: 0 0 5px rgba(25, 118, 210, 1);
 	border: 1px solid rgba(25, 118, 210, 1);
 }		
 .input-int::selection {
-	color: rgba(25, 118, 210, 0.3);
-	background-color: #fff;
+    color: rgba(25, 118, 210, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-string {
-	color: #c62828;
-	border-color: rgba(198, 40, 40, 1);
-	background-color: rgba(198, 40, 40, 0.3);
+    color: #c62828;
+    border-color: rgba(198, 40, 40, 1);
+    background-color: rgba(198, 40, 40, 0.3);
+}
+.btn-string:focus {
+    color: #fff;
+    background-color: rgba(198, 40, 40, 0.3);
+	box-shadow: 0 0 5px rgba(198, 40, 40, 1);
+	border: 1px solid rgba(198, 40, 40, 1);
 }
 .btn-string:hover {
-	color: #fff;
-	border-color: rgba(198, 40, 40, 1);
-	background-color: rgba(198, 40, 40, 1);
+    color: #fff;
+    border-color: rgba(198, 40, 40, 1);
+    background-color: rgba(198, 40, 40, 1);
 }
 
 .input-string {
-	color: #c62828;
-	border-color: rgba(198, 40, 40, 1);
-	background-color: rgba(198, 40, 40, 0.3);
+    color: #c62828;
+    border-color: rgba(198, 40, 40, 1);
+    background-color: rgba(198, 40, 40, 0.3);
 }		
 .input-string:focus {
-	color: #c62828;
-	background-color: rgba(198, 40, 40, 0.3);
+    color: #fff;
+    border-color: rgba(198, 40, 40, 1);
+    background-color: rgba(198, 40, 40, 1);
 	box-shadow: 0 0 5px rgba(198, 40, 40, 1);
 	border: 1px solid rgba(198, 40, 40, 1);
 }		
 .input-string::selection {
-	color: rgba(198, 40, 40, 0.3);
-	background-color: #fff;
+    color: rgba(198, 40, 40, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-short {
-	color: #42a5f5;
-	border-color: rgba(66, 165, 245, 1);
-	background-color: rgba(66, 165, 245, 0.3);
+    color: #42a5f5;
+    border-color: rgba(66, 165, 245, 1);
+    background-color: rgba(66, 165, 245, 0.3);
+}
+.btn-short:focus {
+    color: #fff;
+    background-color: rgba(66, 165, 245, 0.3);
+	box-shadow: 0 0 5px rgba(66, 165, 245, 1);
+	border: 1px solid rgba(66, 165, 245, 1);
 }
 .btn-short:hover {
-	color: #fff;
-	border-color: rgba(66, 165, 245, 1);
-	background-color: rgba(66, 165, 245, 1);
+    color: #fff;
+    border-color: rgba(66, 165, 245, 1);
+    background-color: rgba(66, 165, 245, 1);
 }
 
 .input-short {
-	color: #42a5f5;
-	border-color: rgba(66, 165, 245, 1);
-	background-color: rgba(66, 165, 245, 0.3);
+    color: #42a5f5;
+    border-color: rgba(66, 165, 245, 1);
+    background-color: rgba(66, 165, 245, 0.3);
 }		
 .input-short:focus {
-	color: #42a5f5;
-	background-color: rgba(66, 165, 245, 0.3);
+    color: #fff;
+    border-color: rgba(66, 165, 245, 1);
+    background-color: rgba(66, 165, 245, 1);
 	box-shadow: 0 0 5px rgba(66, 165, 245, 1);
 	border: 1px solid rgba(66, 165, 245, 1);
 }		
 .input-short::selection {
-	color: rgba(66, 165, 245, 0.3);
-	background-color: #fff;
+    color: rgba(66, 165, 245, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-tiny {
-	color: #69e0d6;
-	border-color: rgba(105, 224, 214, 1);
-	background-color: rgba(105, 224, 214, 0.3);
+    color: #69e0d6;
+    border-color: rgba(105, 224, 214, 1);
+    background-color: rgba(105, 224, 214, 0.3);
+}
+.btn-tiny:focus {
+    color: #fff;
+    background-color: rgba(105, 224, 214, 0.3);
+	box-shadow: 0 0 5px rgba(105, 224, 214, 1);
+	border: 1px solid rgba(105, 224, 214, 1);
 }
 .btn-tiny:hover {
-	color: #fff;
-	border-color: rgba(105, 224, 214, 1);
-	background-color: rgba(105, 224, 214, 1);
+    color: #fff;
+    border-color: rgba(105, 224, 214, 1);
+    background-color: rgba(105, 224, 214, 1);
 }
 
 .input-tiny {
-	color: #69e0d6;
-	border-color: rgba(105, 224, 214, 1);
-	background-color: rgba(105, 224, 214, 0.3);
+    color: #69e0d6;
+    border-color: rgba(105, 224, 214, 1);
+    background-color: rgba(105, 224, 214, 0.3);
 }		
 .input-tiny:focus {
-	color: #69e0d6;
-	background-color: rgba(105, 224, 214, 0.3);
+    color: #fff;
+    border-color: rgba(105, 224, 214, 1);
+    background-color: rgba(105, 224, 214, 1);
 	box-shadow: 0 0 5px rgba(105, 224, 214, 1);
 	border: 1px solid rgba(105, 224, 214, 1);
 }		
 .input-tiny::selection {
-	color: rgba(105, 224, 214, 0.3);
-	background-color: #fff;
+    color: rgba(105, 224, 214, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-long {
-	color: #0d47a1;
-	border-color: rgba(13, 71, 161, 1);
-	background-color: rgba(13, 71, 161, 0.3);
+    color: #0d47a1;
+    border-color: rgba(13, 71, 161, 1);
+    background-color: rgba(13, 71, 161, 0.3);
+}
+.btn-long:focus {
+    color: #fff;
+    background-color: rgba(13, 71, 161, 0.3);
+	box-shadow: 0 0 5px rgba(13, 71, 161, 1);
+	border: 1px solid rgba(13, 71, 161, 1);
 }
 .btn-long:hover {
-	color: #fff;
-	border-color: rgba(13, 71, 161, 1);
-	background-color: rgba(13, 71, 161, 1);
+    color: #fff;
+    border-color: rgba(13, 71, 161, 1);
+    background-color: rgba(13, 71, 161, 1);
 }
 
 .input-long {
-	color: #0d47a1;
-	border-color: rgba(13, 71, 161, 1);
-	background-color: rgba(13, 71, 161, 0.3);
+    color: #0d47a1;
+    border-color: rgba(13, 71, 161, 1);
+    background-color: rgba(13, 71, 161, 0.3);
 }		
 .input-long:focus {
-	color: #0d47a1;
-	background-color: rgba(13, 71, 161, 0.3);
+    color: #fff;
+    border-color: rgba(13, 71, 161, 1);
+    background-color: rgba(13, 71, 161, 1);
 	box-shadow: 0 0 5px rgba(13, 71, 161, 1);
 	border: 1px solid rgba(13, 71, 161, 1);
 }		
 .input-long::selection {
-	color: rgba(13, 71, 161, 0.3);
-	background-color: #fff;
+    color: rgba(13, 71, 161, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-bool {
-	color: #5e35b1;
-	border-color: rgba(94, 53, 177, 1);
-	background-color: rgba(94, 53, 177, 0.3);
+    color: #5e35b1;
+    border-color: rgba(94, 53, 177, 1);
+    background-color: rgba(94, 53, 177, 0.3);
+}
+.btn-bool:focus {
+    color: #fff;
+    background-color: rgba(94, 53, 177, 0.3);
+	box-shadow: 0 0 5px rgba(94, 53, 177, 1);
+	border: 1px solid rgba(94, 53, 177, 1);
 }
 .btn-bool:hover {
-	color: #fff;
-	border-color: rgba(94, 53, 177, 1);
-	background-color: rgba(94, 53, 177, 1);
+    color: #fff;
+    border-color: rgba(94, 53, 177, 1);
+    background-color: rgba(94, 53, 177, 1);
 }
 
 .input-bool {
-	color: #5e35b1;
-	border-color: rgba(94, 53, 177, 1);
-	background-color: rgba(94, 53, 177, 0.3);
+    color: #5e35b1;
+    border-color: rgba(94, 53, 177, 1);
+    background-color: rgba(94, 53, 177, 0.3);
 }		
 .input-bool:focus {
-	color: #5e35b1;
-	background-color: rgba(94, 53, 177, 0.3);
+    color: #fff;
+    border-color: rgba(94, 53, 177, 1);
+    background-color: rgba(94, 53, 177, 1);
 	box-shadow: 0 0 5px rgba(94, 53, 177, 1);
 	border: 1px solid rgba(94, 53, 177, 1);
 }		
 .input-bool::selection {
-	color: rgba(94, 53, 177, 0.3);
-	background-color: #fff;
+    color: rgba(94, 53, 177, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-float {
-	color: #66bb6a;
-	border-color: rgba(102, 187, 106, 1);
-	background-color: rgba(102, 187, 106, 0.3);
+    color: #66bb6a;
+    border-color: rgba(102, 187, 106, 1);
+    background-color: rgba(102, 187, 106, 0.3);
+}
+.btn-float:focus {
+    color: #fff;
+    background-color: rgba(102, 187, 106, 0.3);
+	box-shadow: 0 0 5px rgba(102, 187, 106, 1);
+	border: 1px solid rgba(102, 187, 106, 1);
 }
 .btn-float:hover {
-	color: #fff;
-	border-color: rgba(102, 187, 106, 1);
-	background-color: rgba(102, 187, 106, 1);
+    color: #fff;
+    border-color: rgba(102, 187, 106, 1);
+    background-color: rgba(102, 187, 106, 1);
 }
 
 .input-float {
-	color: #66bb6a;
-	border-color: rgba(102, 187, 106, 1);
-	background-color: rgba(102, 187, 106, 0.3);
+    color: #66bb6a;
+    border-color: rgba(102, 187, 106, 1);
+    background-color: rgba(102, 187, 106, 0.3);
 }		
 .input-float:focus {
-	color: #66bb6a;
-	background-color: rgba(102, 187, 106, 0.3);
+    color: #fff;
+    border-color: rgba(102, 187, 106, 1);
+    background-color: rgba(102, 187, 106, 1);
 	box-shadow: 0 0 5px rgba(102, 187, 106, 1);
 	border: 1px solid rgba(102, 187, 106, 1);
 }		
 .input-float::selection {
-	color: rgba(102, 187, 106, 0.3);
-	background-color: #fff;
+    color: rgba(102, 187, 106, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-double {
-	color: #2e7d32;
-	border-color: rgba(46, 125, 50, 1);
-	background-color: rgba(46, 125, 50, 0.3);
+    color: #2e7d32;
+    border-color: rgba(46, 125, 50, 1);
+    background-color: rgba(46, 125, 50, 0.3);
+}
+.btn-double:focus {
+    color: #fff;
+    background-color: rgba(46, 125, 50, 0.3);
+	box-shadow: 0 0 5px rgba(46, 125, 50, 1);
+	border: 1px solid rgba(46, 125, 50, 1);
 }
 .btn-double:hover {
-	color: #fff;
-	border-color: rgba(46, 125, 50, 1);
-	background-color: rgba(46, 125, 50, 1);
+    color: #fff;
+    border-color: rgba(46, 125, 50, 1);
+    background-color: rgba(46, 125, 50, 1);
 }
 
 .input-double {
-	color: #2e7d32;
-	border-color: rgba(46, 125, 50, 1);
-	background-color: rgba(46, 125, 50, 0.3);
+    color: #2e7d32;
+    border-color: rgba(46, 125, 50, 1);
+    background-color: rgba(46, 125, 50, 0.3);
 }		
 .input-double:focus {
-	color: #2e7d32;
-	background-color: rgba(46, 125, 50, 0.3);
+    color: #fff;
+    border-color: rgba(46, 125, 50, 1);
+    background-color: rgba(46, 125, 50, 1);
 	box-shadow: 0 0 5px rgba(46, 125, 50, 1);
 	border: 1px solid rgba(46, 125, 50, 1);
 }		
 .input-double::selection {
-	color: rgba(46, 125, 50, 0.3);
-	background-color: #fff;
+    color: rgba(46, 125, 50, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-list {
-	color: #a1887f;
-	border-color: rgba(161, 136, 127, 1);
-	background-color: rgba(161, 136, 127, 0.3);
+    color: #a1887f;
+    border-color: rgba(161, 136, 127, 1);
+    background-color: rgba(161, 136, 127, 0.3);
+}
+.btn-list:focus {
+    color: #fff;
+    background-color: rgba(161, 136, 127, 0.3);
+	box-shadow: 0 0 5px rgba(161, 136, 127, 1);
+	border: 1px solid rgba(161, 136, 127, 1);
 }
 .btn-list:hover {
-	color: #fff;
-	border-color: rgba(161, 136, 127, 1);
-	background-color: rgba(161, 136, 127, 1);
+    color: #fff;
+    border-color: rgba(161, 136, 127, 1);
+    background-color: rgba(161, 136, 127, 1);
 }
 
 .input-list {
-	color: #a1887f;
-	border-color: rgba(161, 136, 127, 1);
-	background-color: rgba(161, 136, 127, 0.3);
+    color: #a1887f;
+    border-color: rgba(161, 136, 127, 1);
+    background-color: rgba(161, 136, 127, 0.3);
 }		
 .input-list:focus {
-	color: #a1887f;
-	background-color: rgba(161, 136, 127, 0.3);
+    color: #fff;
+    border-color: rgba(161, 136, 127, 1);
+    background-color: rgba(161, 136, 127, 1);
 	box-shadow: 0 0 5px rgba(161, 136, 127, 1);
 	border: 1px solid rgba(161, 136, 127, 1);
 }		
 .input-list::selection {
-	color: rgba(161, 136, 127, 0.3);
-	background-color: #fff;
+    color: rgba(161, 136, 127, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-compound {
-	color: #616161;
-	border-color: rgba(97, 97, 97, 1);
-	background-color: rgba(97, 97, 97, 0.3);
+    color: #616161;
+    border-color: rgba(97, 97, 97, 1);
+    background-color: rgba(97, 97, 97, 0.3);
+}
+.btn-compound:focus {
+    color: #fff;
+    background-color: rgba(97, 97, 97, 0.3);
+	box-shadow: 0 0 5px rgba(97, 97, 97, 1);
+	border: 1px solid rgba(97, 97, 97, 1);
 }
 .btn-compound:hover {
-	color: #fff;
-	border-color: rgba(97, 97, 97, 1);
-	background-color: rgba(97, 97, 97, 1);
+    color: #fff;
+    border-color: rgba(97, 97, 97, 1);
+    background-color: rgba(97, 97, 97, 1);
 }
 
 .input-compound {
-	color: #616161;
-	border-color: rgba(97, 97, 97, 1);
-	background-color: rgba(97, 97, 97, 0.3);
+    color: #616161;
+    border-color: rgba(97, 97, 97, 1);
+    background-color: rgba(97, 97, 97, 0.3);
 }		
 .input-compound:focus {
-	color: #616161;
-	background-color: rgba(97, 97, 97, 0.3);
+    color: #fff;
+    border-color: rgba(97, 97, 97, 1);
+    background-color: rgba(97, 97, 97, 1);
 	box-shadow: 0 0 5px rgba(97, 97, 97, 1);
 	border: 1px solid rgba(97, 97, 97, 1);
 }		
 .input-compound::selection {
-	color: rgba(97, 97, 97, 0.3);
-	background-color: #fff;
+    color: rgba(97, 97, 97, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-character {
-	color: #f06292;
-	border-color: rgba(240, 98, 146, 1);
-	background-color: rgba(240, 98, 146, 0.3);
+    color: #f06292;
+    border-color: rgba(240, 98, 146, 1);
+    background-color: rgba(240, 98, 146, 0.3);
+}
+.btn-character:focus {
+    color: #fff;
+    background-color: rgba(240, 98, 146, 0.3);
+	box-shadow: 0 0 5px rgba(240, 98, 146, 1);
+	border: 1px solid rgba(240, 98, 146, 1);
 }
 .btn-character:hover {
-	color: #fff;
-	border-color: rgba(240, 98, 146, 1);
-	background-color: rgba(240, 98, 146, 1);
+    color: #fff;
+    border-color: rgba(240, 98, 146, 1);
+    background-color: rgba(240, 98, 146, 1);
 }
 
 .input-character {
-	color: #f06292;
-	border-color: rgba(240, 98, 146, 1);
-	background-color: rgba(240, 98, 146, 0.3);
+    color: #f06292;
+    border-color: rgba(240, 98, 146, 1);
+    background-color: rgba(240, 98, 146, 0.3);
 }		
 .input-character:focus {
-	color: #f06292;
-	background-color: rgba(240, 98, 146, 0.3);
+    color: #fff;
+    border-color: rgba(240, 98, 146, 1);
+    background-color: rgba(240, 98, 146, 1);
 	box-shadow: 0 0 5px rgba(240, 98, 146, 1);
 	border: 1px solid rgba(240, 98, 146, 1);
 }		
 .input-character::selection {
-	color: rgba(240, 98, 146, 0.3);
-	background-color: #fff;
+    color: rgba(240, 98, 146, 0.5);
+    background-color: #fff;
 }
 
 
 .btn-uuid {
-	color: #ff9e16;
-	border-color: rgba(255, 158, 22, 1);
-	background-color: rgba(255, 158, 22, 0.3);
+    color: #ff9e16;
+    border-color: rgba(255, 158, 22, 1);
+    background-color: rgba(255, 158, 22, 0.3);
+}
+.btn-uuid:focus {
+    color: #fff;
+    background-color: rgba(255, 158, 22, 0.3);
+	box-shadow: 0 0 5px rgba(255, 158, 22, 1);
+	border: 1px solid rgba(255, 158, 22, 1);
 }
 .btn-uuid:hover {
-	color: #fff;
-	border-color: rgba(255, 158, 22, 1);
-	background-color: rgba(255, 158, 22, 1);
+    color: #fff;
+    border-color: rgba(255, 158, 22, 1);
+    background-color: rgba(255, 158, 22, 1);
 }
 
 .input-uuid {
-	color: #ff9e16;
-	border-color: rgba(255, 158, 22, 1);
-	background-color: rgba(255, 158, 22, 0.3);
+    color: #ff9e16;
+    border-color: rgba(255, 158, 22, 1);
+    background-color: rgba(255, 158, 22, 0.3);
 }		
 .input-uuid:focus {
-	color: #ff9e16;
-	background-color: rgba(255, 158, 22, 0.3);
+    color: #fff;
+    border-color: rgba(255, 158, 22, 1);
+    background-color: rgba(255, 158, 22, 1);
 	box-shadow: 0 0 5px rgba(255, 158, 22, 1);
 	border: 1px solid rgba(255, 158, 22, 1);
 }		
 .input-uuid::selection {
-	color: rgba(255, 158, 22, 0.3);
-	background-color: #fff;
+    color: rgba(255, 158, 22, 0.5);
+    background-color: #fff;
 }
 
 
@@ -393,7 +450,7 @@ input::selection {
 	color: rgba(198, 40, 40, 1);
 	border-color: rgba(198, 40, 40, 1);
 	background-color: rgba(198, 40, 40, 1);
-	width: 8px !important;
+	width: 6px !important;
 	padding: 0;
 
 	/* Lazily hides the text */
