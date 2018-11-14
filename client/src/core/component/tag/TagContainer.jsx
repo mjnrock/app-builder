@@ -76,7 +76,7 @@ class TagContainer extends Component {
 		return this.state.Tag;
 	}
 
-	CreateNewTag(type) {
+	CreateNewTag(type, componentType = PTO.Enum.TagType.STRING) {
 		let state = this.state,
 			uuid = PTO.Utility.Transformer.GenerateUUID(),
 			tag = null;
@@ -84,7 +84,8 @@ class TagContainer extends Component {
 		if(type === "Compound") {
 			tag = new PTO.Tag.TagCompound(uuid);
 		} else if(type === "Component") {
-			tag = new PTO.Tag.TagString(uuid);
+			let clazz = PTO.Enum.TagType.GetClass(componentType);
+			tag = new clazz(uuid);
 		} else if(type === "List") {
 			tag = new PTO.Tag.TagList(uuid, PTO.Enum.TagType.STRING);
 		}
@@ -212,15 +213,19 @@ class TagContainer extends Component {
 						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<p
-						className="f7 code text-center"						
-						style={{
-							"color": PTO.Enum.TagType.GetColor(PTO.Enum.TagType.COMPOUND)
-						}}
-					>
-						<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.COMPOUND) }</span>
-						<span>&nbsp;[{ this.state.UUID }]</span>
-					</p>
+					{
+						this.props.showDetails ?
+						<p
+							className="f7 code text-center"						
+							style={{
+								"color": PTO.Enum.TagType.GetColor(PTO.Enum.TagType.COMPOUND)
+							}}
+						>
+							<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.COMPOUND) }</span>
+							<span>&nbsp;[{ this.state.UUID }]</span>
+						</p>
+						: null
+					}
 					{
 						this.state.Tag.ToArray().sort((a, b) => a.Ordinality - b.Ordinality).map((tag, i) => {
 							return (
@@ -241,7 +246,7 @@ class TagContainer extends Component {
 							);
 						})
 					}
-					<div className="text-center flex justify-around">
+					<div className="text-center flex justify-around mt3">
 						{/* Weird CSS issue that this janky thing fixes, so w/e */}
 						<div
 							className="btn-block"
@@ -250,24 +255,57 @@ class TagContainer extends Component {
 
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-string mr1"
-							onClick={ () => this.CreateNewTag("Component") }
+							className="btn btn-block btn-sm btn-outline-primary mr1 dropdown-toggle"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="false"
 						>Add Tag</button>
-						<button
-							type="button"
-							className="btn btn-block btn-sm btn-compound mr1"
-							onClick={ () => this.CreateNewTag("Compound") }
-						>Add Compound</button>
-						<button
-							type="button"
-							className="btn btn-block btn-sm btn-list mr1"
-							onClick={ () => this.CreateNewTag("List") }
-						>Add List</button>
+						<div
+							className="dropdown-menu"
+							style={{
+								"backgroundColor": "rgb(253, 253, 253)",
+								"borderColor": "rgba(0, 0, 0, 0.2)"
+							}}
+						>
+							<div className="dropdown-header text-center">Primitives</div> 
+							{
+								PTO.Enum.TagType.ForEach([ PTO.Enum.TagType.LIST, PTO.Enum.TagType.COMPOUND ]).map((t, i) => 
+									<button
+										type="button"
+										className={ `dropdown-item text-${ PTO.Enum.TagType.GetString(t).toLowerCase() }` }
+										onClick={ () => this.CreateNewTag("Component", t) }
+										key={ i }
+									>Add <strong>{ PTO.Enum.TagType.GetString(t).toLowerCase() }</strong> Tag</button>
+								)
+							}
+
+							<div className="dropdown-divider"></div>
+
+							<div className="dropdown-header text-center">Containers</div> 
+							<button
+								type="button"
+								className={ `dropdown-item text-compound` }
+								onClick={ () => this.CreateNewTag("Compound") }
+							>Add <strong>compound</strong> Tag</button>
+							<button
+								type="button"
+								className={ `dropdown-item text-list` }
+								onClick={ () => this.CreateNewTag("List") }
+							>Add <strong>list</strong> Tag</button>
+						</div>
+
+						{/* Weird CSS issue that this janky thing fixes, so w/e */}
+						<div
+							className="btn-block"
+							style={{ "display": "none" }}
+						></div>
+						
 						<label
-							className="btn btn-block btn-sm btn-mutator mr1 mb0"
+							className="btn btn-block btn-sm btn-outline-secondary mr1 mb0"
 						>Import from Mutator
 							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 						</label>
+
 						{/* <button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-dark mr1"

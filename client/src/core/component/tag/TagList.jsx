@@ -106,6 +106,7 @@ class TagList extends Component {
 				UUID={ uuid }
 				Tag={ tag }
 				UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
+				hide
 			/>;
 		}
 
@@ -139,16 +140,19 @@ class TagList extends Component {
 						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<p
-						className="f7 code text-center"						
-						style={{
-							"color": PTO.Enum.TagType.GetColor(PTO.Enum.TagType.LIST)
-						}}
-					>
-						<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.LIST) }</span>
-						<span style={{ "color": PTO.Enum.TagType.GetColor(this.state.Tag.GetContentType()) }}>{ `<${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()) }>` }</span>
-						<span>&nbsp;[{ this.state.UUID }]</span>
-					</p>
+					{
+						this.props.showDetails ? <p
+							className="f7 code text-center"						
+							style={{
+								"color": PTO.Enum.TagType.GetColor(PTO.Enum.TagType.LIST)
+							}}
+						>
+							<span>{ PTO.Enum.TagType.GetString(PTO.Enum.TagType.LIST) }</span>
+							<span style={{ "color": PTO.Enum.TagType.GetColor(this.state.Tag.GetContentType()) }}>{ `<${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()) }>` }</span>
+							<span>&nbsp;[{ this.state.UUID }]</span>
+						</p>
+						: null
+					}
 					{
 						this.state.Tag.GetValues().sort((a, b) => a.Timestamp - b.Timestamp).map((tag, i) => {
 							return (
@@ -166,7 +170,7 @@ class TagList extends Component {
 							);
 						})
 					}
-					<div className="text-center flex justify-around">
+					<div className="text-center flex justify-around mt3">
 						{/* Weird CSS issue that this janky thing fixes, so w/e */}
 						<div
 							className="btn-block"
@@ -178,15 +182,10 @@ class TagList extends Component {
 							className={ `btn btn-block btn-sm btn-${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() } mr1` }
 							onClick={ () => this.CreateNewTag() }
 						>Add <strong>{ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }</strong> Tag</button>
-						{/* <button
-							type="button"
-							className="btn btn-block btn-sm btn-outline-dark mr1"
-							onClick={ () => console.log(this) }
-						>console.log(this)</button> */}
 					</div>
 				</div>
 				<div className="w-20">
-					<label className="f7 b">Type</label>
+					<label className="f7 b">Type: <span className="text-list">List{ "<" }<span className={ `text-${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }` }>{ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }</span>{ ">" }</span></label>
 					<input
 						type="number"
 						className={ `form-control text-center mb-1 input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }` }

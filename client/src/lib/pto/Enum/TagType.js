@@ -2,7 +2,6 @@ import Tag from "../Tag/package.js";
 import EnumTagType from "./TagType.js";
 
 export default Object.freeze({
-	ANY: 0,
 	INT: 1,
 	STRING: 2,
 	SHORT: 3,
@@ -15,6 +14,21 @@ export default Object.freeze({
 	COMPOUND: 10,
 	CHARACTER: 11,
 	UUID: 12,
+
+	ForEach: (filter = [], fn = null) => {
+		filter = [
+			...filter,
+			EnumTagType.DOUBLE
+		];
+
+		let valid = Object.values(EnumTagType).filter((v) => typeof v !== "function" && !filter.includes(v));
+
+		if(typeof fn === "function") {
+			return valid.map(v => fn(v));
+		}
+		
+		return valid;
+	},
 
 	GetString: value => {
 		let keys = Object.keys(EnumTagType);

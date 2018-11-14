@@ -59,7 +59,7 @@ class TagComponent extends Component {
 	render() {
 		return (
 			<div className="w-100 flex justify-around">
-				<div className={ this.props.hide ? "w-100" : "w-75" }>
+				<div className="w-75">
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
@@ -77,21 +77,23 @@ class TagComponent extends Component {
 						}
 						onChange={ this.onDataChange.bind(this) }
 					/>
-					<div
-						className="f7 code text-center"						
-						style={{
-							"color": PTO.Enum.TagType.GetColor(this.GetTag().GetType())
-						}}
-					>
-						<span>{ PTO.Enum.TagType.GetString(this.GetTag().GetType()) }</span>&nbsp;
-						<span>[{ this.state.UUID }]</span>
-					</div>
+					{
+						this.props.showDetails ?
+						<div
+							className="f7 code text-center"						
+							style={{
+								"color": PTO.Enum.TagType.GetColor(this.GetTag().GetType())
+							}}
+						>
+							<span>{ PTO.Enum.TagType.GetString(this.GetTag().GetType()) }</span>&nbsp;
+							<span>[{ this.state.UUID }]</span>
+						</div>
+						: null
+					}
 				</div>
 				{
-					this.props.hide
-					? null
-					: <div className="w-20">
-						<label className="f7 b">Type</label>
+					<div className="w-20">
+						<label className="f7 b">Type: <span className={ `text-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }>{ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }</span></label>
 						<input
 							type="number"
 							className={ `form-control text-center mb-1 input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }
@@ -104,6 +106,7 @@ class TagComponent extends Component {
 							value={ this.GetTag().GetType() }
 							onChange={ this.onDataChange.bind(this) }
 							onWheel={ () => null }	// Need to explicitly "activate" scroll functionality with this nothing code, for w/e React reason
+							disabled={ this.props.hide ? true : false }
 						/>
 					</div>
 				}
