@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import PTO from "../../../lib/pto/package";
-import { TagContainer } from "./TagContainer";
+import { TagCompound } from "./TagCompound";
 
 //@ This is for the File Upload, so the files can just extend Mutator without the import line
 // eslint-disable-next-line
@@ -107,7 +107,7 @@ class Tag extends Component {
 				>Load from Mutator File
 					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 				</label>
-				<TagContainer Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } />
+				<TagCompound Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } />
 				<div className="text-center mt3 mb2">
 					<button
 						type="button"

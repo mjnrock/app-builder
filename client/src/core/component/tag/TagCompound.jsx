@@ -8,7 +8,7 @@ import { TagList } from "./TagList";
 // eslint-disable-next-line
 const Mutator = PTO.Mutator.Mutator;
 
-class TagContainer extends Component {
+class TagCompound extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -163,7 +163,7 @@ class TagContainer extends Component {
 			}
 		
 			if(tag instanceof PTO.Tag.TagCompound) {
-				return <TagContainer
+				return <TagCompound
 					UUID={ uuid }
 					Tag={ tag }
 					UpdateElement={ (mc, options) => this.UpdateElement(mc, options) }
@@ -267,7 +267,7 @@ class TagContainer extends Component {
 								"borderColor": "rgba(0, 0, 0, 0.2)"
 							}}
 						>
-							<div className="dropdown-header text-center">Primitives</div> 
+							<div className="dropdown-header text-center">Components</div> 
 							{
 								PTO.Enum.TagType.ForEach([ PTO.Enum.TagType.LIST, PTO.Enum.TagType.COMPOUND ]).map((t, i) => 
 									<button
@@ -335,4 +335,4 @@ class TagContainer extends Component {
 	}
 }
 
-export { TagContainer };
+export { TagCompound };
