@@ -187,12 +187,18 @@ class TagContainer extends Component {
 
 	render() {
 		return (
-			<div className="w-100 flex justify-around mt2 mb2 ba br2 b--ddd pa2">
+			<div
+				className="w-100 flex justify-around mt2 mb2 ba br2 pa2"
+				style={{
+					"borderColor" : "rgba(0, 0, 0, 0.2)",
+					"backgroundColor" : "rgba(0, 0, 0, 0.03)"
+				}}
+			>
 				<div className="w-100">
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
-						className="form-control"
+						className={ `form-control input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }
 						placeholder="Name"
 						mcf=".Name"
 						oldvalue={ this.GetTag().GetKey() }
@@ -218,13 +224,16 @@ class TagContainer extends Component {
 					{
 						this.state.Tag.ToArray().sort((a, b) => a.Ordinality - b.Ordinality).map((tag, i) => {
 							return (
-								<div className="flex mt2 mb2 justify-around" key={ i }>
+								<div
+									className="flex mt2 mb2 justify-around"
+									key={ i }
+								>
 									<button
 										className={
-											`btn btn-sm btn-outline-danger ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
+											`btn btn-sm btn-remove-element ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
 										}
 										onClick={ () => this.RemoveElement(tag) }
-									>X</button>
+									>Remove</button>
 									{
 										this.RenderTag(tag)
 									}
@@ -241,29 +250,29 @@ class TagContainer extends Component {
 
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-primary mr1"
+							className="btn btn-block btn-sm btn-string mr1"
 							onClick={ () => this.CreateNewTag("Component") }
 						>Add Tag</button>
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-info mr1"
+							className="btn btn-block btn-sm btn-compound mr1"
 							onClick={ () => this.CreateNewTag("Compound") }
 						>Add Compound</button>
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-info mr1"
+							className="btn btn-block btn-sm btn-list mr1"
 							onClick={ () => this.CreateNewTag("List") }
 						>Add List</button>
 						<label
-							className="btn btn-block btn-sm btn-outline-dark mr1 mb0"
+							className="btn btn-block btn-sm btn-mutator mr1 mb0"
 						>Import from Mutator
 							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 						</label>
-						<button
+						{/* <button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-dark mr1"
 							onClick={ () => console.log(this) }
-						>console.log(this)</button>
+						>console.log(this)</button> */}
 					</div>
 				</div>
 			</div>

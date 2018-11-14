@@ -124,34 +124,86 @@ export default Object.freeze({
 		}
 	},
 
-	GetColor: value => {
+	GetColor: (value, options = {}) => {
+		let HexToRGB = (hex) => {
+			let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+			return result ? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			} : null;
+		}, HexToRGBA = (hex, a = 1.0) => ({
+			...HexToRGB(hex),
+			a: a
+		});
+		// , RGBComponentToHex = (c) => {
+		// 	let hex = c.toString(16);
+
+		// 	return hex.length === 1 ? "0" + hex : hex;
+		// }, RGBToHex = (r, g, b) => `#${ RGBComponentToHex(r) }${ RGBComponentToHex(g) }${ RGBComponentToHex(b) }`;
+
+		let hex = "#000";
 		switch(value) {
 			case EnumTagType.INT:
-				return "#1976d2";
+				hex = "#1976d2";
+				break;
 			case EnumTagType.STRING:
-				return "#c62828";
+				hex = "#c62828";
+				break;
 			case EnumTagType.SHORT:
-				return "#42a5f5";
+				hex = "#42a5f5";
+				break;
 			case EnumTagType.TINY:
-				return "#bbdefb";
+				hex = "#69e0d6";
+				break;
 			case EnumTagType.LONG:
-				return "#0d47a1";
+				hex = "#0d47a1";
+				break;
 			case EnumTagType.BOOL:
-				return "#5e35b1";
+				hex = "#5e35b1";
+				break;
 			case EnumTagType.FLOAT:
-				return "#66bb6a";
+				hex = "#66bb6a";
+				break;
 			case EnumTagType.DOUBLE:
-				return "#2e7d32";
+				hex = "#2e7d32";
+				break;
 			case EnumTagType.LIST:
-				return "#a1887f";
+				hex = "#a1887f";
+				break;
 			case EnumTagType.COMPOUND:
-				return "#616161";
+				hex = "#616161";
+				break;
 			case EnumTagType.CHARACTER:
-				return "#f06292";
+				hex = "#f06292";
+				break;
 			case EnumTagType.UUID:
-				return "#ffb74d";
+				hex = "#ff9e16";
+				break;
 			default:
-				return "#000";
+				hex = "#000";
+				break;
 		}
+
+		if(options.ToRGB) {
+			if(options.CSS) {
+				let rgb = HexToRGB(hex);
+
+				return `rgb(${ rgb.r }, ${ rgb.g }, ${ rgb.b })`;
+			}
+
+			return HexToRGB(hex);
+		} else if(options.ToRGBA) {
+			if(options.CSS) {
+				let rgba = HexToRGBA(hex, options.a);
+
+				return `rgba(${ rgba.r }, ${ rgba.g }, ${ rgba.b }, ${ rgba.a })`;
+			}
+
+			return HexToRGBA(hex, options.a);
+		}
+
+		return hex;
 	}
 });

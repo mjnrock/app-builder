@@ -114,12 +114,18 @@ class TagList extends Component {
 
 	render() {
 		return (
-			<div className="w-100 flex justify-around mt2 mb2 ba br2 b--ddd pa2">
+			<div
+				className="w-100 flex justify-around mt2 mb2 ba br2 pa2"				
+				style={{
+					"borderColor" : "rgba(0, 0, 0, 0.2)",
+					"backgroundColor" : "rgba(0, 0, 0, 0.03)"
+				}}
+			>
 				<div className="w-75">
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
-						className="form-control"
+						className={ `form-control input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }
 						placeholder="Name"
 						mcf=".Name"
 						oldvalue={ this.GetTag().GetKey() }
@@ -149,7 +155,7 @@ class TagList extends Component {
 								<div className="flex mt2 mb2 justify-around" key={ i }>
 									<button
 										className={
-											`btn btn-sm btn-outline-danger ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
+											`btn btn-sm btn-remove-element ${ tag instanceof PTO.Tag.TagCompound ? "mr2" : "mr1" }`
 										}
 										onClick={ () => this.RemoveElement(tag) }
 									>X</button>
@@ -169,28 +175,30 @@ class TagList extends Component {
 
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-primary mr1"
+							className={ `btn btn-block btn-sm btn-${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() } mr1` }
 							onClick={ () => this.CreateNewTag() }
-						>Add Tag</button>
-						<button
+						>Add <strong>{ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }</strong> Tag</button>
+						{/* <button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-dark mr1"
 							onClick={ () => console.log(this) }
-						>console.log(this)</button>
+						>console.log(this)</button> */}
 					</div>
 				</div>
 				<div className="w-20">
 					<label className="f7 b">Type</label>
 					<input
 						type="number"
-						className="form-control text-center mb-1"
+						className={ `form-control text-center mb-1 input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetContentType()).toLowerCase() }` }
 						placeholder="Type"
 						mcf=".Type"
 						min="1"
 						max="12"
+						step="1"
 						oldvalue={ this.GetTag().GetContentType() }
 						value={ this.GetTag().GetContentType() }
 						onChange={ this.onDataChange.bind(this) }
+						onWheel={ () => null }	// Need to explicitly "activate" scroll functionality with this nothing code, for w/e React reason
 					/>
 				</div>
 			</div>

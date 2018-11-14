@@ -63,7 +63,7 @@ class TagComponent extends Component {
 					<label className="f7 b">Name</label>
 					<input
 						type="text"
-						className="form-control"
+						className={ `form-control input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }
 						placeholder="Name"
 						mcf=".Name"
 						oldvalue={ this.GetTag().GetKey() }
@@ -94,14 +94,16 @@ class TagComponent extends Component {
 						<label className="f7 b">Type</label>
 						<input
 							type="number"
-							className="form-control text-center mb-1"
+							className={ `form-control text-center mb-1 input-${ PTO.Enum.TagType.GetString(this.state.Tag.GetType()).toLowerCase() }` }
 							placeholder="Type"
 							mcf=".Type"
 							min="1"
 							max="12"
+							step="1"
 							oldvalue={ this.GetTag().GetType() }
 							value={ this.GetTag().GetType() }
 							onChange={ this.onDataChange.bind(this) }
+							onWheel={ () => null }	// Need to explicitly "activate" scroll functionality with this nothing code, for w/e React reason
 						/>
 					</div>
 				}
