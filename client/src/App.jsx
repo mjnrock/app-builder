@@ -14,6 +14,15 @@ import Core from "./core/package";
 //* Usage
 // import Remarkable from "remarkable";
 // <div dangerouslySetInnerHTML={ {__html: this.Remarkable.render("Hello, **world**!")} }></div>
+
+//!	Facebook Open Source
+//	https://opensource.fb.com/
+//*	https://yogalayout.com/
+//*	https://draftjs.org/
+//*	https://graphql.org/
+//*	https://osquery.io/
+//*	https://facebook.github.io/react-360/
+
 	
 //! Move these into an appropriate class for use with the GUI bindings and forms
 // static GetAllParameters = (func) => {
