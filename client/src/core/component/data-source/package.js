@@ -1,4 +1,4 @@
-import { TSQL } from "./TSQL";
+import TSQL from "./tsql/package";
 
 export default {
 	TSQL

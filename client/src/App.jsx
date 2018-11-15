@@ -64,7 +64,6 @@ class App extends Component {
 		return (
 			<BrowserRouter>
 				<Switch>
-					<Route exact path="/model/builder" component={ (router) => <Routes.ModelBuilder Router={ router } Core={ Core } /> } />
 					<Route exact path="/tag/builder" component={ (router) => <Routes.TagBuilder Router={ router } Core={ Core } /> } />
 					<Route exact path="/ds" component={ (router) => <Routes.DataSource Router={ router } Core={ Core } /> } />
 				</Switch>
