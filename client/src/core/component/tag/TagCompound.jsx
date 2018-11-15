@@ -259,7 +259,7 @@ class TagCompound extends Component {
 							data-toggle="dropdown"
 							aria-haspopup="true"
 							aria-expanded="false"
-						>Add Tag</button>
+						>Add <strong>Tag</strong></button>
 						<div
 							className="dropdown-menu"
 							style={{
@@ -299,7 +299,7 @@ class TagCompound extends Component {
 							<label
 								className={ `dropdown-item text-mutator` }
 							>Import from Mutator
-								<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
+								<input type="file" accept=".mutator" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 							</label>
 						</div>
 
@@ -315,7 +315,7 @@ class TagCompound extends Component {
 								type="button"
 								className="btn btn-sm btn-block btn-outline-danger mr1"
 								onClick={ () => PTO.Mutator.MutatorFactory.GenerateMutator(this.state.Tag, true) }
-							>Save File</button>
+							>Download <strong>{ this.state.Tag.GetKey() }.mutator</strong></button>
 							: null
 						}
 						

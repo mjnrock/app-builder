@@ -185,7 +185,7 @@ class MutatorFactory {
 			
 				document.body.removeChild(element);
 			};
-			download(`${ saniRootKey }.js`, lines.join(""));
+			download(`${ saniRootKey }.mutator`, lines.join(""));
 		}
 
 		return lines.join("");
