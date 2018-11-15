@@ -78,6 +78,13 @@ css.push(
 	`	border-color: rgba(0, 0, 0, 1.0);`,
 	`	background-color: rgba(0, 0, 0, 1.0);`,
 	`}`,
+	`.text-mutator {`,
+	`	color: #000;`,
+	`}`,
+	`.text-mutator:hover {`,
+	`   color: #fff;`,
+	`	background-color: rgba(0, 0, 0, 1.0);`,
+	`}`,
 	`\n`
 );
 css.push(

@@ -255,7 +255,7 @@ class TagCompound extends Component {
 
 						<button
 							type="button"
-							className="btn btn-block btn-sm btn-outline-primary mr1 dropdown-toggle"
+							className={ `btn btn-block btn-sm ${ this.props.IsRoot ? "btn-primary" : "btn-outline-primary" } mr1 dropdown-toggle` }
 							data-toggle="dropdown"
 							aria-haspopup="true"
 							aria-expanded="false"
@@ -292,6 +292,15 @@ class TagCompound extends Component {
 								className={ `dropdown-item text-list` }
 								onClick={ () => this.CreateNewTag("List") }
 							>Add <strong>list</strong> Tag</button>
+
+							<div className="dropdown-divider"></div>
+
+							<div className="dropdown-header text-center">External</div> 
+							<label
+								className={ `dropdown-item text-mutator` }
+							>Import from Mutator
+								<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
+							</label>
 						</div>
 
 						{/* Weird CSS issue that this janky thing fixes, so w/e */}
@@ -299,12 +308,22 @@ class TagCompound extends Component {
 							className="btn-block"
 							style={{ "display": "none" }}
 						></div>
+
+						{
+							this.props.IsRoot 
+							? <button
+								type="button"
+								className="btn btn-sm btn-block btn-outline-danger mr1"
+								onClick={ () => PTO.Mutator.MutatorFactory.GenerateMutator(this.state.Tag, true) }
+							>Save File</button>
+							: null
+						}
 						
-						<label
+						{/* <label
 							className="btn btn-block btn-sm btn-outline-secondary mr1 mb0"
 						>Import from Mutator
 							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
-						</label>
+						</label> */}
 
 						{/* <button
 							type="button"

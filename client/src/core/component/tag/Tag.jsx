@@ -102,12 +102,15 @@ class Tag extends Component {
 		return (
 			<div className="container">
 				<h2 className="text-center mt3 mb3">Tag Builder</h2>
+				<TagCompound Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } IsRoot={ true }/>
+{/* 				
+				<h2 className="text-center mt3 mb3">Tag Builder</h2>
 				<label 
 					className="btn btn-block btn-sm btn-outline-primary mr1 mb0"
 				>Load from Mutator File
 					<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 				</label>
-				<TagCompound Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } />
+				<TagCompound Tag={ this.state.Tag } GetTag={ (tag) => this.GetTag(tag) } UpdateElement={ (tc) => this.UpdateElement(tc) } IsRoot={ true }/>
 				<div className="text-center mt3 mb2">
 					<button
 						type="button"
@@ -133,7 +136,7 @@ class Tag extends Component {
 						onClick={ () => console.log(PTO.Mutator.MutatorFactory.GenerateMutator(this.state.Tag)) }
 					>Send to Console</button>
 				</div>
-				{ this.Descendents }
+				{ this.Descendents } */}
 			</div>
 		);
 	}
