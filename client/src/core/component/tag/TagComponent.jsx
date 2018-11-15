@@ -119,7 +119,7 @@ class TagComponent extends Component {
 			state = this.state;
 
 		if(e.type === "change") {
-			if(mcf === ".Type") {
+			if(mcf === ".Type" && (+e.target.value > 0 && +e.target.value <= PTO.Enum.TagType.UUID)) {
 				if(+e.target.value > +e.target.getAttribute("oldvalue")) {
 					e.target.value = +e.target.value === +PTO.Enum.TagType.DOUBLE ? +e.target.value + 1 : +e.target.value;
 					e.target.value = +e.target.value === +PTO.Enum.TagType.LIST ? +e.target.value + 1 : +e.target.value;
