@@ -14,6 +14,7 @@ export default Object.freeze({
     BIT: EnumTagType.BOOL,
 
     MONEY: EnumTagType.STRING,
+    SMALLMONEY: EnumTagType.STRING,
 
     DATE: EnumTagType.STRING,
     DATETIME: EnumTagType.STRING,
