@@ -325,11 +325,11 @@ class TagCompound extends Component {
 							<input type="file" accept=".js" onChange={ this.OnFileUpload.bind(this) } onClick={ (e) => e.target.value = null } hidden />
 						</label> */}
 
-						<button
+						{/* <button
 							type="button"
 							className="btn btn-block btn-sm btn-outline-dark mr1"
 							onClick={ () => console.log(PTO.Mutator.MutatorFactory.GenerateMutator(this.state.Tag)) }
-						>console.log(this)</button>
+						>console.log(this)</button> */}
 					</div>
 				</div>
 			</div>

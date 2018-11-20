@@ -1,6 +1,7 @@
 class TableModel {
 	constructor(name, mutator, columns = {}) {
 		this.Name = name;
+
 		this.Mutator = mutator;
 		this.Columns = columns;
 
@@ -51,7 +52,7 @@ class TableModel {
 	}
 
 	Column(name) {
-		let ret = this.Columns.filter((c) => c.GetName() === name);
+		let ret = this.Columns.filter((c) => c.GetLabel() === name);
 
 		if(ret.length === 1) {
 			return ret[0];

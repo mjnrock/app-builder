@@ -2,11 +2,12 @@ class TableColumn {
 	constructor(name, dataType, ordinality, tag = null, getter = null, setter = null) {
 		this.Name = name;
 		this.DataType = dataType;
-		this.Ordinality = ordinality;
 
-		this.Tag = tag;
-		this.Getter = getter;
-		this.Setter = setter;
+		this.Data = {
+			Tag: tag,
+			Getter: getter,
+			Setter: setter
+		};
 	}
 
 	GetName() {
@@ -27,47 +28,31 @@ class TableColumn {
 		return this;
 	}
 
-	GetOrdinality() {
-		return this.Ordinality;
-	}
-	SetOrdinality(input) {
-		this.Ordinality = input;
-
-		return this;
-	}
-
 	GetTag() {
-		return this.Tag;
+		return this.Data.Tag;
 	}
 	SetTag(input) {
-		this.Tag = input;
+		this.Data.Tag = input;
 
 		return this;
 	}
 
 	GetGetter() {
-		return this.Getter();
+		return this.Data.Getter;
 	}
 	SetGetter(input) {
-		this.Getter = input;
+		this.Data.Getter = input;
 
 		return this;
 	}
 
 	GetSetter() {
-		return this.Setter();
+		return this.Data.Setter;
 	}
 	SetSetter(input) {
-		this.Setter = input;
+		this.Data.Setter = input;
 
 		return this;
-	}
-
-	Get() {
-		return this.Getter();
-	}
-	Set(...input) {
-		return this.Setter(...input);
 	}
 }
 

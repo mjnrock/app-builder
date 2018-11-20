@@ -14,6 +14,7 @@ const mssql = require("mssql");
 
 import PTO from "./lib/pto/package";
 import TSQL from "./data-source/tsql/package";
+import { TableModel } from "./data-source/tsql/TableModel";
 
 const config = {
 	user: "staxpax",
@@ -55,7 +56,8 @@ app.get("/api/:schema/:table", async (req, res) => {
 			.query("SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=@s AND TABLE_NAME=@t");
 
 		let tag = new PTO.Tag.TagCompound(req.params.table),
-			ret = result.recordset.map(r => {
+			table = result.recordset[0]["TABLE_NAME"],
+			records = result.recordset.map(r => {
 
 			let dataType = +TSQL.Enum.DataType[r["DATA_TYPE"].toUpperCase()],
 				clazz = PTO.Enum.TagType.GetClass(dataType),
@@ -70,34 +72,38 @@ app.get("/api/:schema/:table", async (req, res) => {
 				+r["ORDINAL_POSITION"],
 
 				colTag
-			)
+			);
 		});
 
 		let Mutator = PTO.Mutator.Mutator,	// For the GenerateMutator "extends"
 			mutator = eval(`(${ PTO.Mutator.MutatorFactory.GenerateMutator(tag) })`),
-			mut = new mutator();
+			mut = new mutator(),
+			tableModel = new TSQL.TableModel(table, mut);
 			
-		ret.forEach((r, i) => {
+		records.forEach((r, i) => {
 			r.SetGetter(`Get${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
 			r.SetSetter(`Set${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
+
+			tableModel.AddColumn(r.GetName(), r);
 		});
 
 		//*	ret Shape
 		// {
-		// 	"Name": "CharacterID",
+		// 	"Label": "UniverseID",
 		// 	"DataType": "INT",
-		// 	"Ordinality": 1,
-		// 	"Tag": {
-		// 		"Type": 1,
-		// 		"Key": "CharacterID",
-		// 		"Value": [],
-		// 		"Ordinality": 1
-		// 	},
-		// 	"Getter": "GetCharacterID",
-		// 	"Setter": "SetCharacterID"
+		// 	"Data": {
+		// 		"Tag": {
+		// 			"Type": 1,
+		// 			"Key": "UniverseID",
+		// 			"Value": [],
+		// 			"Ordinality": 1
+		// 		},
+		// 		"Getter": "GetUniverseID",
+		// 		"Setter": "SetUniverseID"
+		// 	}
 		// }
 
-		res.json(ret);
+		res.json(tableModel);
 	} catch (e) {
 		res.status(500);
 		res.send(e.message);
