@@ -7,8 +7,8 @@ class ActiveTable {
 	GetTableModel() {
 		return this.TableModel;
 	}
-	SetTableModel(input) {
-		this.TableModel = input;
+	SetTableModel(tableModel) {
+		this.TableModel = tableModel;
 
 		return this.TableModel;
 	}
@@ -16,14 +16,15 @@ class ActiveTable {
 	GetRecords() {
 		return this.Records;
 	}
-	SetRecords(input) {
-		this.Records = input;
+	SetRecords(records) {
+		this.Records = records;
 
 		return this;
 	}
 
+	//TODO Doesn't do anything useful yet
 	GetRecord(pkvalue) {
-		let ret = this.Records.filter((c) => this.TableModel.GetPrimaryKey());
+		let ret = this.Records.filter((r) => this.TableModel.GetPrimaryKey());
 
 		if(ret.length === 1) {
 			return ret[0];

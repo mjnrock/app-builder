@@ -11,8 +11,8 @@ class TableModel {
 	GetName() {
 		return this.Name;
 	}
-	SetName(input) {
-		this.Name = input;
+	SetName(name) {
+		this.Name = name;
 
 		return this;
 	}
@@ -20,17 +20,24 @@ class TableModel {
 	GetMutator() {
 		return this.Mutator;
 	}
-	SetMutator(input) {
-		this.Mutator = input;
+	SetMutator(mutator) {
+		this.Mutator = mutator;
 
 		return this;
+	}
+	InstantiateMutator(...args) {
+		try {
+			return new this.Mutator(...args);
+		} catch (e) {
+			console.warn("[FAILED]: Mutator Instantiation.  The attached Mutator is probably corrupt or misshapen.");
+		}
 	}
 
 	GetPrimaryKey() {
 		return this.PrimaryKey;
 	}
-	SetPrimaryKey(input) {
-		this.PrimaryKey = input;
+	SetPrimaryKey(pk) {
+		this.PrimaryKey = pk;
 
 		return this;
 	}
@@ -38,8 +45,8 @@ class TableModel {
 	GetColumns() {
 		return this.Columns;
 	}
-	SetColumns(input) {
-		this.Columns = input;
+	SetColumns(columns) {
+		this.Columns = columns;
 
 		return this;
 	}

@@ -13,8 +13,8 @@ class TableColumn {
 	GetName() {
 		return this.Name;
 	}
-	SetName(input) {
-		this.Name = input;
+	SetName(name) {
+		this.Name = name;
 
 		return this;
 	}
@@ -22,8 +22,8 @@ class TableColumn {
 	GetDataType() {
 		return this.DataType;
 	}
-	SetDataType(input) {
-		this.DataType = input;
+	SetDataType(dataType) {
+		this.DataType = dataType;
 
 		return this;
 	}
@@ -31,8 +31,8 @@ class TableColumn {
 	GetTag() {
 		return this.Data.Tag;
 	}
-	SetTag(input) {
-		this.Data.Tag = input;
+	SetTag(tag) {
+		this.Data.Tag = tag;
 
 		return this;
 	}
@@ -40,8 +40,8 @@ class TableColumn {
 	GetGetter() {
 		return this.Data.Getter;
 	}
-	SetGetter(input) {
-		this.Data.Getter = input;
+	SetGetter(getter) {
+		this.Data.Getter = getter;
 
 		return this;
 	}
@@ -49,8 +49,8 @@ class TableColumn {
 	GetSetter() {
 		return this.Data.Setter;
 	}
-	SetSetter(input) {
-		this.Data.Setter = input;
+	SetSetter(setter) {
+		this.Data.Setter = setter;
 
 		return this;
 	}

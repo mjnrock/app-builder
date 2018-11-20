@@ -34,7 +34,6 @@ const TSQLPool = new mssql.ConnectionPool(config)
 app.get("/api", async (req, res) => {
 	try {
 		const pool = await TSQLPool;
-		console.log(req.query);
 		const result = await pool.request()
         	.input("s", mssql.VarChar, req.query.s)
 			.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=@s");
@@ -48,7 +47,6 @@ app.get("/api", async (req, res) => {
 app.get("/api/:schema/:table", async (req, res) => {
 	try {
 		const pool = await TSQLPool;
-		console.log(req.params);
 		const result = await pool.request()
         	.input("s", mssql.VarChar, req.params.schema)
         	.input("t", mssql.VarChar, req.params.table)
@@ -77,9 +75,9 @@ app.get("/api/:schema/:table", async (req, res) => {
 
 		let Mutator = PTO.Mutator.Mutator,	// For the GenerateMutator "extends"
 			mutator = eval(`(${ PTO.Mutator.MutatorFactory.GenerateMutator(tag) })`),
-			mut = new mutator(),
-			tableModel = new TSQL.TableModel(table, mut);
+			tableModel = new TSQL.TableModel(table, mutator);
 			
+		let mut = new mutator();
 		records.forEach((r, i) => {
 			r.SetGetter(`Get${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
 			r.SetSetter(`Set${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);

@@ -148,17 +148,17 @@ class MutatorFactory {
 				`\t\tthis.Tag = new this.PTO.Tag.TagCompound("${ root.Tag.GetKey() }");\n`
 			],
 			metaMapper = [],
-			metaFunc = [
-				`\tSearchSchema(key, value) {`,
-					`\t\tlet ret = this.Schema.filter(t => t[key] === value);\n`,
+			// metaFunc = [
+			// 	`\tSearchSchema(key, value) {`,
+			// 		`\t\tlet ret = this.Schema.filter(t => t[key] === value);\n`,
 
-					`\t\tif(ret.length === 1) {`,
-						`\t\t\treturn ret[0];`,
-					`\t\t}\n`,
+			// 		`\t\tif(ret.length === 1) {`,
+			// 			`\t\t\treturn ret[0];`,
+			// 		`\t\t}\n`,
 
-					`\t\treturn ret;`,
-				`\t}\n\n`
-			],
+			// 		`\t\treturn ret;`,
+			// 	`\t}\n\n`
+			// ],
 			funcs = [
 				...MakeGetterSetter(root)
 			];
@@ -195,7 +195,7 @@ class MutatorFactory {
 		lines.push(`\n\t\tthis.PTO.Utility.Transformer.ToHierarchy(this.Tag).forEach((t, i) => t.Tag.SetOrdinality(i + 1));\n`);	// Ensure Tag ordinality mimes creation order
 		lines.push(`\n\t\tthis.Schema = [\n${ metaMapper.join("\n") }\n\t\t];`);	// End Constructor
 		lines.push(`\n\t}\n\n`);	// End Constructor
-		lines.push(metaFunc.join("\n"));
+		// lines.push(metaFunc.join("\n"));
 		lines.push(...funcs);
 		lines.pop();	// Cleanup an aesthetically unpleasing extra line
 		lines.push(`}`);	// End Class

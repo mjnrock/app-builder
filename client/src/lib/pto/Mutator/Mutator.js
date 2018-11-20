@@ -4,6 +4,17 @@ class Mutator {
 	constructor() {
 		this.PTO = PTO;
 		this.Tag = null;
+		this.Schema = null;
+	}
+
+	SearchSchema(key, value) {
+		let ret = this.Schema.filter(t => t[key] === value);
+
+		if(ret.length === 1) {
+			return ret[0];
+		}
+
+		return ret;
 	}
 
 	Compare(tag, a, bv, af) {
