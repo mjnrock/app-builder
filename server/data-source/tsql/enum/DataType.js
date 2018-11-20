@@ -1,4 +1,4 @@
-import EnumTagType from "./../../../../lib/pto/Enum/TagType";
+import EnumTagType from "../../../lib/pto/Enum/TagType";
 
 export default Object.freeze({
     TINYINT: EnumTagType.TINY,

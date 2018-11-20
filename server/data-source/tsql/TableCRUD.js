@@ -1,0 +1,5 @@
+class TableCRUD {
+
+}
+
+export { TableCRUD };

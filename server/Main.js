@@ -9,6 +9,103 @@ const app = expressWS.app;
 const PORT = 1999;
 const STDIN = process.openStdin();
 
+
+const mssql = require("mssql");
+
+import PTO from "./lib/pto/package";
+import TSQL from "./data-source/tsql/package";
+
+const config = {
+	user: "staxpax",
+	password: "staxpax",
+	server: "localhost",
+	database: "StaxPax"
+};
+const TSQLPool = new mssql.ConnectionPool(config)
+	.connect()
+	.then(pool => {
+		console.log(`Connected to: [Server: ${ config.server }, Databse: ${ config.database }]`);
+
+		return pool;
+	})
+	.catch(err => console.log("Database Connection Failed! Bad Config: ", err));
+
+app.get("/api", async (req, res) => {
+	try {
+		const pool = await TSQLPool;
+		console.log(req.query);
+		const result = await pool.request()
+        	.input("s", mssql.VarChar, req.query.s)
+			.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=@s");
+
+		res.json(result.recordset);
+	} catch (e) {
+		res.status(500);
+		res.send(e.message);
+	}
+});
+app.get("/api/:schema/:table", async (req, res) => {
+	try {
+		const pool = await TSQLPool;
+		console.log(req.params);
+		const result = await pool.request()
+        	.input("s", mssql.VarChar, req.params.schema)
+        	.input("t", mssql.VarChar, req.params.table)
+			// .query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=@s AND TABLE_NAME=@t");
+			.query("SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=@s AND TABLE_NAME=@t");
+
+		let tag = new PTO.Tag.TagCompound(req.params.table),
+			ret = result.recordset.map(r => {
+
+			let dataType = +TSQL.Enum.DataType[r["DATA_TYPE"].toUpperCase()],
+				clazz = PTO.Enum.TagType.GetClass(dataType),
+				colTag = new clazz(r["COLUMN_NAME"]);
+			
+			colTag.SetOrdinality(+r["ORDINAL_POSITION"]);
+			tag.AddTag(colTag);
+
+			return new TSQL.TableColumn(
+				r["COLUMN_NAME"],
+				r["DATA_TYPE"].toUpperCase(),
+				+r["ORDINAL_POSITION"],
+
+				colTag
+			)
+		});
+
+		let Mutator = PTO.Mutator.Mutator,	// For the GenerateMutator "extends"
+			mutator = eval(`(${ PTO.Mutator.MutatorFactory.GenerateMutator(tag) })`),
+			mut = new mutator();
+			
+		ret.forEach((r, i) => {
+			r.SetGetter(`Get${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
+			r.SetSetter(`Set${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
+		});
+
+		//*	ret Shape
+		// {
+		// 	"Name": "CharacterID",
+		// 	"DataType": "INT",
+		// 	"Ordinality": 1,
+		// 	"Tag": {
+		// 		"Type": 1,
+		// 		"Key": "CharacterID",
+		// 		"Value": [],
+		// 		"Ordinality": 1
+		// 	},
+		// 	"Getter": "GetCharacterID",
+		// 	"Setter": "SetCharacterID"
+		// }
+
+		res.json(ret);
+	} catch (e) {
+		res.status(500);
+		res.send(e.message);
+	}
+});
+
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next) {
