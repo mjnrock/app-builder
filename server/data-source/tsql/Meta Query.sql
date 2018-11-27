@@ -2,20 +2,23 @@ SELECT
 	cols.SchemaName,
 	cols.TableName,
 	cols.ColumnName,
+	cols.OrdinalPosition,
 	cols.DataType,
 	cols.DataTypeLength,
 	
-	fkcols.FKSchemaName AS FKSchemaName,
-	fkcols.FKTableName AS FKTableName,
-	fkcols.FKColumnName AS FKColumnName,
-	fkcols.DataType AS FKDataType,
-	fkcols.DataTypeLength AS FKDataTypeLength
+	fkcols.FKSchemaName,
+	fkcols.FKTableName,
+	fkcols.FKColumnName,
+	fkcols.FKOrdinalPosition,
+	fkcols.FKDataType,
+	fkcols.FKDataTypeLength
 FROM
 	(
 		SELECT
 			s.name AS SchemaName,
 			o.name AS TableName,
 			c.name AS ColumnName,
+			c.colid AS OrdinalPosition,
 			UPPER(t.name) AS DataType,
 			c.[length] AS DataTypeLength
 		FROM
@@ -36,11 +39,13 @@ FROM
 			s.name AS SchemaName,
 			OBJECT_NAME(f.parent_object_id) AS TableName,
 			COL_NAME(fc.parent_object_id, fc.parent_column_id) AS ColumnName,
+			c.column_id AS OrdinalPosition,
 			UPPER(ty.name) AS DataType,
 			c.max_length AS DataTypeLength,
 			fks.name AS FKSchemaName,
 			OBJECT_NAME(f.referenced_object_id) AS FKTableName,
-			COL_NAME(fc.referenced_object_id, fc.referenced_column_id) AS FKColumnName,			
+			COL_NAME(fc.referenced_object_id, fc.referenced_column_id) AS FKColumnName,		
+			fkc.column_id AS FKOrdinalPosition,	
 			UPPER(fkty.name) AS FKDataType,
 			fkc.max_length AS FKDataTypeLength,
 			delete_referential_action_desc AS FKDeleteAction,
@@ -74,4 +79,5 @@ FROM
 		AND cols.ColumnName = fkcols.ColumnName
 ORDER BY
 	cols.TableName,
-	cols.ColumnName
+	cols.OrdinalPosition,
+	fkcols.FKOrdinalPosition
