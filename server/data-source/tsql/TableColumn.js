@@ -1,5 +1,5 @@
 class TableColumn {
-	constructor(name, dataType, ordinality, tag = null, getter = null, setter = null) {
+	constructor(name, dataType, tag = null, getter = null, setter = null) {
 		this.Name = name;
 		this.DataType = dataType;
 

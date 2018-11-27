@@ -33,6 +33,7 @@ FROM
 				ON tbl.schema_id = s.schema_id
 		WHERE
 			o.xtype = 'U'
+			AND t.[status] = 0
 	) cols
 	LEFT JOIN (
 		SELECT

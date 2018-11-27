@@ -25,7 +25,7 @@ const config = {
 const TSQLPool = new mssql.ConnectionPool(config)
 	.connect()
 	.then(pool => {
-		console.log(`Connected to: [Server: ${ config.server }, Databse: ${ config.database }]`);
+		console.log(`Connected to: [Server: ${ config.server }, Database: ${ config.database }]`);
 
 		return pool;
 	})
@@ -44,64 +44,176 @@ app.get("/api", async (req, res) => {
 		res.send(e.message);
 	}
 });
-app.get("/api/:schema/:table", async (req, res) => {
+app.get("/api/:schema", async (req, res) => {
 	try {
 		const pool = await TSQLPool;
 		const result = await pool.request()
         	.input("s", mssql.VarChar, req.params.schema)
-        	.input("t", mssql.VarChar, req.params.table)
-			// .query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=@s AND TABLE_NAME=@t");
-			.query("SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=@s AND TABLE_NAME=@t");
+			.query(`
+				SELECT
+					cols.SchemaName,
+					cols.TableName,
+					cols.ColumnName,
+					cols.OrdinalPosition,
+					cols.DataType,
+					cols.DataTypeLength,
+					
+					fkcols.FKSchemaName,
+					fkcols.FKTableName,
+					fkcols.FKColumnName,
+					fkcols.FKOrdinalPosition,
+					fkcols.FKDataType,
+					fkcols.FKDataTypeLength
+				FROM
+					(
+						SELECT
+							s.name AS SchemaName,
+							o.name AS TableName,
+							c.name AS ColumnName,
+							c.colid AS OrdinalPosition,
+							UPPER(t.name) AS DataType,
+							c.[length] AS DataTypeLength
+						FROM
+							sysobjects o
+							INNER JOIN syscolumns c
+								ON o.id = c.id
+							INNER JOIN systypes t
+								ON c.xtype = t.xtype
+							INNER JOIN sys.tables tbl
+								ON o.id = tbl.object_id
+							INNER JOIN sys.schemas s
+								ON tbl.schema_id = s.schema_id
+						WHERE
+							o.xtype = 'U'
+							AND t.[status] = 0
+					) cols
+					LEFT JOIN (
+						SELECT
+							s.name AS SchemaName,
+							OBJECT_NAME(f.parent_object_id) AS TableName,
+							COL_NAME(fc.parent_object_id, fc.parent_column_id) AS ColumnName,
+							c.column_id AS OrdinalPosition,
+							UPPER(ty.name) AS DataType,
+							c.max_length AS DataTypeLength,
+							fks.name AS FKSchemaName,
+							OBJECT_NAME(f.referenced_object_id) AS FKTableName,
+							COL_NAME(fc.referenced_object_id, fc.referenced_column_id) AS FKColumnName,		
+							fkc.column_id AS FKOrdinalPosition,	
+							UPPER(fkty.name) AS FKDataType,
+							fkc.max_length AS FKDataTypeLength,
+							delete_referential_action_desc AS FKDeleteAction,
+							update_referential_action_desc AS FKUpdateAction
+						FROM
+							sys.foreign_keys f
+							INNER JOIN sys.foreign_key_columns fc
+								ON f.object_id = fc.constraint_object_id
+							INNER JOIN sys.tables t
+								ON f.parent_object_id = t.object_id
+							INNER JOIN sys.schemas s
+								ON t.schema_id = s.schema_id
+							INNER JOIN sys.columns c
+								ON t.object_id = c.object_id
+								AND c.column_id = fc.parent_column_id
+							INNER JOIN sys.types ty
+								ON c.user_type_id = ty.user_type_id
+								
+							INNER JOIN sys.tables fkt
+								ON fc.referenced_object_id = fkt.object_id
+							INNER JOIN sys.schemas fks
+								ON fkt.schema_id = fks.schema_id
+							INNER JOIN sys.columns fkc
+								ON fkt.object_id = fkc.object_id
+								AND fkc.column_id = fc.referenced_column_id
+							INNER JOIN sys.types fkty
+								ON fkc.user_type_id = fkty.user_type_id
+					) fkcols
+						ON cols.SchemaName = fkcols.SchemaName
+						AND cols.TableName = fkcols.TableName
+						AND cols.ColumnName = fkcols.ColumnName
+				WHERE
+					cols.SchemaName=@s
+				ORDER BY
+					cols.TableName,
+					cols.OrdinalPosition,
+					fkcols.FKOrdinalPosition
+			`);
 
-		let tag = new PTO.Tag.TagCompound(req.params.table),
-			table = result.recordset[0]["TABLE_NAME"],
-			records = result.recordset.map(r => {
+		let maxDepth = req.query.md != null && req.query.md !== void 0 ? req.query.md : 5;
+		let recur = (columns, depth) => {
+			let tag = columns.map(c => {
+				if(c.FKColumnName === null || depth > maxDepth) {
+					let dataType = +TSQL.Enum.DataType[c.DataType.toUpperCase()],
+						clazz = PTO.Enum.TagType.GetClass(dataType),
+						colTag = new clazz(c.ColumnName);
+				
+					colTag.SetOrdinality(+c.OrdinalPosition);
 
-			let dataType = +TSQL.Enum.DataType[r["DATA_TYPE"].toUpperCase()],
-				clazz = PTO.Enum.TagType.GetClass(dataType),
-				colTag = new clazz(r["COLUMN_NAME"]);
-			
-			colTag.SetOrdinality(+r["ORDINAL_POSITION"]);
-			tag.AddTag(colTag);
+					return colTag;
+				} else {
+					let ftbls = result.recordset.filter(r => r.SchemaName === c.FKSchemaName && r.TableName === c.FKTableName),
+						ctag = new PTO.Tag.TagCompound(c.ColumnName);
+		
+					ctag.SetOrdinality(+c.OrdinalPosition);
+					
+					let children = recur(ftbls, depth + 1);
+					children.forEach(ch => ctag.AddTag(ch));
+					
+					return ctag;
+				}
+			});			
 
-			return new TSQL.TableColumn(
-				r["COLUMN_NAME"],
-				r["DATA_TYPE"].toUpperCase(),
-				+r["ORDINAL_POSITION"],
+			return tag;
+		};
 
-				colTag
-			);
+
+		let tag = new PTO.Tag.TagCompound(req.params.schema),
+			tables = [];
+		result.recordset.forEach(r => {
+			if(!tables.includes(r.TableName)) {
+				tables.push(r.TableName);
+			}
 		});
+		tables.forEach(t => {
+			let ftbls = result.recordset.filter(r => r.TableName === t),
+				children = recur(ftbls, 1),
+				ctag = new PTO.Tag.TagCompound(t);
 
-		let Mutator = PTO.Mutator.Mutator,	// For the GenerateMutator "extends"
-			mutator = eval(`(${ PTO.Mutator.MutatorFactory.GenerateMutator(tag) })`),
-			tableModel = new TSQL.TableModel(table, mutator);
-			
-		let mut = new mutator();
-		records.forEach((r, i) => {
-			r.SetGetter(`Get${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
-			r.SetSetter(`Set${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
-
-			tableModel.AddColumn(r.GetName(), r);
+			children.forEach(c => ctag.AddTag(c));
+			tag.AddTag(ctag);
 		});
+		
+		res.json(tag);
 
-		//*	ret Shape
-		// {
-		// 	"Label": "UniverseID",
-		// 	"DataType": "INT",
-		// 	"Data": {
-		// 		"Tag": {
-		// 			"Type": 1,
-		// 			"Key": "UniverseID",
-		// 			"Value": [],
-		// 			"Ordinality": 1
-		// 		},
-		// 		"Getter": "GetUniverseID",
-		// 		"Setter": "SetUniverseID"
-		// 	}
-		// }
+		//! Move the "tag" into a larger shape, like below
+		// let Mutator = PTO.Mutator.Mutator,	// For the GenerateMutator "extends"
+		// 	mutator = eval(`(${ PTO.Mutator.MutatorFactory.GenerateMutator(tag) })`),
+		// 	tableModel = new TSQL.TableModel(table, mutator);
+			
+		// let mut = new mutator();
+		// records.forEach((r, i) => {
+		// 	r.SetGetter(`Get${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
+		// 	r.SetSetter(`Set${ mut.SearchSchema("Key", r.GetName()).SafeKey }`);
 
-		res.json(tableModel);
+		// 	tableModel.AddColumn(r.GetName(), r);
+		// });
+
+		// res.json(tableModel);
+
+		// //*	ret Shape
+		// // {
+		// // 	"Label": "UniverseID",
+		// // 	"DataType": "INT",
+		// // 	"Data": {
+		// // 		"Tag": {
+		// // 			"Type": 1,
+		// // 			"Key": "UniverseID",
+		// // 			"Value": [],
+		// // 			"Ordinality": 1
+		// // 		},
+		// // 		"Getter": "GetUniverseID",
+		// // 		"Setter": "SetUniverseID"
+		// // 	}
+		// // }
 	} catch (e) {
 		res.status(500);
 		res.send(e.message);
