@@ -10,3 +10,4 @@ NOTES:
 
 ACTIVE TASK:
 	☐ GenerateMutator does not include the root tag (ID: 1) in `this.Schema` in the generated Mutator file itself
+	☐ Create tag query language, as per written notes
