@@ -1,0 +1,12 @@
+NOTES:
+	☐ **Install ToDo+ in VS Code**
+	☐ Unit Test - http://dm.gl/2015/11/26/wallaby-for-visual-studio-code/
+	☐ Info - https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
+	☐ Tags - @critical @high @low @today @customizableTag
+	☐ CTRL+ENTER - Make the boxes
+	☐ ALT+D - Mark Complete/Incomplete
+	☐ ALT+C - Mark Canceled
+	☐ CTRL+SHIFT+A - Archive (Move Completed/Canceled to Archive)
+
+ACTIVE TASK:
+	☐ GenerateMutator does not include the root tag (ID: 1) in `this.Schema` in the generated Mutator file itself
