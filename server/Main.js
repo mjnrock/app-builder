@@ -264,6 +264,25 @@ app.listen(PORT, () => {
 	console.log(`App Builder API is now listening on port: ${PORT}`);
 });
 
+const TestCase = () => {
+	let tags = [];
+
+	for(let i = 0; i < 2; i++) {
+		tags.push(new PTO.Tag.TagInt(i, [5]));
+	}
+
+	console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0]));
+	console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0], true));
+	console.log("Add: ", PTO.Utility.Mathematics.Add(...tags));
+	console.log("Subtract: ", PTO.Utility.Mathematics.Subtract(...tags));
+	console.log("Multiply: ", PTO.Utility.Mathematics.Multiply(...tags));
+	console.log("Divide: ", PTO.Utility.Mathematics.Divide(...tags));
+	console.log("Power: ", PTO.Utility.Mathematics.Power(tags[0], tags[1]));
+	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0]));
+	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0], tags[1]));
+	console.log("Calculate: ", PTO.Utility.Mathematics.Calculate("1 + ({0} * {1})", ...tags));
+;}
+
 //?		get Object.keys($.Common.Entity.EntityManager.Entities)
 STDIN.addListener("data", function(d) {
 	let args = d.toString().trim().replace(/^\s+|\s+$/g, '').split(" ");
@@ -279,6 +298,8 @@ STDIN.addListener("data", function(d) {
 	} else if(args[0] === "exit" || args[0] === "stop") {
 		//  Kill the current Node instance
 		process.exit();
+	} else if(args[0] === "test" || args[0] === "t") {
+		TestCase()
 	}
 });
 
