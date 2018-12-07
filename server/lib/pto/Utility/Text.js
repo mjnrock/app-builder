@@ -5,14 +5,7 @@ class Text {
 		return [
 			PTO.Enum.TagType.CHARACTER,
 			PTO.Enum.TagType.STRING,	
-			PTO.Enum.TagType.UUID,
-			
-			PTO.Enum.TagType.TINY,
-			PTO.Enum.TagType.SHORT,
-			PTO.Enum.TagType.INT,
-			PTO.Enum.TagType.LONG,
-			PTO.Enum.TagType.FLOAT,
-			PTO.Enum.TagType.DOUBLE
+			PTO.Enum.TagType.UUID
 		];
 	}
     static IsCompatible(...tags) {
@@ -29,7 +22,7 @@ class Text {
 	 * Functionally equivalent to a TSQL CONCAT.  If a boolean is found, it will treat is as the "returnAsTag" flag.
 	 * @param  {...any} input | Any combination of a String or a Tag
 	 */
-	static Concat(...inputs) {		
+	static Concat(...inputs) {
 		let string = "",
 			returnAsTag = false;
 
@@ -55,11 +48,87 @@ class Text {
 
 		return string;
 	}
+	
+	static Match(pattern, tag, returnAsTag = false) {
+		if(!Text.IsCompatible(tag)) {
+			throw new PTO.Error.IncompatibleType(Text.COMPATIBILITY);
+		}
+
+		let res = tag.GetValues().match(pattern)!== null ? true : false;
+
+		if(returnAsTag) {
+			return new PTO.Tag.TagBoolean("Match", res);
+		}
+
+		return res;
+	}
+
+	static Equals(t1, t2, identityCompare = false, returnAsTag = false) {
+		if(!Text.IsCompatible(t1) || !Text.IsCompatible(t2)) {
+			throw new PTO.Error.IncompatibleType(Text.COMPATIBILITY);
+		}
+
+		let res = identityCompare ? t1.GetValues() === t2.GetValues() : t1.GetValues() == t2.GetValues();
+
+		if(returnAsTag) {
+			return new PTO.Tag.TagBoolean("Equals", res);
+		}
+
+		return res;
+	}
+
+	/**
+	 * 
+	 * @param {*} string | Construct with "{#}" syntax (e.g. "This is the {0}st test and the {1}nd")
+	 * @param  {...any} tags 
+	 */
+	static Interpolate(string, ...tags) {
+        let regex = /{\d+}/g,
+            match = regex.exec(string),
+			i = 0;
+
+        while (match != null) {
+            string = string.replace(match, Array.from(tags[i].GetValues()).join(""));
+            match = regex.exec(string);            
+
+            ++i;
+		}
+
+		//	returnAsTag
+		if(tags.includes(true)) {
+			return new PTO.Tag.TagString("Interpolate", string);
+		}
+		
+		return string;
+	}
+
+	static Replace(tag, find, replace, overwrite = false) {
+		if(!Text.IsCompatible(tag)) {
+			throw new PTO.Error.IncompatibleType(Text.COMPATIBILITY);
+		}
+
+		let value = tag.GetValues().replace(find, replace);
+
+		if(overwrite) {
+			tag.SetValues(value);
+		}
+		
+		return tag;
+	}
+
+	static Find(tag, find, returnAsTag = false) {
+		if(!Text.IsCompatible(tag)) {
+			throw new PTO.Error.IncompatibleType(Text.COMPATIBILITY);
+		}
+
+		let value = tag.GetValues().search(find);
+
+		if(returnAsTag) {
+			return new PTO.Tag.TagString("Find", value);
+		}
+		
+		return value;
+	}
 }
 
-// Text.COMPATIBILITY = [
-// 	PTO.Enum.TagType.CHARACTER,
-// 	PTO.Enum.TagType.STRING,	
-// 	PTO.Enum.TagType.UUID
-// ];
 export { Text };

@@ -16,20 +16,20 @@ import PTO from "./lib/pto/package";
 import TSQL from "./data-source/tsql/package";
 import { TableModel } from "./data-source/tsql/TableModel";
 
-const config = {
-	user: "staxpax",
-	password: "staxpax",
-	server: "localhost",
-	database: "StaxPax"
-};
-const TSQLPool = new mssql.ConnectionPool(config)
-	.connect()
-	.then(pool => {
-		console.log(`Connected to: [Server: ${ config.server }, Database: ${ config.database }]`);
+// const config = {
+// 	user: "staxpax",
+// 	password: "staxpax",
+// 	server: "localhost",
+// 	database: "StaxPax"
+// };
+// const TSQLPool = new mssql.ConnectionPool(config)
+// 	.connect()
+// 	.then(pool => {
+// 		console.log(`Connected to: [Server: ${ config.server }, Database: ${ config.database }]`);
 
-		return pool;
-	})
-	.catch(err => console.log("Database Connection Failed! Bad Config: ", err));
+// 		return pool;
+// 	})
+// 	.catch(err => console.log("Database Connection Failed! Bad Config: ", err));
 
 app.get("/api", async (req, res) => {
 	try {
@@ -266,15 +266,29 @@ app.listen(PORT, () => {
 
 const TestCase = () => {
 	let tags = [];
+	tags.push(new PTO.Tag.TagString(1, "cats"));
+	tags.push(new PTO.Tag.TagInt(2, [1, 2, 3, 4]));
 
-	for(let i = 0; i < 2; i++) {
-		tags.push(new PTO.Tag.TagInt(i, 74));
-	}
+	// for(let i = 0; i < 2; i++) {
+	// 	tags.push(new PTO.Tag.TagString(i, "cats"));
+	// }
+
+	
+	//?	General
+	console.log("Copy: ", PTO.Utility.General.Copy(tags[0], 5));
 
 	//?	Text
-	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", false, tags[1]));
-	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]));
-	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]).GetValues());
+	// console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", false, tags[1]));
+	// console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]));
+	// console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]).GetValues());
+	// console.log("Match: ", PTO.Utility.Text.Match("cat", tags[0], false));
+	// console.log("Match: ", PTO.Utility.Text.Match("cat", tags[0], true));
+	// console.log("Equals: ", PTO.Utility.Text.Equals(tags[0], tags[1], false));
+	// console.log("Equals: ", PTO.Utility.Text.Equals(tags[0], tags[1], true));
+	// console.log("Equals: ", PTO.Utility.Text.Equals(tags[0], tags[1], true, true));
+	// console.log("Interpolate: ", PTO.Utility.Text.Interpolate("This is {0} a test {1} for you", ...tags, true));
+	// console.log("Interpolate: ", PTO.Utility.Text.Interpolate("This is {0} a test {1} for you", ...tags));
+	// console.log("Interpolate: ", PTO.Utility.Text.Interpolate("This is {0} a test {1} for you", ...tags, true).GetValues());
 
 	// //?	Mathematics
 	// console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0]));

@@ -95,12 +95,6 @@ class Mathematics {
         return result;
     }
 
-    static OverwriteValue(t1, t2) {
-        t1.Value = t2.Value;
-
-        return t1;
-    }
-
     static Add(...tags) {
         let multi = Mathematics.ToSingleValueSpread(...tags),
             sum = multi.Sum.reduce((p, v) => p + v),
