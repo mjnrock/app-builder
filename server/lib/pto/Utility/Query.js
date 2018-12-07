@@ -36,6 +36,7 @@ class Query {
 	 * 
 	 * @returns {ATag} | A (?modified) copy of $baseTag
 	 */
+	//TODO This is not complete
 	static Execute(baseTag, query = "$") {
 		if(tiers[0] === "$" || tiers[0] === "**") {
 			return PTO.Utility.General.Copy(baseTag);
