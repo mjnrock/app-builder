@@ -1,9 +1,9 @@
-import Enum from "./Enum/package";
-import Error from "./Error/package";
-import Tag from "./Tag/package";
-import Utility from "./Utility/package";
-import Struct from "./Struct/package";
-import Mutator from "./Mutator/package";
+import Enum from "./Enum/package.js";
+import Error from "./Error/package.js";
+import Tag from "./Tag/package.js";
+import Utility from "./Utility/package.js";
+import Struct from "./Struct/package.js";
+import Mutator from "./Mutator/package.js";
 
 export default {
 	Enum,

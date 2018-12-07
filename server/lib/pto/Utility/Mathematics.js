@@ -1,26 +1,29 @@
-import PTO from "../package.js";
+import PTO from "./../package.js";
 
 class Mathematics {
+	static get COMPATIBILITY() {
+		return [
+			PTO.Enum.TagType.TINY,
+			PTO.Enum.TagType.SHORT,
+			PTO.Enum.TagType.INT,
+			PTO.Enum.TagType.LONG,
+			PTO.Enum.TagType.FLOAT,
+			PTO.Enum.TagType.DOUBLE
+		];
+	}
     static IsCompatible(...tags) {
-        let enums = [
-            PTO.Enum.TagType.SHORT,
-            PTO.Enum.TagType.INT,
-            PTO.Enum.TagType.LONG,
-            PTO.Enum.TagType.FLOAT,
-            PTO.Enum.TagType.DOUBLE
-        ];
-
         for(let i in tags) {
-            if(!enums.includes(tags[i].Type)) {
+            if(!Mathematics.COMPATIBILITY.includes(tags[i].Type)) {
                 return false;
             }
         }
 
         return true;
-    }
-    static ToSingleValue(tag, returnAsTagAndOverwrite = false) {       
+	}
+	
+    static ToSingleValue(tag, returnAsTagAndOverwrite = false) {
         if(!Mathematics.IsCompatible(tag)) {
-            throw new PTO.Error.MathIncompatibleType();
+            throw new PTO.Error.IncompatibleType(Mathematics.COMPATIBILITY);
         }
 
         let sum = 0;
@@ -42,7 +45,7 @@ class Mathematics {
      */
     static ToSingleValueSpread(...tags) {      
         if(!Mathematics.IsCompatible(...tags)) {
-            throw new PTO.Error.MathIncompatibleType();
+            throw new PTO.Error.IncompatibleType(Mathematics.COMPATIBILITY);
         }
 
         let sum = [],
@@ -68,7 +71,7 @@ class Mathematics {
     }
     static ToPercent(tag, returnAsTag = true) {
         if(!Mathematics.IsCompatible(tag)) {
-            throw new PTO.Error.MathIncompatibleType();
+            throw new PTO.Error.IncompatibleType(Mathematics.COMPATIBILITY);
         }
 
         if(returnAsTag) {
@@ -80,7 +83,7 @@ class Mathematics {
     
     static Power(t1, t2, returnAsTag = true) {
         if(!Mathematics.IsCompatible(t1) || !Mathematics.IsCompatible(t2)) {
-            throw new PTO.Error.MathIncompatibleType();
+            throw new PTO.Error.IncompatibleType(Mathematics.COMPATIBILITY);
         }
 
         let result = Math.pow(Mathematics.ToSingleValue(t1, false), Mathematics.ToSingleValue(t2, false));

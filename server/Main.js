@@ -268,20 +268,26 @@ const TestCase = () => {
 	let tags = [];
 
 	for(let i = 0; i < 2; i++) {
-		tags.push(new PTO.Tag.TagInt(i, [5]));
+		tags.push(new PTO.Tag.TagInt(i, 74));
 	}
 
-	console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0]));
-	console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0], true));
-	console.log("Add: ", PTO.Utility.Mathematics.Add(...tags));
-	console.log("Subtract: ", PTO.Utility.Mathematics.Subtract(...tags));
-	console.log("Multiply: ", PTO.Utility.Mathematics.Multiply(...tags));
-	console.log("Divide: ", PTO.Utility.Mathematics.Divide(...tags));
-	console.log("Power: ", PTO.Utility.Mathematics.Power(tags[0], tags[1]));
-	console.log("ToPercent: ", PTO.Utility.Mathematics.ToPercent(tags[0]));
-	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0]));
-	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0], tags[1]));
-	console.log("Calculate: ", PTO.Utility.Mathematics.Calculate("1 + ({0} * {1})", ...tags));
+	//?	Text
+	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", false, tags[1]));
+	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]));
+	console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", true, tags[1]).GetValues());
+
+	// //?	Mathematics
+	// console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0]));
+	// console.log("ToSingleValue: ", PTO.Utility.Mathematics.ToSingleValue(tags[0], true));
+	// console.log("Add: ", PTO.Utility.Mathematics.Add(...tags));
+	// console.log("Subtract: ", PTO.Utility.Mathematics.Subtract(...tags));
+	// console.log("Multiply: ", PTO.Utility.Mathematics.Multiply(...tags));
+	// console.log("Divide: ", PTO.Utility.Mathematics.Divide(...tags));
+	// console.log("Power: ", PTO.Utility.Mathematics.Power(tags[0], tags[1]));
+	// console.log("ToPercent: ", PTO.Utility.Mathematics.ToPercent(tags[0]));
+	// console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0]));
+	// console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0], tags[1]));
+	// console.log("Calculate: ", PTO.Utility.Mathematics.Calculate("1 + ({0} * {1})", ...tags));
 ;}
 
 //?		get Object.keys($.Common.Entity.EntityManager.Entities)
