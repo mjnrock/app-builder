@@ -76,6 +76,24 @@ class General {
 	}
 	//TODO Write this to perform the Intersection on the Schemas
 	static Intersection(key, ...tags) {}
+
+	/**
+	 * Transforms @tag into a Hierarchy, and invokes foreach(t in hier) { callback(t, [@tag, hier], ...@args); }
+	 * @param {ATag} tag 
+	 * @param {fn()} callback 
+	 * @param  {...any} args 
+	 * 
+	 * @returns tag
+	 */
+	static ForEach(tag, callback, ...args) {
+		let hier = PTO.Utility.Transformer.ToHierarchy(tag);
+
+		hier.forEach(t => {
+			callback(t, [tag, hier], ...args);
+		});
+
+		return tag;
+	}
 }
 
 export { General };
