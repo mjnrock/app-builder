@@ -41,7 +41,7 @@ class Mathematics {
     }
     /**
      * Collapse the Value array into a single entry for each tag in tags
-     * @param  {...any} tags | Pass TRUE or FALSE as an element as the @returnAsTag value
+     * @param  {...any} tags | Pass TRUE or FALSE as an element as the $returnAsTag value
      */
     static ToSingleValueSpread(...tags) {      
         if(!Mathematics.IsCompatible(...tags)) {

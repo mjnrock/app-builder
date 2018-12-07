@@ -273,7 +273,24 @@ const TestCase = () => {
 	// 	tags.push(new PTO.Tag.TagString(i, "cats"));
 	// }
 
-	console.log(PTO.Utility.Transformer.ToSchema(tags[0]));
+	let Tag = new PTO.Tag.TagCompound("Database Connection");
+	Tag.AddTag(new PTO.Tag.TagCompound("Server"));
+	let Server = Tag.GetTag("Server");
+	Server.AddTag(new PTO.Tag.TagString("Host"));
+	Server.AddTag(new PTO.Tag.TagInt("Port"));
+	Server.AddTag(new PTO.Tag.TagString("Instance"));
+	Tag.AddTag(new PTO.Tag.TagCompound("Catalog"));
+	let Catalog = Tag.GetTag("Catalog");
+	Catalog.AddTag(new PTO.Tag.TagString("Database"));
+	Catalog.AddTag(new PTO.Tag.TagString("Schema"));
+	Tag.AddTag(new PTO.Tag.TagCompound("Authentication"));
+	let Authentication = Tag.GetTag("Authentication");
+	Authentication.AddTag(new PTO.Tag.TagString("Username"));
+	Authentication.AddTag(new PTO.Tag.TagString("Password"));
+	Authentication.AddTag(new PTO.Tag.TagBoolean("Trusted Connection"));
+	Tag.AddTag(new PTO.Tag.TagString("Driver"));
+	//?	Query
+	console.log(PTO.Utility.Query.Execute(Tag));
 	
 	//?	General
 	// console.log("Copy: ", PTO.Utility.General.Copy(tags[0], 5));

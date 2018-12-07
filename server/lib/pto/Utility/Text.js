@@ -79,7 +79,7 @@ class Text {
 
 	/**
 	 * 
-	 * @param {*} string | Construct with "{#}" syntax (e.g. "This is the {0}st test and the {1}nd")
+	 * @param {String} string | Construct with "{#}" syntax (e.g. "This is the {0}st test and the {1}nd")
 	 * @param  {...any} tags 
 	 */
 	static Interpolate(string, ...tags) {

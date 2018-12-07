@@ -2,10 +2,10 @@ import PTO from "../package.js";
 
 class General {
 	/**
-	 * Return the copy of the Tag(s), in an array if @tags > 1.  This will Serialize @tag and seed-Deserialize to create the copies.
+	 * Return the copy of the Tag(s), in an array if $tags > 1.  This will Serialize $tag and seed-Deserialize to create the copies.
 	 * @param {ATag} tag | The Tag to copy
 	 * @param {int} copies | The number of copies
-	 * @param {bool} includeOriginal | Should @tag be .unshift()ed into the return array (i.e. shift-inserted into index = 0)
+	 * @param {bool} includeOriginal | Should $tag be .unshift()ed into the return array (i.e. shift-inserted into index = 0)
 	 */
 	static Copy(tag, copies = 1, includeOriginal = false) {
 		let serialize = tag.Serialize(),
@@ -78,7 +78,7 @@ class General {
 	static Intersection(key, ...tags) {}
 
 	/**
-	 * Transforms @tag into a Hierarchy, and invokes foreach(t in hier) { callback(t, [@tag, hier], ...@args); }
+	 * Transforms $tag into a Hierarchy, and invokes foreach(t in hier) { callback(t, [$tag, hier], ...$args); }
 	 * @param {ATag} tag 
 	 * @param {fn()} callback 
 	 * @param  {...any} args 

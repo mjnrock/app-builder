@@ -875,6 +875,7 @@ class Transformer {
 		array.push({
 			ID: ID,
 			ParentID: parentID,
+			Route: `${parent !== null && parent !== void 0 ? `${parent.Route}.` : ""}${ID}`,
 			Key: tag.GetKey(),
 			Path: `${parent !== null && parent !== void 0 ? `${parent.Path}.` : ""}${tag.GetKey()}`,
 			Ordinality: tag.GetOrdinality(),
