@@ -11,8 +11,11 @@ class Query {
 	// 	Ordinality: 1544212849179,
 	// 	Tag: TagString { Type: 2, Key: 1, Value: [Object], Ordinality: 1544212849179 } }
 
-	static Q(tag, query) {
-		
+	static Execute(tag, query) {
+
+	}
+	static Exec(tag, query) {
+		return Query.Execute(tag, query);
 	}
 }
 
