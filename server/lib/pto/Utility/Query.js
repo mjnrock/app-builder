@@ -7,7 +7,7 @@ class Query {
 	// { ID: 1,
 	// 	ParentID: null,
 	// 	Key: 1,
-	// 	Path: '1',
+	// 	Path: '1',					//* Use "Path" and count "." levels to determine the Tag's Tier
 	// 	Ordinality: 1544212849179,
 	// 	Tag: TagString { Type: 2, Key: 1, Value: [Object], Ordinality: 1544212849179 } }
 
