@@ -278,6 +278,7 @@ const TestCase = () => {
 	console.log("Multiply: ", PTO.Utility.Mathematics.Multiply(...tags));
 	console.log("Divide: ", PTO.Utility.Mathematics.Divide(...tags));
 	console.log("Power: ", PTO.Utility.Mathematics.Power(tags[0], tags[1]));
+	console.log("ToPercent: ", PTO.Utility.Mathematics.ToPercent(tags[0]));
 	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0]));
 	console.log("Count: ", PTO.Utility.Mathematics.Count(tags[0], tags[1]));
 	console.log("Calculate: ", PTO.Utility.Mathematics.Calculate("1 + ({0} * {1})", ...tags));

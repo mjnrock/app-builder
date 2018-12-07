@@ -5,6 +5,7 @@ import { NoName } from "./NoName.js";
 import { OutOfRange } from "./OutOfRange.js";
 import { UndefinedValue } from "./UndefinedValue.js";
 import { UnsafeIntegerRange } from "./UnsafeIntegerRange.js";
+import { MathIncompatibleType } from "./MathIncompatibleType.js";
 
 export default {
 	AException,
@@ -13,5 +14,6 @@ export default {
 	NoName,
 	OutOfRange,
 	UndefinedValue,
-	UnsafeIntegerRange
+	UnsafeIntegerRange,
+	MathIncompatibleType
 };

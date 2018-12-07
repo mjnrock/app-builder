@@ -1,7 +1,28 @@
 import PTO from "../package.js";
 
 class Mathematics {
-    static ToSingleValue(tag, returnAsTagAndOverwrite = false) {        
+    static IsCompatible(...tags) {
+        let enums = [
+            PTO.Enum.TagType.SHORT,
+            PTO.Enum.TagType.INT,
+            PTO.Enum.TagType.LONG,
+            PTO.Enum.TagType.FLOAT,
+            PTO.Enum.TagType.DOUBLE
+        ];
+
+        for(let i in tags) {
+            if(!enums.includes(tags[i].Type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    static ToSingleValue(tag, returnAsTagAndOverwrite = false) {       
+        if(!Mathematics.IsCompatible(tag)) {
+            throw new PTO.Error.MathIncompatibleType();
+        }
+
         let sum = 0;
 
         for(let v in tag.Value) {
@@ -19,7 +40,11 @@ class Mathematics {
      * Collapse the Value array into a single entry for each tag in tags
      * @param  {...any} tags | Pass TRUE or FALSE as an element as the @returnAsTag value
      */
-    static ToSingleValueSpread(...tags) {        
+    static ToSingleValueSpread(...tags) {      
+        if(!Mathematics.IsCompatible(...tags)) {
+            throw new PTO.Error.MathIncompatibleType();
+        }
+
         let sum = [],
             returnAsTag = true;
 
@@ -42,6 +67,10 @@ class Mathematics {
         };
     }
     static ToPercent(tag, returnAsTag = true) {
+        if(!Mathematics.IsCompatible(tag)) {
+            throw new PTO.Error.MathIncompatibleType();
+        }
+
         if(returnAsTag) {
             return new PTO.Tag.TagInt("Percent", Mathematics.ToSingleValue(tag, false) * 100);
         }
@@ -50,6 +79,10 @@ class Mathematics {
     }
     
     static Power(t1, t2, returnAsTag = true) {
+        if(!Mathematics.IsCompatible(t1) || !Mathematics.IsCompatible(t2)) {
+            throw new PTO.Error.MathIncompatibleType();
+        }
+
         let result = Math.pow(Mathematics.ToSingleValue(t1, false), Mathematics.ToSingleValue(t2, false));
         
         if(returnAsTag) {
