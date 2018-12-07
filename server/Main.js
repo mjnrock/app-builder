@@ -273,10 +273,11 @@ const TestCase = () => {
 	// 	tags.push(new PTO.Tag.TagString(i, "cats"));
 	// }
 
+	console.log(PTO.Utility.Transformer.ToSchema(tags[0]));
 	
 	//?	General
 	// console.log("Copy: ", PTO.Utility.General.Copy(tags[0], 5));
-	console.log("Union: ", PTO.Utility.General.Union("test", ...tags));
+	// console.log("Union: ", PTO.Utility.General.Union("test", ...tags));
 
 	//?	Text
 	// console.log("Concat: ", PTO.Utility.Text.Concat("pre", tags[0], "app", false, tags[1]));
