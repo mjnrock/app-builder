@@ -84,6 +84,13 @@ class TagList extends ATag {
 
 		return this;
 	}
+	HasTag(input) {
+		if (input instanceof ATag) {
+			input = input.GetKey();
+		}
+			
+		return this.Find(input) >= 0;
+	}
 
 	GetByteLength() {
 		let bytes = super.GetByteLength(this);

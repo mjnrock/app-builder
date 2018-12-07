@@ -32,7 +32,7 @@ class Mathematics {
             sum += tag.Value[v];
         }
 
-        if(returnAsTagAndOverwrite) {
+        if(returnAsTagAndOverwrite === true) {
             tag.SetValues(sum);
             return tag;
         }
@@ -74,7 +74,7 @@ class Mathematics {
             throw new PTO.Error.IncompatibleType(Mathematics.COMPATIBILITY);
         }
 
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Percent", Mathematics.ToSingleValue(tag, false) * 100);
         }
 
@@ -88,7 +88,7 @@ class Mathematics {
 
         let result = Math.pow(Mathematics.ToSingleValue(t1, false), Mathematics.ToSingleValue(t2, false));
         
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Power", result);
         }
 
@@ -100,7 +100,7 @@ class Mathematics {
             sum = multi.Sum.reduce((p, v) => p + v),
             returnAsTag = multi.ReturnAsTag;
             
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Add", sum);
         }
 
@@ -111,7 +111,7 @@ class Mathematics {
             sum = multi.Sum.reduce((p, v) => p - v),
             returnAsTag = multi.ReturnAsTag;
             
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Difference", sum);
         }
 
@@ -122,7 +122,7 @@ class Mathematics {
             sum = multi.Sum.reduce((p, v) => p * v),
             returnAsTag = multi.ReturnAsTag;
             
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Product", sum);
         }
 
@@ -133,7 +133,7 @@ class Mathematics {
             sum = multi.Sum.reduce((p, v) => p / v),
             returnAsTag = multi.ReturnAsTag;
             
-        if(returnAsTag) {
+        if(returnAsTag === true) {
             return new PTO.Tag.TagInt("Quotient", sum);
         }
 

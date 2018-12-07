@@ -42,7 +42,7 @@ class Text {
 			}
 		}
 
-		if(returnAsTag) {
+		if(returnAsTag === true) {
 			return new PTO.Tag.TagString("Concat", string);
 		}
 
@@ -56,7 +56,7 @@ class Text {
 
 		let res = tag.GetValues().match(pattern)!== null ? true : false;
 
-		if(returnAsTag) {
+		if(returnAsTag === true) {
 			return new PTO.Tag.TagBoolean("Match", res);
 		}
 
@@ -70,7 +70,7 @@ class Text {
 
 		let res = identityCompare ? t1.GetValues() === t2.GetValues() : t1.GetValues() == t2.GetValues();
 
-		if(returnAsTag) {
+		if(returnAsTag === true) {
 			return new PTO.Tag.TagBoolean("Equals", res);
 		}
 
@@ -109,7 +109,7 @@ class Text {
 
 		let value = tag.GetValues().replace(find, replace);
 
-		if(overwrite) {
+		if(overwrite === true) {
 			tag.SetValues(value);
 		}
 		
@@ -123,7 +123,7 @@ class Text {
 
 		let value = tag.GetValues().search(find);
 
-		if(returnAsTag) {
+		if(returnAsTag === true) {
 			return new PTO.Tag.TagString("Find", value);
 		}
 		

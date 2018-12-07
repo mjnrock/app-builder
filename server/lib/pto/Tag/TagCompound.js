@@ -25,15 +25,6 @@ class TagCompound extends ATag {
 		return Object.values(this.Value);
 	}
 
-	GetContentType() {
-		return this.ContentType;
-	}
-	SetContentType(type) {
-		this.ContentType = type;
-
-		return this;
-	}
-
 	GetTag(input) {
 		if (typeof input === "string" || input instanceof String) {
 			return this.Value[input];
@@ -59,6 +50,13 @@ class TagCompound extends ATag {
 		delete this.Value[Object.keys(this.Value)[input]];
 
 		return this;
+	}
+	HasTag(input) {
+		if (input instanceof ATag) {
+			input = input.GetKey();
+		}
+			
+		return this.Value[input] !== null && this.Value[input] !== void 0;
 	}
 
 	Size() {
