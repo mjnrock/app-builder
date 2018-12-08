@@ -290,7 +290,8 @@ const TestCase = () => {
 	Authentication.AddTag(new PTO.Tag.TagBoolean("Trusted Connection"));
 	Tag.AddTag(new PTO.Tag.TagString("Driver"));
 	//?	Query
-	console.log(PTO.Utility.Query.Execute(Tag));
+	// PTO.Utility.Query.Execute(Tag, "$./Driver/g");
+	console.log(PTO.Utility.Query.Execute(Tag, "$./Driver/g"));
 	
 	//?	General
 	// console.log("Copy: ", PTO.Utility.General.Copy(tags[0], 5));
