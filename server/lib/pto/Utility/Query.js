@@ -24,6 +24,29 @@ class Query {
 			}
 
 			return false;
+		} else if (tier.match(/([TVO])\(([*~=!])?(.*)\)/gi)) {
+			let match = /([TVO])\(([*~=!])?(.*)\)/gi.exec(tier),
+				values = match[1],
+				flag = match[2],
+				check = match[3];
+
+			if(values === "V") {
+				values = schema.Tag.GetValues();
+			} else if(values === "O") {
+				values = schema.Tag.GetOrdinality();
+			} else if(values === "T") {
+				values = schema.Tag.GetType();
+			}
+
+			if(flag === "*") {
+				return values.toString().includes(check);
+			} else if(flag === "!" || flag === "~") {
+				return values != check;
+			} else if(flag === "=") {
+				return values === check;
+			}
+			
+			return values == check;
 		} else {
 			path = path.toLowerCase();
 			tier = tier.toLowerCase();
@@ -39,9 +62,16 @@ class Query {
 			return path.startsWith(tier);
 		}
 	}
+
+	/**
+	 * Depth queries must include "$." as a placeholder for the root tag.
+	 * @param {ATag} tag | The tag to query
+	 * @param {String} query | The TAL (Tag Atomizer Language) query
+	 * 
+	 * @returns {Array} | All of the tags that meet the query criteria
+	 */
 	static Atomize(tag, query) {
-		let ctag = PTO.Utility.General.Copy(tag),
-			schema = PTO.Utility.Transformer.ToSchema(ctag),
+		let schema = PTO.Utility.Transformer.ToSchema(tag),
 			depth = +(query.match(/\./g) || []).length,			//	Counts the "."
 			tiers = query.split(/\./g),							//	i.e. Array.from(@query.split("."))
 			ret = [];

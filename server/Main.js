@@ -289,10 +289,11 @@ const TestCase = () => {
 	Authentication.AddTag(new PTO.Tag.TagString("Password"));
 	Authentication.AddTag(new PTO.Tag.TagBoolean("Trusted Connection"));
 	Tag.AddTag(new PTO.Tag.TagString("Driver"));
+
 	//?	Query
 	// PTO.Utility.Query.Execute(Tag, "$./Driver/g");
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$./Server/g")));
-	console.log(PTO.Utility.Query.Atomize(Tag, "$.D[er"));
+	console.log(PTO.Utility.Query.Atomize(Tag, "T(2)"));
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$.<compound>.<int>")));
 	
 	//?	General
