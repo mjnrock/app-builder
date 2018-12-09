@@ -292,7 +292,7 @@ const TestCase = () => {
 	//?	Query
 	// PTO.Utility.Query.Execute(Tag, "$./Driver/g");
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$./Server/g")));
-	console.log(PTO.Utility.Query.Execute(Tag, "$.[ticat.<bool>"));
+	console.log(PTO.Utility.Query.Atomize(Tag, "$.D[er"));
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$.<compound>.<int>")));
 	
 	//?	General
