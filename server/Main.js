@@ -291,7 +291,9 @@ const TestCase = () => {
 	Tag.AddTag(new PTO.Tag.TagString("Driver"));
 	//?	Query
 	// PTO.Utility.Query.Execute(Tag, "$./Driver/g");
-	console.log(PTO.Utility.Query.Execute(Tag, "$./Driver/g"));
+	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$./Server/g")));
+	console.log(PTO.Utility.Query.Execute(Tag, "$.[ticat.<bool>"));
+	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$.<compound>.<int>")));
 	
 	//?	General
 	// console.log("Copy: ", PTO.Utility.General.Copy(tags[0], 5));

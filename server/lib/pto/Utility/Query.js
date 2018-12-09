@@ -1,16 +1,6 @@
 import PTO from "../package.js";
 
 class Query {
-	//	Shape Example:
-	//		PTO.Utility.Transformer.ToSchema(tag)
-	//	---------------------------------------------
-	// { ID: 1,
-	// 	ParentID: null,
-	// 	Key: 1,
-	// 	Path: '1',					//* Use "Path" and count "." levels to determine the Tag's Tier
-	// 	Ordinality: 1544212849179,
-	// 	Tag: TagString { Type: 2, Key: 1, Value: [Object], Ordinality: 1544212849179 } }
-
 	/**
 	 * This function is designed to be called internally to the class Query
 	 * Like a .filter(), TRUE keeps the tag, FALSE removes the tag, and "break" is used for Query.Execute()
@@ -32,6 +22,28 @@ class Query {
 				regex = RegExp(matches[1], typeof matches[2] === "string" || matches[2] instanceof String ? matches[2] : "gi");
 
 			return regex.test(schema.Key);
+		} else if(tier.match(/<(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)+(\|(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID))*>/gi)) {
+			let regex = /<(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)+(\|(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID))*>/gi,
+				match = regex.exec(tier),
+				r = RegExp(`^${ PTO.Enum.TagType.GetString(schema.Tag.Type) }$`, "gi");
+
+			for(let i = 0; i < match.length - 2; i++) {
+				if((match[i].match(/^[a-zA-Z]+$/gi) !== null) && (r.test(match[i]))) {
+					return true;
+				}
+			}
+
+			return false;
+		} else {			
+			if(tier.indexOf("[") > -1) {
+				let i = tier.indexOf("["),
+					startWith = schema.Key.startsWith(tier.substring(0, i)),
+					contains = schema.Key.includes(tier.substring(i + 1));
+
+				return startWith && contains;
+			}
+
+			return schema.Key.startsWith(tier);
 		}
 	}
 
