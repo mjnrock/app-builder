@@ -15,7 +15,7 @@ class Query {
 		} else if(tier.match(/<(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)+(\|(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID))*>/gi)) {
 			let regex = /<(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID)+(\|(Boolean|Character|Compound|Double|Float|Int|List|Long|Short|String|Tiny|UUID))*>/gi,
 				match = regex.exec(tier),
-				r = RegExp(`^${ PTO.Enum.TagType.GetString(path.Tag.Type) }$`, "gi");
+				r = RegExp(`^${ PTO.Enum.TagType.GetString(schema.Tag.Type) }$`, "gi");
 
 			for(let i = 0; i < match.length - 2; i++) {
 				if((match[i].match(/^[a-zA-Z]+$/gi) !== null) && (r.test(match[i]))) {
@@ -82,20 +82,22 @@ class Query {
 			let s = schema[i],
 				sDepth = (s.Route.match(/\./g) || []).length;
 
-			if(tiers[0] === "$" && depth === sDepth) {
-				let retain = true,
-				paths = s.Path.split(/\./g);
+			if(tiers[0] === "$") {
+				if(depth === sDepth) {
+					let retain = true,
+					paths = s.Path.split(/\./g);
 
-				tierLoop:
-				for(let j in tiers) {
-					retain = Query.Analyze(paths[j], tiers[j], s);
-					if(retain === false) {
-						break tierLoop;
+					tierLoop:
+					for(let j in tiers) {
+						retain = Query.Analyze(paths[j], tiers[j], s);
+						if(retain === false) {
+							break tierLoop;
+						}
 					}
-				}
 
-				if(retain === true) {
-					ret.push(s.Tag);
+					if(retain === true) {
+						ret.push(s.Tag);
+					}
 				}
 			} else {
 				if(Query.Analyze(s.Key, query, s) === true) {

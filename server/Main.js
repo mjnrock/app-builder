@@ -264,7 +264,7 @@ app.listen(PORT, () => {
 	console.log(`App Builder API is now listening on port: ${PORT}`);
 });
 
-const TestCase = () => {
+const TestCase = (query) => {
 	let tags = [];
 	tags.push(new PTO.Tag.TagString(1, "cats"));
 	tags.push(new PTO.Tag.TagInt(2, [1, 2, 3, 4]));
@@ -293,7 +293,7 @@ const TestCase = () => {
 	//?	Query
 	// PTO.Utility.Query.Execute(Tag, "$./Driver/g");
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$./Server/g")));
-	console.log(PTO.Utility.Query.Atomize(Tag, "T(2)"));
+	console.log(PTO.Utility.Query.Atomize(Tag, query));
 	// console.log(PTO.Utility.Transformer.ToJSON(PTO.Utility.Query.Execute(Tag, "$.<compound>.<int>")));
 	
 	//?	General
@@ -343,7 +343,7 @@ STDIN.addListener("data", function(d) {
 		//  Kill the current Node instance
 		process.exit();
 	} else if(args[0] === "test" || args[0] === "t") {
-		TestCase()
+		TestCase(args[1]);
 	}
 });
 
