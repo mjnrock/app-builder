@@ -64,7 +64,7 @@ class Query {
 	}
 
 	/**
-	 * Depth queries must include "$." as a placeholder for the root tag.
+	 * Depth queries must include "$." as a placeholder for the root tag.  Be aware that by .Foster()ing this result, you may incur circular or broken Tag connections if the query exludes them.
 	 * @param {ATag} tag | The tag to query
 	 * @param {String} query | The TAL (Tag Atomizer Language) query
 	 * 
