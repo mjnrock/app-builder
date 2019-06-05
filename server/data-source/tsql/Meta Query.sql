@@ -5,6 +5,7 @@ SELECT
 	cols.OrdinalPosition,
 	cols.DataType,
 	cols.DataTypeLength,
+	cols.IsPrimaryKey,
 	
 	fkcols.FKSchemaName,
 	fkcols.FKTableName,
@@ -20,7 +21,11 @@ FROM
 			c.name AS ColumnName,
 			c.colid AS OrdinalPosition,
 			UPPER(t.name) AS DataType,
-			c.[length] AS DataTypeLength
+			c.[length] AS DataTypeLength,
+			CASE
+				WHEN pk.is_primary_key = 1 THEN 1
+				ELSE 0
+			END IsPrimaryKey
 		FROM
 			sysobjects o
 			INNER JOIN syscolumns c
@@ -31,6 +36,24 @@ FROM
 				ON o.id = tbl.object_id
 			INNER JOIN sys.schemas s
 				ON tbl.schema_id = s.schema_id
+			LEFT JOIN (
+				SELECT
+					i.object_id,
+					c.column_id,
+					i.is_primary_key
+				FROM
+					sys.indexes i
+					INNER JOIN sys.index_columns ic
+						ON ic.object_id = i.object_id
+						AND i.index_id = ic.index_id
+					INNER JOIN sys.columns c
+						ON ic.column_id = c.column_id
+						AND i.object_id = c.object_id
+				WHERE
+					i.is_primary_key = 1
+			) pk
+				ON c.colid = pk.column_id
+				AND tbl.object_id = pk.object_id
 		WHERE
 			o.xtype = 'U'
 			AND t.[status] = 0
