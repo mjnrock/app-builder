@@ -11,7 +11,7 @@
     "react-scripts": "^1.1.4",
     "remarkable": "^1.7.1",
     "superagent": "^3.8.3",
-    "url-parse": "^1.4.3"
+    "url-parse": "^1.5.8"
   },
   "scripts": {
     "start": "set PORT=3002 && react-scripts start",
